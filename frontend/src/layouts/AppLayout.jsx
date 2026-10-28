@@ -5,24 +5,36 @@ import Sidebar from '../components/Sidebar';
 import MobileBottomNav from '../components/MobileBottomNav';
 
 const AppLayout = () => {
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [isMobileSidebarOpen, setIsMobileSidebarOpen] = useState(false);
+  const [isDesktopSidebarOpen, setIsDesktopSidebarOpen] = useState(true);
 
   const toggleSidebar = () => {
-    setIsSidebarOpen((prev) => !prev);
+    if (typeof window !== 'undefined' && window.innerWidth < 1024) {
+      setIsMobileSidebarOpen((prev) => !prev);
+    } else {
+      setIsDesktopSidebarOpen((prev) => !prev);
+    }
   };
 
   const closeSidebar = () => {
-    setIsSidebarOpen(false);
+    setIsMobileSidebarOpen(false);
   };
 
   return (
     <div className="min-h-screen bg-slate-50 flex flex-col text-slate-800">
-      <Navbar toggleSidebar={toggleSidebar} isSidebarOpen={isSidebarOpen} />
+      <Navbar
+        toggleSidebar={toggleSidebar}
+        isSidebarOpen={isMobileSidebarOpen || isDesktopSidebarOpen}
+      />
 
-      <div className="flex-1 flex">
-        <Sidebar isOpen={isSidebarOpen} closeSidebar={closeSidebar} />
+      <div className="flex-1 flex w-full relative">
+        <Sidebar
+          isOpen={isMobileSidebarOpen}
+          isDesktopOpen={isDesktopSidebarOpen}
+          closeSidebar={closeSidebar}
+        />
 
-        <main className="flex-1 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5 md:py-8 pb-24 lg:pb-10 overflow-x-hidden">
+        <main className="flex-1 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5 md:py-8 pb-24 lg:pb-10 overflow-x-hidden min-w-0 transition-all duration-300">
           <Outlet />
         </main>
       </div>

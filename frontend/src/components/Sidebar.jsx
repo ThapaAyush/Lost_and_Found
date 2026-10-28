@@ -14,12 +14,12 @@ import {
   User,
   ShieldCheck,
   LogOut,
-  HelpCircle,
+  X,
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { useNotifications } from '../context/NotificationContext';
 
-const Sidebar = ({ isOpen, closeSidebar }) => {
+const Sidebar = ({ isOpen, isDesktopOpen = true, closeSidebar }) => {
   const { user, logout, isAdmin } = useAuth();
   const { unreadCount } = useNotifications();
   const navigate = useNavigate();
@@ -51,7 +51,7 @@ const Sidebar = ({ isOpen, closeSidebar }) => {
 
   return (
     <>
-      {/* Mobile Backdrop */}
+      {/* Mobile Backdrop Overlay */}
       {isOpen && (
         <div
           className="fixed inset-0 z-40 bg-slate-900/40 backdrop-blur-sm lg:hidden transition-opacity"
@@ -59,26 +59,31 @@ const Sidebar = ({ isOpen, closeSidebar }) => {
         />
       )}
 
-      {/* Sidebar Panel */}
+      {/* Sidebar Panel: Sticks below Navbar on desktop (lg:top-16), never overlapping top bar */}
       <aside
-        className={`fixed lg:sticky top-0 left-0 z-40 h-screen w-64 bg-white border-r border-slate-200 flex flex-col justify-between transition-transform duration-200 ease-in-out ${
-          isOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'
+        className={`fixed lg:sticky top-0 lg:top-16 left-0 z-50 lg:z-30 h-screen lg:h-[calc(100vh-4rem)] bg-white border-r border-slate-200 flex flex-col justify-between transition-all duration-300 ease-in-out shrink-0 ${
+          isOpen ? 'translate-x-0 w-72 shadow-2xl' : '-translate-x-full'
+        } ${
+          isDesktopOpen
+            ? 'lg:translate-x-0 lg:w-64 lg:shadow-none'
+            : 'lg:-translate-x-full lg:w-0 lg:overflow-hidden lg:border-none'
         }`}
       >
-        {/* Top Logo in Sidebar for mobile */}
-        <div>
-          <div className="p-5 border-b border-slate-100 flex items-center justify-between lg:hidden">
+        {/* Top Header inside Sidebar for mobile drawer */}
+        <div className="overflow-hidden">
+          <div className="p-4 border-b border-slate-100 flex items-center justify-between lg:hidden">
             <span className="font-bold text-slate-800 text-sm">Navigation Menu</span>
             <button
               onClick={closeSidebar}
-              className="text-xs text-slate-400 hover:text-slate-600 font-semibold"
+              className="p-1.5 rounded-lg text-slate-400 hover:text-slate-600 hover:bg-slate-100 transition"
+              aria-label="Close Sidebar"
             >
-              Close
+              <X className="w-5 h-5" />
             </button>
           </div>
 
-          {/* Navigation Links */}
-          <nav className="p-3 space-y-1 overflow-y-auto max-h-[calc(100vh-140px)]">
+          {/* Navigation Links with custom scroll */}
+          <nav className="p-3 space-y-1 overflow-y-auto max-h-[calc(100vh-140px)] lg:max-h-[calc(100vh-140px)]">
             {navLinks.map((link) => {
               const Icon = link.icon;
               return (
@@ -103,7 +108,7 @@ const Sidebar = ({ isOpen, closeSidebar }) => {
                     <>
                       <div className="flex items-center space-x-3">
                         <Icon
-                          className={`w-4 h-4 ${
+                          className={`w-4 h-4 shrink-0 ${
                             isActive
                               ? 'text-white'
                               : link.isLost
@@ -113,11 +118,11 @@ const Sidebar = ({ isOpen, closeSidebar }) => {
                               : 'text-slate-400'
                           }`}
                         />
-                        <span>{link.label}</span>
+                        <span className="truncate">{link.label}</span>
                       </div>
                       {link.badge && (
                         <span
-                          className={`px-2 py-0.5 text-[10px] font-extrabold rounded-full ${
+                          className={`px-2 py-0.5 text-[10px] font-extrabold rounded-full shrink-0 ${
                             isActive ? 'bg-white text-blue-600' : 'bg-blue-600 text-white'
                           }`}
                         >
@@ -133,7 +138,7 @@ const Sidebar = ({ isOpen, closeSidebar }) => {
         </div>
 
         {/* Bottom User Card & Quick Logout */}
-        <div className="p-3 border-t border-slate-100 space-y-2">
+        <div className="p-3 border-t border-slate-100 space-y-2 shrink-0">
           {isAdmin && (
             <NavLink
               to="/admin"
@@ -146,8 +151,8 @@ const Sidebar = ({ isOpen, closeSidebar }) => {
                 }`
               }
             >
-              <ShieldCheck className="w-4 h-4" />
-              <span>Admin Oversight</span>
+              <ShieldCheck className="w-4 h-4 shrink-0" />
+              <span className="truncate">Admin Oversight</span>
             </NavLink>
           )}
 
@@ -157,8 +162,8 @@ const Sidebar = ({ isOpen, closeSidebar }) => {
               onClick={handleLogout}
               className="w-full flex items-center space-x-3 px-3.5 py-2 rounded-xl text-xs font-semibold text-slate-500 hover:bg-rose-50 hover:text-rose-600 transition"
             >
-              <LogOut className="w-4 h-4 text-slate-400 group-hover:text-rose-600" />
-              <span>Sign Out</span>
+              <LogOut className="w-4 h-4 text-slate-400 group-hover:text-rose-600 shrink-0" />
+              <span className="truncate">Sign Out</span>
             </button>
           )}
         </div>
