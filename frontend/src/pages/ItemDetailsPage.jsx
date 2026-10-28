@@ -326,7 +326,7 @@ const ItemDetailsPage = () => {
                           setClaimModalOpen(true);
                         }
                       }}
-                      className="inline-flex items-center px-4 py-2 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white text-xs font-bold rounded-xl shadow-sm shadow-blue-500/20 transition"
+                      className="inline-flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold rounded-xl shadow-sm transition"
                     >
                       <ShieldCheck className="w-4 h-4 mr-1.5" />
                       Claim Ownership
@@ -340,34 +340,48 @@ const ItemDetailsPage = () => {
                 </>
               )}
 
-              {item.type === 'found' && (
-                claimStatus === 'approved' ? (
-                  <Link
-                    to="/conversations"
-                    className="inline-flex items-center px-4 py-2 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white text-xs font-bold rounded-xl shadow-sm transition"
-                  >
-                    <MessageSquare className="w-4 h-4 mr-1.5" />
-                    Chat with Finder
-                  </Link>
-                ) : (
-                  <button
-                    type="button"
-                    onClick={() => {
-                      if (!user) {
-                        navigate('/login', { state: { from: `/items/${id}` } });
-                      } else if (!hasActiveClaim) {
-                        setClaimModalOpen(true);
-                      } else {
-                        navigate(`/claims/${activeClaimId}`);
-                      }
-                    }}
-                    className="inline-flex items-center px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold rounded-xl transition"
-                    title="Claim verification required before private chat"
-                  >
-                    <Lock className="w-3.5 h-3.5 mr-1.5 text-slate-500" />
-                    {hasActiveClaim ? 'Chat Locked (Under Review)' : 'Chat Locked (Claim Required)'}
-                  </button>
-                )
+              {item.type === 'lost' && (
+                <>
+                  {hasActiveClaim ? (
+                    <Link
+                      to={`/claims/${activeClaimId}`}
+                      className="inline-flex items-center px-4 py-2 bg-teal-50 hover:bg-teal-100 text-teal-800 border border-teal-200 text-xs font-bold rounded-xl transition shadow-sm"
+                    >
+                      <Sparkles className="w-4 h-4 mr-1.5 text-teal-600" />
+                      View Your Found Submission
+                    </Link>
+                  ) : item.status !== 'returned' ? (
+                    <button
+                      type="button"
+                      onClick={() => {
+                        if (!user) {
+                          navigate('/login', { state: { from: `/items/${id}` } });
+                        } else {
+                          setClaimModalOpen(true);
+                        }
+                      }}
+                      className="inline-flex items-center px-4 py-2 bg-teal-600 hover:bg-teal-700 text-white text-xs font-bold rounded-xl shadow-sm transition"
+                    >
+                      <Sparkles className="w-4 h-4 mr-1.5" />
+                      I Found This Item
+                    </button>
+                  ) : (
+                    <span className="inline-flex items-center px-3 py-1.5 bg-emerald-50 text-emerald-700 rounded-xl text-xs font-bold border border-emerald-200">
+                      <CheckCircle2 className="w-4 h-4 mr-1.5" />
+                      Returned to Owner
+                    </span>
+                  )}
+                </>
+              )}
+
+              {claimStatus === 'approved' && (
+                <Link
+                  to="/conversations"
+                  className="inline-flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold rounded-xl shadow-sm transition"
+                >
+                  <MessageSquare className="w-4 h-4 mr-1.5" />
+                  Chat ({item.type === 'lost' ? 'Owner' : 'Finder'})
+                </Link>
               )}
 
               <button
@@ -435,13 +449,17 @@ const ItemDetailsPage = () => {
             </div>
             <div>
               <span className="text-[10px] font-extrabold uppercase tracking-wider text-amber-800 bg-amber-100 px-2.5 py-0.5 rounded-full">
-                Claim Awaiting Manager Verification
+                {item.type === 'lost' ? 'Found Report Submitted' : 'Claim Awaiting Verification'}
               </span>
               <h3 className="text-sm font-bold text-slate-900 mt-1">
-                Your proof of ownership is under administrator review
+                {item.type === 'lost'
+                  ? 'Your found item report has been delivered to the owner'
+                  : 'Your proof of ownership is under administrator review'}
               </h3>
               <p className="text-xs text-slate-600">
-                Campus administration verifies serial numbers and purchase receipts to prevent wrongful handovers. Once approved, the private in-app messaging system will unlock.
+                {item.type === 'lost'
+                  ? 'The owner can view your submission in their claims center and message you directly to coordinate safe return.'
+                  : 'Campus administration verifies serial numbers and purchase receipts to prevent wrongful handovers. Once approved, the private in-app messaging system will unlock.'}
               </p>
             </div>
           </div>
@@ -451,8 +469,44 @@ const ItemDetailsPage = () => {
             className="inline-flex items-center px-4 py-2.5 bg-amber-600 hover:bg-amber-700 text-white text-xs font-bold rounded-xl shadow-sm transition whitespace-nowrap self-start sm:self-auto"
           >
             <ShieldCheck className="w-4 h-4 mr-1.5" />
-            View Submitted Proof
+            View Submitted Details
           </Link>
+        </div>
+      )}
+
+      {item.type === 'lost' && !isOwner && !hasActiveClaim && item.status !== 'returned' && (
+        <div className="bg-teal-50/80 border border-teal-200 rounded-3xl p-5 sm:p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4 shadow-sm">
+          <div className="flex items-center space-x-3">
+            <div className="w-11 h-11 rounded-2xl bg-teal-600 text-white flex items-center justify-center shrink-0 shadow-sm">
+              <Sparkles className="w-5 h-5" />
+            </div>
+            <div>
+              <span className="text-[10px] font-extrabold uppercase tracking-wider text-teal-800 bg-teal-100 px-2.5 py-0.5 rounded-full">
+                Lost Item Recovery
+              </span>
+              <h3 className="text-sm font-bold text-slate-900 mt-1">
+                Did you find this lost belonging?
+              </h3>
+              <p className="text-xs text-slate-600">
+                Let the owner know you found their item. Submit details or where you found it, so the owner can review your report in their claims center and message you to arrange safe return.
+              </p>
+            </div>
+          </div>
+
+          <button
+            type="button"
+            onClick={() => {
+              if (!user) {
+                navigate('/login', { state: { from: `/items/${id}` } });
+              } else {
+                setClaimModalOpen(true);
+              }
+            }}
+            className="inline-flex items-center px-5 py-2.5 bg-teal-600 hover:bg-teal-700 active:scale-95 text-white text-xs font-bold rounded-xl shadow-sm transition whitespace-nowrap self-start sm:self-auto"
+          >
+            <Sparkles className="w-4 h-4 mr-1.5" />
+            I Found This Item
+          </button>
         </div>
       )}
 
@@ -484,7 +538,7 @@ const ItemDetailsPage = () => {
                 setClaimModalOpen(true);
               }
             }}
-            className="inline-flex items-center px-5 py-2.5 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white text-xs font-bold rounded-xl shadow-sm transition whitespace-nowrap self-start sm:self-auto"
+            className="inline-flex items-center px-5 py-2.5 bg-blue-600 hover:bg-blue-700 active:scale-95 text-white text-xs font-bold rounded-xl shadow-sm transition whitespace-nowrap self-start sm:self-auto"
           >
             <ShieldCheck className="w-4 h-4 mr-1.5" />
             Claim Ownership Now
@@ -823,21 +877,31 @@ const ItemDetailsPage = () => {
         </form>
       </Modal>
 
-      {/* Claim Ownership Modal */}
+      {/* Claim / Found Submission Modal */}
       <Modal
         isOpen={claimModalOpen}
         onClose={() => setClaimModalOpen(false)}
-        title="Submit Ownership Claim"
+        title={item?.type === 'lost' ? 'I Found This Belonging' : 'Submit Ownership Claim'}
       >
         <form onSubmit={handleSubmitClaim} className="space-y-4">
-          <div className="p-3 rounded-2xl bg-indigo-50 border border-indigo-100 text-xs text-indigo-900 space-y-1">
+          <div className="p-3 rounded-2xl bg-blue-50 border border-blue-100 text-xs text-blue-900 space-y-1">
             <p className="font-bold flex items-center">
-              <Lock className="w-3.5 h-3.5 mr-1 text-indigo-600" />
-              Confidential Ownership Verification
+              {item?.type === 'lost' ? (
+                <>
+                  <Sparkles className="w-3.5 h-3.5 mr-1 text-teal-600" />
+                  Found Item Report & Message to Owner
+                </>
+              ) : (
+                <>
+                  <Lock className="w-3.5 h-3.5 mr-1 text-blue-600" />
+                  Confidential Ownership Verification
+                </>
+              )}
             </p>
-            <p className="text-[11px] text-indigo-700">
-              Your explanation, secret serial numbers, and uploaded proofs are kept confidential and
-              only reviewed by campus administrators and the finder.
+            <p className="text-[11px] text-blue-700">
+              {item?.type === 'lost'
+                ? 'Provide details on where and when you found this item, and a personal message to the owner. This will be sent directly to their Claims section so you can coordinate safe handover.'
+                : 'Your explanation, secret serial numbers, and uploaded proofs are kept confidential and only reviewed by campus administrators and the finder.'}
             </p>
           </div>
 
@@ -855,34 +919,47 @@ const ItemDetailsPage = () => {
 
           <div>
             <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">
-              Statement of Ownership <span className="text-rose-500">*</span>
+              {item?.type === 'lost' ? 'Where & When Found / Message to Owner' : 'Statement of Ownership'}{' '}
+              <span className="text-rose-500">*</span>
             </label>
             <textarea
               rows={3}
               required
               value={claimExplanation}
               onChange={(e) => setClaimExplanation(e.target.value)}
-              placeholder="Describe how and when you lost this item, including unique details only the owner would know..."
+              placeholder={
+                item?.type === 'lost'
+                  ? 'Describe where and when you found this item, current state, and your message to the owner...'
+                  : 'Describe how and when you lost this item, including unique details only the owner would know...'
+              }
               className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 text-xs rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/20"
             />
           </div>
 
           <div>
             <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">
-              Secret Identifiers / Private Clues
+              {item?.type === 'lost'
+                ? 'Distinguishing Features / Location Details (Optional)'
+                : 'Secret Identifiers / Private Clues'}
             </label>
             <input
               type="text"
               value={claimIdentifiers}
               onChange={(e) => setClaimIdentifiers(e.target.value)}
-              placeholder="e.g. Serial #SN98241, sticker on bottom left, wallpaper is a dog"
+              placeholder={
+                item?.type === 'lost'
+                  ? 'e.g. Found on 2nd floor library desk, held safely at reception...'
+                  : 'e.g. Serial #SN98241, sticker on bottom left, wallpaper is a dog'
+              }
               className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 text-xs rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/20"
             />
           </div>
 
           <div>
             <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">
-              Supporting Proof Documents / Receipts / Photos
+              {item?.type === 'lost'
+                ? 'Photograph of Found Item (Optional)'
+                : 'Supporting Proof Documents / Receipts / Photos'}
             </label>
             <ImageUploader
               files={claimFiles}
@@ -906,7 +983,11 @@ const ItemDetailsPage = () => {
               disabled={claimSubmitting}
               className="px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold rounded-xl shadow-sm transition disabled:opacity-50"
             >
-              {claimSubmitting ? 'Submitting Proof...' : 'Submit Claim for Review'}
+              {claimSubmitting
+                ? 'Submitting...'
+                : item?.type === 'lost'
+                ? 'Submit Found Report & Notify Owner'
+                : 'Submit Claim for Review'}
             </button>
           </div>
         </form>

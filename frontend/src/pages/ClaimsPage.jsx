@@ -89,11 +89,11 @@ const ClaimsPage = () => {
           </h1>
         </div>
         <p className="text-xs sm:text-sm text-slate-500 mt-1">
-          Review claims submitted on your found items or check the standing of claims you submitted to recover belongings.
+          Review claims submitted on your found items or found reports sent to you by community members for your lost belongings.
         </p>
       </div>
 
-      {/* Tabs Switcher: Claims on My Found Items vs My Submitted Claims */}
+      {/* Tabs Switcher: Claims on My Items vs My Submitted Claims */}
       <div className="flex flex-wrap items-center gap-2 border-b border-slate-200 pb-3">
         <button
           type="button"
@@ -105,7 +105,7 @@ const ClaimsPage = () => {
           }`}
         >
           <Inbox className="w-4 h-4" />
-          <span>Claims on My Found Items</span>
+          <span>Claims on My Reported Items</span>
           <span
             className={`px-2 py-0.5 rounded-full text-[10px] font-extrabold ${
               activeTab === 'received' ? 'bg-white text-blue-700' : 'bg-slate-100 text-slate-600'
@@ -125,7 +125,7 @@ const ClaimsPage = () => {
           }`}
         >
           <Send className="w-4 h-4" />
-          <span>My Submitted Claims</span>
+          <span>My Submitted Claims & Reports</span>
           <span
             className={`px-2 py-0.5 rounded-full text-[10px] font-extrabold ${
               activeTab === 'submitted' ? 'bg-white text-teal-800' : 'bg-slate-100 text-slate-600'
@@ -174,9 +174,27 @@ const ClaimsPage = () => {
                     <span className="text-[11px] text-slate-400">
                       Filed {formatTimeAgo(claim.createdAt)}
                     </span>
-                    {activeTab === 'received' && (
+                    {claim.item?.type === 'lost' ? (
+                      <span className="px-2 py-0.5 rounded-full bg-rose-50 text-rose-700 border border-rose-200 text-[10px] font-bold">
+                        Lost Item Report
+                      </span>
+                    ) : (
                       <span className="px-2 py-0.5 rounded-full bg-blue-50 text-blue-700 border border-blue-200 text-[10px] font-bold">
-                        Claimed by: {claim.claimant?.name || 'Community Member'}
+                        Found Item Report
+                      </span>
+                    )}
+                    {activeTab === 'received' && (
+                      <span className="px-2 py-0.5 rounded-full bg-slate-100 text-slate-700 border border-slate-200 text-[10px] font-bold">
+                        {claim.item?.type === 'lost'
+                          ? `Found by: ${claim.claimant?.name || 'Community Finder'}`
+                          : `Claimed by: ${claim.claimant?.name || 'Community Member'}`}
+                      </span>
+                    )}
+                    {activeTab === 'submitted' && (
+                      <span className="px-2 py-0.5 rounded-full bg-slate-100 text-slate-700 border border-slate-200 text-[10px] font-bold">
+                        {claim.item?.type === 'lost'
+                          ? `Submitted for owner: ${claim.item?.owner?.name || 'Owner'}`
+                          : `Submitted for finder: ${claim.item?.owner?.name || 'Finder'}`}
                       </span>
                     )}
                   </div>
@@ -186,7 +204,9 @@ const ClaimsPage = () => {
                   </h3>
 
                   <p className="text-xs text-slate-600 line-clamp-2 mt-1 bg-slate-50 p-2.5 rounded-xl border border-slate-100">
-                    <span className="font-semibold text-slate-700">Proof Submitted: </span>
+                    <span className="font-semibold text-slate-700">
+                      {claim.item?.type === 'lost' ? "Finder's Message & Details: " : 'Proof Submitted: '}
+                    </span>
                     "{claim.explanation}"
                   </p>
                 </div>
@@ -213,28 +233,42 @@ const ClaimsPage = () => {
                     ) : (
                       <MessageSquare className="w-4 h-4 mr-1.5" />
                     )}
-                    <span>Message Claimant ({claim.claimant?.name || 'User'})</span>
+                    <span>
+                      Message {claim.item?.type === 'lost' ? 'Finder' : 'Claimant'} ({claim.claimant?.name || 'User'})
+                    </span>
                   </button>
                 ) : (
-                  claim.status === 'approved' && (
-                    <Link
-                      to="/conversations"
-                      className="inline-flex items-center px-4 py-2.5 bg-blue-600 hover:bg-blue-700 active:scale-95 text-white text-xs font-bold rounded-xl shadow-sm transition whitespace-nowrap"
-                    >
+                  <button
+                    type="button"
+                    onClick={() =>
+                      handleStartMessage(
+                        claim,
+                        claim.item?.owner?._id || claim.item?.owner,
+                        claim.item?.title
+                      )
+                    }
+                    disabled={startingChatId === claim._id}
+                    className="inline-flex items-center px-4 py-2.5 bg-teal-600 hover:bg-teal-700 active:scale-95 text-white text-xs font-bold rounded-xl shadow-sm transition whitespace-nowrap"
+                  >
+                    {startingChatId === claim._id ? (
+                      <Loader2 className="w-4 h-4 mr-1.5 animate-spin" />
+                    ) : (
                       <MessageSquare className="w-4 h-4 mr-1.5" />
-                      <span>Message Finder</span>
-                    </Link>
-                  )
+                    )}
+                    <span>
+                      Message {claim.item?.type === 'lost' ? 'Owner' : 'Finder'} ({claim.item?.owner?.name || 'User'})
+                    </span>
+                  </button>
                 )}
 
-                {/* 2. Review Claim Link (Only show to the Finder on received claims, NOT to the claimant) */}
+                {/* 2. Review Claim Link (Only show to the Receiver / Item Owner on received claims) */}
                 {activeTab === 'received' && (
                   <Link
                     to={`/claims/${claim._id}`}
                     className="inline-flex items-center px-4 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold rounded-xl transition whitespace-nowrap"
                   >
                     <ShieldCheck className="w-4 h-4 mr-1.5 text-slate-500" />
-                    <span>View Claim & Proof</span>
+                    <span>View {claim.item?.type === 'lost' ? 'Found Report' : 'Claim & Proof'}</span>
                   </Link>
                 )}
               </div>

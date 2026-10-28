@@ -80,12 +80,17 @@ export const submitClaim = async (req, res, next) => {
       req,
     });
 
-    // Notify item owner of new claim
+    // Notify item owner of new claim or found report
+    const isLostItem = item.type === 'lost';
     await createNotification({
       recipient: item.owner,
       type: 'new_claim',
-      title: `New Ownership Claim on "${item.title}"`,
-      message: `${req.user.name} submitted an ownership claim with supporting evidence for review.`,
+      title: isLostItem
+        ? `Someone Found Your Item "${item.title}"!`
+        : `New Ownership Claim on "${item.title}"`,
+      message: isLostItem
+        ? `${req.user.name} reported that they found your lost item "${item.title}" and sent you details and a personal message. Click to view in Claims and coordinate safe return.`
+        : `${req.user.name} submitted an ownership claim with supporting evidence for review.`,
       relatedItem: item._id,
       relatedClaim: claim._id,
       sendEmailNotification: true,
@@ -93,7 +98,9 @@ export const submitClaim = async (req, res, next) => {
 
     res.status(201).json({
       success: true,
-      message: 'Your claim has been submitted successfully for verification',
+      message: isLostItem
+        ? 'Your found report has been submitted to the owner'
+        : 'Your claim has been submitted successfully for verification',
       claim,
     });
   } catch (error) {
@@ -105,9 +112,12 @@ export const submitClaim = async (req, res, next) => {
 // @route   GET /api/claims/mine
 export const getMyClaims = async (req, res, next) => {
   try {
-    // 1. Claims submitted by this user to recover their items
+    // 1. Claims submitted by this user (claims on found items or reports on lost items)
     const submittedClaimsRaw = await Claim.find({ claimant: req.user._id })
-      .populate('item')
+      .populate({
+        path: 'item',
+        populate: { path: 'owner', select: 'name email avatar phone' },
+      })
       .populate('reviewer', 'name')
       .sort({ createdAt: -1 });
 
@@ -288,9 +298,12 @@ export const updateClaimStatus = async (req, res, next) => {
         participants: { $all: [claim.claimant, claim.item.owner] },
       });
 
-      const approvalNote = `🎉 System Notice: Ownership claim on "${claim.item.title}" has been verified and APPROVED by ${
-        isAdmin ? 'the Administrator' : 'the finder'
-      }. You can now safely communicate here to coordinate the item handover on campus (recommended handover point: Campus Security Desk or Student Union).`;
+      const isLostItem = claim.item.type === 'lost';
+      const approvalNote = isLostItem
+        ? `🎉 System Notice: Lost item report for "${claim.item.title}" has been verified and confirmed with the finder. You can now safely communicate here to coordinate the safe return on campus (recommended meetup: Campus Security Desk or Student Union).`
+        : `🎉 System Notice: Ownership claim on "${claim.item.title}" has been verified and APPROVED by ${
+            isAdmin ? 'the Administrator' : 'the finder'
+          }. You can now safely communicate here to coordinate the item handover on campus (recommended handover point: Campus Security Desk or Student Union).`;
 
       if (!conversation) {
         conversation = await Conversation.create({

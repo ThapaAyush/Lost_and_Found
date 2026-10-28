@@ -15,7 +15,7 @@ import {
   MessageSquare,
   MapPin,
 } from 'lucide-react';
-import { claimAPI, itemAPI } from '../services/api';
+import { claimAPI, itemAPI, conversationAPI } from '../services/api';
 import { useAuth } from '../context/AuthContext';
 import StatusBadge from '../components/StatusBadge';
 import LoadingSpinner from '../components/LoadingSpinner';
@@ -124,6 +124,24 @@ const ClaimDetailsPage = () => {
       alert(err.message || 'Failed to withdraw claim');
     } finally {
       setWithdrawing(false);
+    }
+  };
+
+  const handleStartMessage = async () => {
+    const targetUserId = isClaimant
+      ? claim.item?.owner?._id || claim.item?.owner
+      : claim.claimant?._id;
+    if (!targetUserId) return;
+    try {
+      await conversationAPI.createOrGetConversation({
+        itemId: claim.item?._id,
+        recipientId: targetUserId,
+        subject: `Regarding ${claim.item?.title || 'item'}`,
+        initialMessage: `Hello! Reaching out regarding "${claim.item?.title}". Let's coordinate safe handover on campus.`,
+      });
+      navigate('/conversations');
+    } catch (err) {
+      navigate('/conversations');
     }
   };
 
@@ -246,42 +264,54 @@ const ClaimDetailsPage = () => {
           </div>
           <div>
             <span className="text-[10px] font-bold text-blue-600 uppercase tracking-wider">
-              Item Under Claim
+              {claim.item?.type === 'lost' ? 'Lost Item Under Recovery' : 'Item Under Claim'}
             </span>
             <h2 className="text-base sm:text-lg font-black text-slate-900">{claim.item?.title}</h2>
             <p className="text-xs text-slate-500">
-              Found at: {claim.item?.locationDescription} • Date: {formatDate(claim.item?.incidentDate)}
+              Location: {claim.item?.locationDescription} • Date: {formatDate(claim.item?.incidentDate)}
             </p>
           </div>
         </div>
 
-        <Link
-          to={`/items/${claim.item?._id}`}
-          className="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold rounded-xl transition"
-        >
-          View Full Item Listing
-        </Link>
+        <div className="flex flex-wrap items-center gap-2">
+          <button
+            type="button"
+            onClick={handleStartMessage}
+            className="inline-flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold rounded-xl shadow-sm transition"
+          >
+            <MessageSquare className="w-4 h-4 mr-1.5" />
+            Message {isClaimant ? (claim.item?.type === 'lost' ? 'Owner' : 'Finder') : (claim.item?.type === 'lost' ? 'Finder' : 'Claimant')}
+          </button>
+          <Link
+            to={`/items/${claim.item?._id}`}
+            className="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold rounded-xl transition"
+          >
+            View Listing
+          </Link>
+        </div>
       </div>
 
       {/* Claim Evidence Details */}
       <div className="bg-white rounded-3xl border border-slate-200 p-6 sm:p-8 shadow-sm space-y-6">
         <div className="flex items-center justify-between border-b border-slate-100 pb-4">
           <div>
-            <h3 className="text-base font-bold text-slate-900">Claimant Ownership Proof</h3>
+            <h3 className="text-base font-bold text-slate-900">
+              {claim.item?.type === 'lost' ? "Finder's Report & Personal Message" : 'Claimant Ownership Proof'}
+            </h3>
             <p className="text-xs text-slate-400">
               Submitted by {claim.claimant?.name} • {formatTimeAgo(claim.createdAt)}
             </p>
           </div>
           <span className="inline-flex items-center text-xs text-slate-600 bg-slate-50 px-3 py-1 rounded-full border border-slate-200">
             <Lock className="w-3.5 h-3.5 mr-1 text-blue-600" />
-            Confidential Evidence
+            Confidential Details
           </span>
         </div>
 
         {/* Ownership Explanation */}
         <div className="space-y-1.5">
           <h4 className="text-xs font-bold text-slate-700 uppercase tracking-wider">
-            Statement of Ownership
+            {claim.item?.type === 'lost' ? 'Where & When Found / Message to Owner' : 'Statement of Ownership'}
           </h4>
           <p className="text-sm text-slate-700 whitespace-pre-line leading-relaxed bg-slate-50 p-4 rounded-2xl border border-slate-100">
             {claim.explanation}
@@ -292,7 +322,7 @@ const ClaimDetailsPage = () => {
         {claim.secretIdentifiers && (
           <div className="space-y-1.5">
             <h4 className="text-xs font-bold text-slate-700 uppercase tracking-wider">
-              Secret Identifiers / Private Clues
+              {claim.item?.type === 'lost' ? 'Location Details & Distinguishing Notes' : 'Secret Identifiers / Private Clues'}
             </h4>
             <p className="text-sm text-slate-800 bg-slate-50 p-4 rounded-2xl border border-slate-200 font-mono">
               {claim.secretIdentifiers}
@@ -304,7 +334,7 @@ const ClaimDetailsPage = () => {
         {claim.privateEvidence && claim.privateEvidence.length > 0 && (
           <div className="space-y-2">
             <h4 className="text-xs font-bold text-slate-700 uppercase tracking-wider">
-              Supporting Proof Documents / Receipts / Photos ({claim.privateEvidence.length})
+              {claim.item?.type === 'lost' ? 'Photos of Found Item' : 'Supporting Proof Documents / Receipts / Photos'} ({claim.privateEvidence.length})
             </h4>
             <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
               {claim.privateEvidence.map((url, idx) => (
@@ -330,26 +360,33 @@ const ClaimDetailsPage = () => {
         )}
       </div>
 
-      {/* Reviewer / Decision Panel (For Item Finder or Administrator) */}
+      {/* Reviewer / Decision Panel (For Item Owner or Administrator) */}
       {canReview && (
         <div className="bg-white rounded-3xl border border-slate-200 p-6 sm:p-8 shadow-sm space-y-4">
           <h3 className="text-base font-bold text-slate-900 border-b border-slate-100 pb-3">
-            Admin / Manager Verification & Review
+            {claim.item?.type === 'lost'
+              ? 'Owner Review & Handover Coordination'
+              : 'Admin / Manager Verification & Review'}
           </h3>
           <p className="text-xs text-slate-500">
-            Verify the claimant's proof and secret identifiers above against the item details. If satisfied,
-            approve the claim to unlock direct in-app messaging and coordinate the handover.
+            {claim.item?.type === 'lost'
+              ? "Review the finder's details and message above. If this is your item, approve to connect and coordinate physical return on campus, or message them directly."
+              : "Verify the claimant's proof and secret identifiers above against the item details. If satisfied, approve the claim to unlock direct in-app messaging and coordinate the handover."}
           </p>
 
           <div>
             <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
-              Review Notes (visible to claimant)
+              Review Notes (visible to {claim.item?.type === 'lost' ? 'finder' : 'claimant'})
             </label>
             <textarea
               rows={3}
               value={reviewNotes}
               onChange={(e) => setReviewNotes(e.target.value)}
-              placeholder="e.g. Serial number verified against student registry. Claim approved..."
+              placeholder={
+                claim.item?.type === 'lost'
+                  ? 'e.g. Thank you! That is indeed my lost item. Let’s meet at the Security Desk...'
+                  : 'e.g. Serial number verified against student registry. Claim approved...'
+              }
               className="w-full px-4 py-2.5 bg-slate-50 focus:bg-white text-xs border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/20"
             />
           </div>
@@ -362,14 +399,23 @@ const ClaimDetailsPage = () => {
               className="inline-flex items-center px-5 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs rounded-xl shadow-sm transition disabled:opacity-50"
             >
               <CheckCircle2 className="w-4 h-4 mr-1.5" />
-              Approve Claim & Unlock Chat
+              {claim.item?.type === 'lost' ? 'Confirm This Is My Item & Unlock Handover' : 'Approve Claim & Unlock Chat'}
+            </button>
+
+            <button
+              type="button"
+              onClick={handleStartMessage}
+              className="inline-flex items-center px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs rounded-xl shadow-sm transition"
+            >
+              <MessageSquare className="w-4 h-4 mr-1.5" />
+              Message {claim.item?.type === 'lost' ? 'Finder' : 'Claimant'}
             </button>
 
             <button
               type="button"
               disabled={submitting}
               onClick={() => handleDecision('under_review')}
-              className="inline-flex items-center px-4 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs rounded-xl shadow-sm transition disabled:opacity-50"
+              className="inline-flex items-center px-4 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs rounded-xl shadow-sm transition disabled:opacity-50"
             >
               <Clock className="w-4 h-4 mr-1.5" />
               Mark Under Review
@@ -382,7 +428,7 @@ const ClaimDetailsPage = () => {
               className="inline-flex items-center px-4 py-2.5 bg-rose-600 hover:bg-rose-700 text-white font-bold text-xs rounded-xl shadow-sm transition disabled:opacity-50"
             >
               <XCircle className="w-4 h-4 mr-1.5" />
-              Reject Claim
+              {claim.item?.type === 'lost' ? 'Not My Item (Decline)' : 'Reject Claim'}
             </button>
           </div>
         </div>
