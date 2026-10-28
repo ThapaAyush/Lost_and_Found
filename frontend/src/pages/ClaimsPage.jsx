@@ -227,14 +227,16 @@ const ClaimsPage = () => {
                   )
                 )}
 
-                {/* 2. Review Claim Link */}
-                <Link
-                  to={`/claims/${claim._id}`}
-                  className="inline-flex items-center px-4 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold rounded-xl transition whitespace-nowrap"
-                >
-                  <ShieldCheck className="w-4 h-4 mr-1.5 text-slate-500" />
-                  <span>View Claim & Proof</span>
-                </Link>
+                {/* 2. Review Claim Link (Only show to the Finder on received claims, NOT to the claimant) */}
+                {activeTab === 'received' && (
+                  <Link
+                    to={`/claims/${claim._id}`}
+                    className="inline-flex items-center px-4 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold rounded-xl transition whitespace-nowrap"
+                  >
+                    <ShieldCheck className="w-4 h-4 mr-1.5 text-slate-500" />
+                    <span>View Claim & Proof</span>
+                  </Link>
+                )}
               </div>
             </div>
           ))}
