@@ -148,6 +148,7 @@ const PotentialMatchesPage = () => {
                   <MatchCard
                     key={idx}
                     matchCandidate={cand}
+                    layout="horizontal"
                     onClaim={(item) => openClaimModal(item)}
                   />
                 ))}
