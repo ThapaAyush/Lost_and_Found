@@ -4,7 +4,8 @@ import Item from '../models/Item.js';
 const STOP_WORDS = new Set([
   'a', 'an', 'the', 'and', 'or', 'in', 'on', 'at', 'to', 'for', 'with', 'by', 'from',
   'of', 'my', 'is', 'was', 'it', 'that', 'this', 'near', 'around', 'about', 'some',
-  'please', 'help', 'lost', 'found', 'item', 'has', 'have', 'had', 'been', 'there',
+  'please', 'help', 'lost', 'found', 'item', 'items', 'has', 'have', 'had', 'been', 'there',
+  'very', 'much', 'just', 'need', 'want', 'anyone', 'someone',
 ]);
 
 const tokenize = (text) => {
@@ -13,60 +14,110 @@ const tokenize = (text) => {
     .toLowerCase()
     .replace(/[^a-z0-9\s]/g, ' ')
     .split(/\s+/)
-    .filter((word) => word.length > 2 && !STOP_WORDS.has(word));
+    .filter((word) => word.length >= 2 && !STOP_WORDS.has(word));
 };
 
 export const calculateMatchScore = (sourceItem, targetItem) => {
+  // If items are not opposite types (e.g. both are lost or both are found), no match
+  if (sourceItem.type === targetItem.type) {
+    return { score: 0, reasons: [] };
+  }
+
   let score = 0;
   const reasons = [];
 
-  // 1. Category match (Weight: 30%)
-  if (sourceItem.category && targetItem.category && sourceItem.category === targetItem.category) {
+  // Extract cleaned tokens from titles and descriptions
+  const sourceTitleTokens = tokenize(sourceItem.title);
+  const targetTitleTokens = tokenize(targetItem.title);
+
+  const sTitleNorm = (sourceItem.title || '').trim().toLowerCase();
+  const tTitleNorm = (targetItem.title || '').trim().toLowerCase();
+
+  const sourceDescTokens = tokenize(
+    `${sourceItem.description || ''} ${sourceItem.distinguishingFeatures || ''}`
+  );
+  const targetDescTokens = tokenize(
+    `${targetItem.description || ''} ${targetItem.distinguishingFeatures || ''}`
+  );
+
+  // Check 1: Title Direct Overlap or Substring
+  const commonTitleTokens = sourceTitleTokens.filter((t) => targetTitleTokens.includes(t));
+  const isExactTitle = sTitleNorm && tTitleNorm && sTitleNorm === tTitleNorm;
+  const isSubstringTitle =
+    (sTitleNorm.length >= 3 && tTitleNorm.includes(sTitleNorm)) ||
+    (tTitleNorm.length >= 3 && sTitleNorm.includes(tTitleNorm));
+
+  // Check 2: Brand Overlap
+  const sBrand = (sourceItem.brand || '').trim().toLowerCase();
+  const tBrand = (targetItem.brand || '').trim().toLowerCase();
+  const isExactBrand = sBrand && tBrand && sBrand === tBrand;
+  const isBrandInTitle =
+    (sBrand && sBrand.length >= 2 && (tTitleNorm.includes(sBrand) || targetDescTokens.includes(sBrand))) ||
+    (tBrand && tBrand.length >= 2 && (sTitleNorm.includes(tBrand) || sourceDescTokens.includes(tBrand)));
+
+  // Check 3: Description & Distinguishing feature keyword overlap
+  const allSourceTokens = new Set([...sourceTitleTokens, ...sourceDescTokens]);
+  const allTargetTokens = new Set([...targetTitleTokens, ...targetDescTokens]);
+  const allSharedTokens = [...allSourceTokens].filter((t) => allTargetTokens.has(t));
+
+  // GATE CHECK: Must have an actual substantive connection!
+  // If there is NO title keyword match, NO title substring, NO brand match, and fewer than 2 shared keywords:
+  // These are two completely unrelated items (e.g. "hari" mask vs "Sony Headphones"). Score MUST be 0!
+  const hasSubstantiveMatch =
+    isExactTitle ||
+    isSubstringTitle ||
+    commonTitleTokens.length > 0 ||
+    isExactBrand ||
+    isBrandInTitle ||
+    allSharedTokens.length >= 2;
+
+  if (!hasSubstantiveMatch) {
+    return { score: 0, reasons: [] };
+  }
+
+  // 1. Title Similarity (Weight: up to 35%)
+  if (isExactTitle) {
+    score += 35;
+    reasons.push(`Exact item title match: "${sourceItem.title}" (+35%)`);
+  } else if (isSubstringTitle) {
     score += 30;
-    reasons.push(`Exact category match: "${sourceItem.category}" (+30%)`);
+    reasons.push(`Item name directly matches (+30%)`);
+  } else if (commonTitleTokens.length > 0) {
+    const titleScore = Math.min(28, 15 + commonTitleTokens.length * 6);
+    score += titleScore;
+    reasons.push(
+      `Shared title keywords (${commonTitleTokens.slice(0, 3).join(', ')}) (+${titleScore}%)`
+    );
   }
 
-  // 2. Title & Description keyword similarity (Weight: 25%)
-  const sourceTokens = new Set([
-    ...tokenize(sourceItem.title),
-    ...tokenize(sourceItem.description),
-    ...tokenize(sourceItem.distinguishingFeatures),
-  ]);
-
-  const targetTokens = new Set([
-    ...tokenize(targetItem.title),
-    ...tokenize(targetItem.description),
-    ...tokenize(targetItem.distinguishingFeatures),
-  ]);
-
-  if (sourceTokens.size > 0 && targetTokens.size > 0) {
-    const commonTokens = [...sourceTokens].filter((t) => targetTokens.has(t));
-    if (commonTokens.length > 0) {
-      // Overlap ratio scaled to 25 points
-      const ratio = commonTokens.length / Math.min(sourceTokens.size, targetTokens.size);
-      const textScore = Math.min(25, Math.round(ratio * 25));
-      score += textScore;
-      reasons.push(
-        `Shared keywords (${commonTokens.slice(0, 4).join(', ')}) (+${textScore}%)`
-      );
-    }
+  // 2. Keyword & Description Overlap (Weight: up to 20%)
+  if (allSharedTokens.length > 0) {
+    const kwScore = Math.min(20, allSharedTokens.length * 5);
+    score += kwScore;
+    reasons.push(
+      `Shared keywords (${allSharedTokens.slice(0, 4).join(', ')}) (+${kwScore}%)`
+    );
   }
 
-  // 3. Brand match (Weight: 15%)
-  if (sourceItem.brand && targetItem.brand) {
-    if (sourceItem.brand.trim().toLowerCase() === targetItem.brand.trim().toLowerCase()) {
-      score += 15;
-      reasons.push(`Matching brand: "${sourceItem.brand}" (+15%)`);
-    }
-  } else if (sourceItem.brand && targetItem.title.toLowerCase().includes(sourceItem.brand.toLowerCase())) {
-    score += 10;
-    reasons.push(`Brand "${sourceItem.brand}" mentioned in listing (+10%)`);
-  } else if (targetItem.brand && sourceItem.title.toLowerCase().includes(targetItem.brand.toLowerCase())) {
-    score += 10;
-    reasons.push(`Brand "${targetItem.brand}" mentioned in listing (+10%)`);
+  // 3. Brand Match (Weight: up to 20%)
+  if (isExactBrand) {
+    score += 20;
+    reasons.push(`Exact brand match: "${sourceItem.brand}" (+20%)`);
+  } else if (isBrandInTitle) {
+    score += 15;
+    reasons.push(`Brand "${sBrand || tBrand}" confirmed in report (+15%)`);
   }
 
-  // 4. Color match (Weight: 10%)
+  // 4. Category Match (Weight: 15%)
+  if (sourceItem.category && targetItem.category && sourceItem.category === targetItem.category) {
+    score += 15;
+    reasons.push(`Matching category: "${sourceItem.category}" (+15%)`);
+  } else {
+    // Cross-category penalty
+    score -= 10;
+  }
+
+  // 5. Color Match (Weight: up to 10%)
   if (sourceItem.color && targetItem.color) {
     const sourceColors = sourceItem.color.toLowerCase().split(/[,\s/]+/);
     const targetColors = targetItem.color.toLowerCase().split(/[,\s/]+/);
@@ -75,37 +126,9 @@ export const calculateMatchScore = (sourceItem, targetItem) => {
       score += 10;
       reasons.push(`Matching color: "${matchedColors.join(', ')}" (+10%)`);
     }
-  } else if (
-    sourceItem.color &&
-    (targetItem.description.toLowerCase().includes(sourceItem.color.toLowerCase()) ||
-      targetItem.title.toLowerCase().includes(sourceItem.color.toLowerCase()))
-  ) {
-    score += 6;
-    reasons.push(`Color "${sourceItem.color}" referenced (+6%)`);
   }
 
-  // 5. Date proximity (Weight: 10%)
-  if (sourceItem.incidentDate && targetItem.incidentDate) {
-    const sourceDate = new Date(sourceItem.incidentDate).getTime();
-    const targetDate = new Date(targetItem.incidentDate).getTime();
-    const diffDays = Math.abs(targetDate - sourceDate) / (1000 * 60 * 60 * 24);
-
-    if (diffDays <= 2) {
-      score += 10;
-      reasons.push(`Dates within 2 days (+10%)`);
-    } else if (diffDays <= 7) {
-      score += 7;
-      reasons.push(`Dates within 1 week (+7%)`);
-    } else if (diffDays <= 14) {
-      score += 4;
-      reasons.push(`Dates within 2 weeks (+4%)`);
-    } else if (diffDays <= 30) {
-      score += 2;
-      reasons.push(`Dates within 1 month (+2%)`);
-    }
-  }
-
-  // 6. Location similarity (Weight: 10%)
+  // 6. Location Landmark Proximity (Weight: up to 10%)
   if (sourceItem.locationDescription && targetItem.locationDescription) {
     const loc1Tokens = tokenize(sourceItem.locationDescription);
     const loc2Tokens = tokenize(targetItem.locationDescription);
@@ -116,19 +139,39 @@ export const calculateMatchScore = (sourceItem, targetItem) => {
     }
   }
 
+  // 7. Date Proximity (Weight: up to 5%)
+  if (sourceItem.incidentDate && targetItem.incidentDate) {
+    const sourceDate = new Date(sourceItem.incidentDate).getTime();
+    const targetDate = new Date(targetItem.incidentDate).getTime();
+    const diffDays = Math.abs(targetDate - sourceDate) / (1000 * 60 * 60 * 24);
+
+    if (diffDays <= 3) {
+      score += 5;
+      reasons.push(`Dates within 3 days (+5%)`);
+    } else if (diffDays <= 7) {
+      score += 3;
+      reasons.push(`Dates within 1 week (+3%)`);
+    }
+  }
+
   // Cap score between 0 and 100
   const totalScore = Math.min(100, Math.max(0, score));
 
+  // Must achieve at least 35% match score to be presented as a genuine candidate
+  if (totalScore < 35) {
+    return { score: 0, reasons: [] };
+  }
+
   return {
     score: totalScore,
-    reasons: reasons.length > 0 ? reasons : ['General category resemblance'],
+    reasons: reasons.length > 0 ? reasons : ['Item attributes match'],
   };
 };
 
 /**
  * Find candidate matches for a specific item
  */
-export const findMatchesForItem = async (itemId, minScore = 20) => {
+export const findMatchesForItem = async (itemId, minScore = 35) => {
   const sourceItem = await Item.findById(itemId);
   if (!sourceItem) return [];
 
@@ -164,7 +207,7 @@ export const findMatchesForItem = async (itemId, minScore = 20) => {
 /**
  * Find all high-relevance matches for the current user's active reports
  */
-export const findMatchesForUser = async (userId, minScore = 25) => {
+export const findMatchesForUser = async (userId, minScore = 35) => {
   const userItems = await Item.find({
     owner: userId,
     status: { $in: ['lost', 'found'] },
@@ -188,7 +231,7 @@ export const findMatchesForUser = async (userId, minScore = 25) => {
 /**
  * Find all active community cross-matches (lost items matching found items)
  */
-export const findCommunityMatches = async (minScore = 20, limit = 20) => {
+export const findCommunityMatches = async (minScore = 35, limit = 20) => {
   const lostItems = await Item.find({
     type: 'lost',
     status: 'lost',

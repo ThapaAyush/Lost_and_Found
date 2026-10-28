@@ -4,7 +4,7 @@ import { findMatchesForUser, findCommunityMatches } from '../services/matchingSe
 // @route   GET /api/matches
 export const getMatches = async (req, res, next) => {
   try {
-    const minScore = req.query.minScore ? parseInt(req.query.minScore, 10) : 20;
+    const minScore = req.query.minScore ? parseInt(req.query.minScore, 10) : 35;
     const matches = await findMatchesForUser(req.user._id, minScore);
 
     res.status(200).json({
@@ -21,7 +21,7 @@ export const getMatches = async (req, res, next) => {
 // @route   GET /api/matches/community
 export const getCommunityMatches = async (req, res, next) => {
   try {
-    const minScore = req.query.minScore ? parseInt(req.query.minScore, 10) : 20;
+    const minScore = req.query.minScore ? parseInt(req.query.minScore, 10) : 35;
     const limit = req.query.limit ? parseInt(req.query.limit, 10) : 20;
     const matches = await findCommunityMatches(minScore, limit);
 

@@ -28,7 +28,7 @@ const PotentialMatchesPage = () => {
     setLoading(true);
     setError(null);
     try {
-      const res = await matchAPI.getMatches({ minScore: 20 });
+      const res = await matchAPI.getMatches({ minScore: 35 });
       if (res.data?.success) {
         setMatchGroups(res.data.matches);
       }
@@ -128,9 +128,16 @@ const PotentialMatchesPage = () => {
                         : 'bg-blue-50 text-blue-700 border-blue-200'
                     }`}
                   >
-                    Your {group.myReport.type} Report
+                    Your {group.myReport.type === 'lost' ? 'Lost' : 'Found'} Report
                   </span>
-                  <h3 className="text-base font-bold text-slate-900">{group.myReport.title}</h3>
+                  <div>
+                    <h3 className="text-base font-bold text-slate-900">{group.myReport.title}</h3>
+                    <p className="text-[11px] text-slate-500">
+                      {group.myReport.type === 'lost'
+                        ? `Candidate found items matching your lost report (${group.candidateMatches.length} match${group.candidateMatches.length > 1 ? 'es' : ''})`
+                        : `Candidate lost reports matching your found item (${group.candidateMatches.length} match${group.candidateMatches.length > 1 ? 'es' : ''})`}
+                    </p>
+                  </div>
                 </div>
 
                 <Link
@@ -159,10 +166,10 @@ const PotentialMatchesPage = () => {
       ) : (
         <EmptyState
           icon={Sparkles}
-          title="No candidate matches discovered yet"
-          description="As more lost and found reports are published across campus, potential matches will automatically appear here."
-          actionText="Browse Found Belongings"
-          actionLink="/found-items"
+          title="No candidate matches found"
+          description="When an item is reported that genuinely matches your lost or found report (by title, keywords, brand, and details), it will automatically appear here with its match confidence percentage. If there are no matches, nothing is displayed."
+          actionText="Report a Lost Item"
+          actionLink="/report-lost"
         />
       )}
 

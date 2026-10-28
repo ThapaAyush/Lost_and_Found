@@ -136,13 +136,21 @@ const MatchCard = ({ matchCandidate, match, layout = 'vertical', onClaim, onCont
             <ArrowRight className="w-3.5 h-3.5 ml-1" />
           </Link>
 
-          {item.type === 'found' && (
+          {item.type === 'found' ? (
             <Link
               to={`/items/${item._id}`}
               className="w-full sm:w-auto inline-flex items-center justify-center px-4 py-2.5 text-xs font-bold text-white bg-teal-600 hover:bg-teal-700 rounded-xl transition shadow-sm whitespace-nowrap"
             >
               <ShieldCheck className="w-3.5 h-3.5 mr-1" />
               Claim Ownership
+            </Link>
+          ) : (
+            <Link
+              to={`/items/${item._id}`}
+              className="w-full sm:w-auto inline-flex items-center justify-center px-4 py-2.5 text-xs font-bold text-white bg-blue-600 hover:bg-blue-700 rounded-xl transition shadow-sm whitespace-nowrap"
+            >
+              <Sparkles className="w-3.5 h-3.5 mr-1" />
+              I Found This Item
             </Link>
           )}
         </div>
@@ -239,13 +247,21 @@ const MatchCard = ({ matchCandidate, match, layout = 'vertical', onClaim, onCont
             <ArrowRight className="w-3.5 h-3.5 ml-1" />
           </Link>
 
-          {item.type === 'found' && (
+          {item.type === 'found' ? (
             <Link
               to={`/items/${item._id}`}
               className="inline-flex items-center px-4 py-2 text-xs font-bold text-white bg-teal-600 hover:bg-teal-700 rounded-xl transition shadow-sm"
             >
               <ShieldCheck className="w-3.5 h-3.5 mr-1" />
               Claim Ownership
+            </Link>
+          ) : (
+            <Link
+              to={`/items/${item._id}`}
+              className="inline-flex items-center px-4 py-2 text-xs font-bold text-white bg-blue-600 hover:bg-blue-700 rounded-xl transition shadow-sm"
+            >
+              <Sparkles className="w-3.5 h-3.5 mr-1" />
+              I Found This Item
             </Link>
           )}
         </div>

@@ -542,7 +542,7 @@ export const getItemMatches = async (req, res, next) => {
       return res.status(404).json({ success: false, message: 'Item listing not found' });
     }
 
-    const matches = await findMatchesForItem(item._id, 15);
+    const matches = await findMatchesForItem(item._id, 35);
 
     res.status(200).json({
       success: true,
