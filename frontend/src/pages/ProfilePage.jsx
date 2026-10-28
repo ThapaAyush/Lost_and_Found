@@ -117,7 +117,7 @@ const ProfilePage = () => {
     <div className="max-w-4xl mx-auto space-y-6 sm:space-y-8 animate-in fade-in duration-150">
       {/* Profile Header Card */}
       <div className="bg-white rounded-3xl border border-slate-200/80 p-6 sm:p-8 shadow-card flex flex-col sm:flex-row items-center sm:items-start space-y-5 sm:space-y-0 sm:space-x-6 relative overflow-hidden">
-        <div className="absolute top-0 right-0 w-64 h-32 bg-gradient-to-bl from-blue-100/40 via-purple-100/30 to-transparent pointer-events-none rounded-bl-full" />
+        <div className="absolute top-0 right-0 w-64 h-32 bg-gradient-to-bl from-blue-100/30 via-teal-100/20 to-transparent pointer-events-none rounded-bl-full" />
 
         {/* Avatar with Camera Overlay */}
         <div className="relative group shrink-0">

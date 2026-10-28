@@ -9,12 +9,12 @@ const MatchCard = ({ matchCandidate, match, layout = 'vertical', onClaim, onCont
 
   if (!item) return null;
 
-  // Modern Purple/Blue Confidence Meter
-  let scoreBadgeClass = 'text-purple-700 bg-purple-50 border-purple-200';
-  let barColorClass = 'bg-purple-600';
+  // Soothing Sage Teal / Ocean Blue Confidence Meter
+  let scoreBadgeClass = 'text-teal-700 bg-teal-50 border-teal-200';
+  let barColorClass = 'bg-teal-600';
   if (score >= 70) {
-    scoreBadgeClass = 'text-emerald-700 bg-emerald-50 border-emerald-200';
-    barColorClass = 'bg-emerald-600';
+    scoreBadgeClass = 'text-teal-800 bg-teal-50 border-teal-300';
+    barColorClass = 'bg-teal-600';
   } else if (score < 40) {
     scoreBadgeClass = 'text-blue-700 bg-blue-50 border-blue-200';
     barColorClass = 'bg-blue-600';
@@ -23,7 +23,7 @@ const MatchCard = ({ matchCandidate, match, layout = 'vertical', onClaim, onCont
   // 1. Vertical Layout (Standard for Grid Views) - Image on Top with proper 16:10 aspect ratio
   if (layout === 'vertical') {
     return (
-      <div className="group bg-white rounded-3xl border border-slate-200/90 hover:border-purple-300 p-5 shadow-card hover:shadow-card-hover transition-all duration-300 flex flex-col justify-between h-full">
+      <div className="group bg-white rounded-3xl border border-slate-200/90 hover:border-teal-300 p-5 shadow-card hover:shadow-card-hover transition-all duration-300 flex flex-col justify-between h-full">
         <div>
           {/* Top Image with natural 16:10 aspect ratio and overlays (never vertically stretched) */}
           <div className="relative aspect-[16/10] w-full rounded-2xl overflow-hidden bg-slate-100 border border-slate-200/80 mb-4">
@@ -43,7 +43,7 @@ const MatchCard = ({ matchCandidate, match, layout = 'vertical', onClaim, onCont
             <div className="absolute top-3 left-3">
               <span
                 className={`px-3 py-1 text-[11px] font-black uppercase tracking-wider rounded-full shadow-sm ${
-                  item.type === 'lost' ? 'bg-rose-500 text-white' : 'bg-blue-600 text-white'
+                  item.type === 'lost' ? 'bg-slate-800 text-white' : 'bg-blue-600 text-white'
                 }`}
               >
                 {item.type} Report
@@ -62,7 +62,7 @@ const MatchCard = ({ matchCandidate, match, layout = 'vertical', onClaim, onCont
           </div>
 
           {/* Category & Brand */}
-          <div className="flex items-center text-xs font-semibold text-purple-700 mb-1.5 space-x-2">
+          <div className="flex items-center text-xs font-semibold text-teal-700 mb-1.5 space-x-2">
             <span>{item.category}</span>
             {item.brand && (
               <>
@@ -73,7 +73,7 @@ const MatchCard = ({ matchCandidate, match, layout = 'vertical', onClaim, onCont
           </div>
 
           {/* Title */}
-          <h4 className="text-base font-black text-slate-900 group-hover:text-purple-700 transition line-clamp-1 mb-1.5">
+          <h4 className="text-base font-black text-slate-900 group-hover:text-teal-700 transition line-clamp-1 mb-1.5">
             {item.title}
           </h4>
 
@@ -100,7 +100,7 @@ const MatchCard = ({ matchCandidate, match, layout = 'vertical', onClaim, onCont
           <div className="space-y-1 mb-4">
             <div className="flex justify-between text-[11px] font-bold text-slate-600">
               <span>Match Confidence</span>
-              <span className={score >= 70 ? 'text-emerald-700' : 'text-purple-700'}>{score}%</span>
+              <span className={score >= 70 ? 'text-teal-700' : 'text-blue-700'}>{score}%</span>
             </div>
             <div className="w-full bg-slate-100 rounded-full h-2 overflow-hidden">
               <div
@@ -112,13 +112,13 @@ const MatchCard = ({ matchCandidate, match, layout = 'vertical', onClaim, onCont
 
           {/* Matching Criteria Breakdown */}
           {reasons && reasons.length > 0 && (
-            <div className="bg-purple-50/50 p-3 rounded-2xl border border-purple-100 space-y-1.5 mb-4">
-              <p className="text-[10px] font-extrabold text-purple-900 uppercase tracking-wider">
+            <div className="bg-teal-50/50 p-3 rounded-2xl border border-teal-100/80 space-y-1.5 mb-4">
+              <p className="text-[10px] font-extrabold text-teal-900 uppercase tracking-wider">
                 Matched Attributes:
               </p>
               {reasons.slice(0, 3).map((reason, idx) => (
                 <div key={idx} className="flex items-start text-xs text-slate-700">
-                  <CheckCircle2 className="w-3.5 h-3.5 mr-1.5 text-purple-600 shrink-0 mt-0.5" />
+                  <CheckCircle2 className="w-3.5 h-3.5 mr-1.5 text-teal-600 shrink-0 mt-0.5" />
                   <span className="line-clamp-1 font-medium">{reason}</span>
                 </div>
               ))}
@@ -139,7 +139,7 @@ const MatchCard = ({ matchCandidate, match, layout = 'vertical', onClaim, onCont
           {item.type === 'found' && (
             <Link
               to={`/items/${item._id}`}
-              className="w-full sm:w-auto inline-flex items-center justify-center px-4 py-2.5 text-xs font-bold text-white bg-gradient-to-r from-purple-600 to-indigo-600 hover:from-purple-700 hover:to-indigo-700 rounded-xl transition shadow-sm whitespace-nowrap"
+              className="w-full sm:w-auto inline-flex items-center justify-center px-4 py-2.5 text-xs font-bold text-white bg-teal-600 hover:bg-teal-700 rounded-xl transition shadow-sm whitespace-nowrap"
             >
               <ShieldCheck className="w-3.5 h-3.5 mr-1" />
               Claim Ownership
@@ -152,7 +152,7 @@ const MatchCard = ({ matchCandidate, match, layout = 'vertical', onClaim, onCont
 
   // 2. Horizontal Layout (for Full-Width Row Lists)
   return (
-    <div className="bg-white rounded-3xl border border-slate-200/90 hover:border-purple-300 p-5 sm:p-6 shadow-card hover:shadow-card-hover transition-all duration-300 flex flex-col md:flex-row gap-5 items-start">
+    <div className="bg-white rounded-3xl border border-slate-200/90 hover:border-teal-300 p-5 sm:p-6 shadow-card hover:shadow-card-hover transition-all duration-300 flex flex-col md:flex-row gap-5 items-start">
       {/* Fixed size thumbnail - never stretched */}
       <div className="w-full md:w-56 h-48 rounded-2xl overflow-hidden bg-slate-100 shrink-0 border border-slate-200 relative">
         {item.images && item.images.length > 0 ? (
@@ -165,7 +165,7 @@ const MatchCard = ({ matchCandidate, match, layout = 'vertical', onClaim, onCont
         <div className="absolute top-2.5 left-2.5">
           <span
             className={`px-2.5 py-0.5 text-[10px] font-black uppercase tracking-wider rounded-full shadow-sm ${
-              item.type === 'lost' ? 'bg-rose-500 text-white' : 'bg-blue-600 text-white'
+              item.type === 'lost' ? 'bg-slate-800 text-white' : 'bg-blue-600 text-white'
             }`}
           >
             {item.type}
@@ -178,7 +178,7 @@ const MatchCard = ({ matchCandidate, match, layout = 'vertical', onClaim, onCont
         <div>
           {/* Header & Match Score */}
           <div className="flex flex-wrap items-center justify-between gap-2 mb-2">
-            <span className="text-[11px] font-bold uppercase tracking-wider text-purple-700">
+            <span className="text-[11px] font-bold uppercase tracking-wider text-teal-700">
               {item.type} Report • {item.category}
             </span>
 
@@ -215,13 +215,13 @@ const MatchCard = ({ matchCandidate, match, layout = 'vertical', onClaim, onCont
 
           {/* Matching Criteria Breakdown */}
           {reasons && reasons.length > 0 && (
-            <div className="bg-slate-50 p-3 rounded-xl border border-slate-200/80 space-y-1">
-              <p className="text-[11px] font-bold text-slate-700 uppercase tracking-wider mb-1">
+            <div className="bg-teal-50/40 p-3 rounded-xl border border-teal-100 space-y-1">
+              <p className="text-[11px] font-bold text-teal-800 uppercase tracking-wider mb-1">
                 Matched Attributes:
               </p>
               {reasons.map((reason, idx) => (
                 <div key={idx} className="flex items-start text-xs text-slate-600">
-                  <CheckCircle2 className="w-3.5 h-3.5 mr-1.5 text-purple-600 shrink-0 mt-0.5" />
+                  <CheckCircle2 className="w-3.5 h-3.5 mr-1.5 text-teal-600 shrink-0 mt-0.5" />
                   <span>{reason}</span>
                 </div>
               ))}
@@ -242,7 +242,7 @@ const MatchCard = ({ matchCandidate, match, layout = 'vertical', onClaim, onCont
           {item.type === 'found' && (
             <Link
               to={`/items/${item._id}`}
-              className="inline-flex items-center px-4 py-2 text-xs font-bold text-white bg-purple-600 hover:bg-purple-700 rounded-xl transition shadow-sm"
+              className="inline-flex items-center px-4 py-2 text-xs font-bold text-white bg-teal-600 hover:bg-teal-700 rounded-xl transition shadow-sm"
             >
               <ShieldCheck className="w-3.5 h-3.5 mr-1" />
               Claim Ownership

@@ -264,12 +264,12 @@ const ConversationsPage = () => {
                 </div>
 
                 {/* Safety Tips Banner */}
-                <div className="px-3 sm:px-4 py-2 bg-gradient-to-r from-blue-50 to-purple-50 border-b border-slate-100 text-[10px] sm:text-[11px] text-slate-600 flex items-center justify-between">
+                <div className="px-3 sm:px-4 py-2 bg-blue-50/60 border-b border-slate-100 text-[10px] sm:text-[11px] text-slate-600 flex items-center justify-between">
                   <span className="flex items-center truncate mr-2">
                     <Building2 className="w-3.5 h-3.5 mr-1.5 text-blue-600 flex-shrink-0" />
                     Meetup recommendation: Campus Security Desk or Student Union Foyer.
                   </span>
-                  <span className="font-bold text-indigo-700 hidden sm:inline whitespace-nowrap">
+                  <span className="font-bold text-blue-700 hidden sm:inline whitespace-nowrap">
                     Safe Handover
                   </span>
                 </div>
@@ -294,14 +294,14 @@ const ConversationsPage = () => {
                           }`}
                         >
                           {isSystem ? (
-                            <div className="max-w-[90%] p-3 sm:p-3.5 rounded-2xl bg-gradient-to-r from-purple-50 to-blue-50 border border-purple-200 text-xs text-purple-950 font-medium text-center shadow-sm">
+                            <div className="max-w-[90%] p-3 sm:p-3.5 rounded-2xl bg-teal-50 border border-teal-200 text-xs text-teal-900 font-medium text-center shadow-sm">
                               {msg.text}
                             </div>
                           ) : (
                             <div
                               className={`max-w-[85%] sm:max-w-[78%] px-4 py-2.5 rounded-2xl text-xs sm:text-sm leading-relaxed shadow-sm ${
                                 isMe
-                                  ? 'bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-br-none'
+                                  ? 'bg-blue-600 text-white rounded-br-none'
                                   : 'bg-white border border-slate-200 text-slate-800 rounded-bl-none'
                               }`}
                             >

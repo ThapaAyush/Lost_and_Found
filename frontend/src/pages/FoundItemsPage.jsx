@@ -137,10 +137,10 @@ const FoundItemsPage = () => {
 
       {/* Prominent Cross-Matched Lost Items Showcase in Found Section */}
       {communityMatches.length > 0 && (
-        <div className="bg-gradient-to-br from-purple-50/90 via-indigo-50/50 to-blue-50/70 border border-purple-200/90 rounded-3xl p-5 sm:p-7 space-y-4 shadow-card">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-purple-200/60 pb-4">
+        <div className="bg-teal-50/50 border border-teal-200/70 rounded-3xl p-5 sm:p-7 space-y-4 shadow-sm">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-teal-200/60 pb-4">
             <div className="flex items-center space-x-3">
-              <div className="w-10 h-10 rounded-2xl bg-gradient-to-tr from-purple-600 to-indigo-600 text-white flex items-center justify-center shrink-0 shadow-md">
+              <div className="w-10 h-10 rounded-2xl bg-teal-600 text-white flex items-center justify-center shrink-0 shadow-sm">
                 <Sparkles className="w-5 h-5" />
               </div>
               <div>
@@ -148,7 +148,7 @@ const FoundItemsPage = () => {
                   <h2 className="text-base sm:text-lg font-black text-slate-900">
                     Lost Items Matched in Found Section
                   </h2>
-                  <span className="px-2.5 py-0.5 rounded-full bg-purple-600 text-white text-[10px] font-extrabold uppercase tracking-wider">
+                  <span className="px-2.5 py-0.5 rounded-full bg-teal-600 text-white text-[10px] font-extrabold uppercase tracking-wider">
                     {communityMatches.length} Match{communityMatches.length > 1 ? 'es' : ''}
                   </span>
                 </div>
@@ -161,7 +161,7 @@ const FoundItemsPage = () => {
             <button
               type="button"
               onClick={() => setViewMode(viewMode === 'matches' ? 'all' : 'matches')}
-              className="text-xs font-bold text-purple-700 hover:text-purple-900 self-start sm:self-center flex items-center"
+              className="text-xs font-bold text-teal-700 hover:text-teal-900 self-start sm:self-center flex items-center"
             >
               {viewMode === 'matches' ? 'Show All Found Grid' : 'Expand All Matches'}
               <ArrowRight className="w-3.5 h-3.5 ml-1" />
@@ -173,11 +173,11 @@ const FoundItemsPage = () => {
             {communityMatches.slice(0, viewMode === 'matches' ? communityMatches.length : 3).map((match, idx) => (
               <div
                 key={idx}
-                className="bg-white rounded-2xl border border-purple-100 shadow-sm p-4 flex flex-col justify-between space-y-3 hover:border-purple-300 transition"
+                className="bg-white rounded-2xl border border-teal-100 shadow-sm p-4 flex flex-col justify-between space-y-3 hover:border-teal-300 transition"
               >
                 <div className="flex items-center justify-between">
-                  <span className="px-2 py-0.5 rounded-full bg-purple-100 text-purple-800 text-[10px] font-black uppercase tracking-wider flex items-center">
-                    <Sparkles className="w-3 h-3 mr-1 text-purple-600" />
+                  <span className="px-2 py-0.5 rounded-full bg-teal-50 text-teal-800 text-[10px] font-black uppercase tracking-wider flex items-center border border-teal-100">
+                    <Sparkles className="w-3 h-3 mr-1 text-teal-600" />
                     {match.score}% Confidence
                   </span>
                   <span className="text-[10px] font-bold text-slate-400">Pair #{idx + 1}</span>
@@ -185,8 +185,8 @@ const FoundItemsPage = () => {
 
                 <div className="grid grid-cols-2 gap-2 text-xs">
                   {/* Lost Item */}
-                  <div className="p-2.5 rounded-xl bg-rose-50/80 border border-rose-100">
-                    <span className="text-[9px] font-black uppercase text-rose-700 block">Lost Report</span>
+                  <div className="p-2.5 rounded-xl bg-slate-100 border border-slate-200">
+                    <span className="text-[9px] font-black uppercase text-slate-700 block">Lost Report</span>
                     <p className="font-bold text-slate-900 truncate mt-0.5">{match.lostItem?.title}</p>
                     <p className="text-[10px] text-slate-500 truncate">{match.lostItem?.category}</p>
                     <p className="text-[10px] text-slate-400 mt-1 truncate">By: {match.lostItem?.owner?.name}</p>
@@ -218,7 +218,7 @@ const FoundItemsPage = () => {
 
                   <Link
                     to={`/items/${match.foundItem?._id}`}
-                    className="inline-flex items-center px-3 py-1.5 rounded-xl bg-purple-600 hover:bg-purple-700 text-white text-xs font-bold shadow-sm transition"
+                    className="inline-flex items-center px-3 py-1.5 rounded-xl bg-teal-600 hover:bg-teal-700 text-white text-xs font-bold shadow-sm transition"
                   >
                     <ShieldCheck className="w-3.5 h-3.5 mr-1" />
                     Claim Ownership

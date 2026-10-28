@@ -199,7 +199,7 @@ const AdminUsersPage = () => {
                       <span
                         className={`px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider ${
                           u.role === 'admin'
-                            ? 'bg-purple-100 text-purple-800 border border-purple-200'
+                            ? 'bg-blue-50 text-blue-700 border border-blue-200'
                             : 'bg-slate-100 text-slate-700'
                         }`}
                       >
@@ -211,8 +211,8 @@ const AdminUsersPage = () => {
                       <span
                         className={`inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold ${
                           u.accountStatus === 'active'
-                            ? 'bg-emerald-50 text-emerald-700 border border-emerald-200'
-                            : 'bg-rose-50 text-rose-700 border border-rose-200'
+                            ? 'bg-teal-50 text-teal-700 border border-teal-200'
+                            : 'bg-slate-100 text-slate-700 border border-slate-200'
                         }`}
                       >
                         <span className="w-1.5 h-1.5 rounded-full bg-current mr-1" />

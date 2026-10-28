@@ -93,9 +93,9 @@ const AdminDashboardPage = () => {
   return (
     <div className="space-y-8 animate-in fade-in duration-150">
       {/* Top Banner */}
-      <div className="bg-gradient-to-r from-slate-900 via-indigo-950 to-purple-950 text-white rounded-3xl p-6 sm:p-8 shadow-xl flex flex-col md:flex-row md:items-center justify-between gap-4">
+      <div className="bg-slate-900 text-white rounded-3xl p-6 sm:p-8 shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <span className="px-3 py-1 rounded-full text-xs font-bold bg-white/10 text-purple-300 border border-white/20">
+          <span className="px-3 py-1 rounded-full text-xs font-bold bg-white/10 text-blue-300 border border-white/20">
             Platform Security & Governance
           </span>
           <h1 className="text-2xl sm:text-3xl font-black tracking-tight mt-2 text-white">
@@ -109,7 +109,7 @@ const AdminDashboardPage = () => {
         <div className="flex flex-wrap items-center gap-2">
           <Link
             to="/admin/claims"
-            className="px-4 py-2.5 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white text-xs font-bold rounded-xl shadow-md transition"
+            className="px-4 py-2.5 bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold rounded-xl shadow-sm transition"
           >
             Verify Pending Claims
           </Link>
@@ -130,7 +130,7 @@ const AdminDashboardPage = () => {
             <Link
               key={idx}
               to={card.link}
-              className="bg-white p-4 rounded-2xl border border-slate-200 hover:border-purple-300 shadow-sm hover:shadow-card-hover transition group flex flex-col justify-between"
+              className="bg-white p-4 rounded-2xl border border-slate-200 hover:border-blue-400 shadow-sm hover:shadow-card-hover transition group flex flex-col justify-between"
             >
               <div className="flex items-center justify-between mb-3">
                 <span className="text-[11px] font-bold text-slate-500 uppercase tracking-wider">
@@ -141,10 +141,10 @@ const AdminDashboardPage = () => {
                 </div>
               </div>
               <div className="flex items-baseline justify-between">
-                <span className="text-2xl font-black text-slate-900 group-hover:text-purple-600 transition">
+                <span className="text-2xl font-black text-slate-900 group-hover:text-blue-600 transition">
                   {card.count}
                 </span>
-                <ArrowRight className="w-3.5 h-3.5 text-slate-300 group-hover:text-purple-600 group-hover:translate-x-0.5 transition" />
+                <ArrowRight className="w-3.5 h-3.5 text-slate-300 group-hover:text-blue-600 group-hover:translate-x-0.5 transition" />
               </div>
             </Link>
           );
@@ -162,7 +162,7 @@ const AdminDashboardPage = () => {
             </div>
             <Link
               to="/admin/claims"
-              className="text-xs font-bold text-purple-600 hover:text-purple-700 inline-flex items-center"
+              className="text-xs font-bold text-blue-600 hover:text-blue-700 inline-flex items-center"
             >
               All Claims
               <ArrowRight className="w-3 h-3 ml-1" />
@@ -207,7 +207,7 @@ const AdminDashboardPage = () => {
             </div>
             <Link
               to="/admin/audit-logs"
-              className="text-xs font-bold text-purple-600 hover:text-purple-700 inline-flex items-center"
+              className="text-xs font-bold text-blue-600 hover:text-blue-700 inline-flex items-center"
             >
               Full Audit Trail
               <ArrowRight className="w-3 h-3 ml-1" />
@@ -219,7 +219,7 @@ const AdminDashboardPage = () => {
               data.recentAuditLogs.map((log) => (
                 <div key={log._id} className="py-3 px-2 flex items-start justify-between gap-3 text-xs">
                   <div>
-                    <span className="font-mono text-[10px] font-bold text-purple-700 bg-purple-50 px-2 py-0.5 rounded border border-purple-200">
+                    <span className="font-mono text-[10px] font-bold text-blue-700 bg-blue-50 px-2 py-0.5 rounded border border-blue-200">
                       {log.action}
                     </span>
                     <p className="text-slate-600 text-[11px] mt-1 font-medium">

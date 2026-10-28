@@ -51,9 +51,9 @@ const MobileBottomNav = () => {
               <Link
                 to="/report/lost"
                 onClick={() => setReportModalOpen(false)}
-                className="p-4 rounded-2xl bg-rose-50 border border-rose-100 hover:border-rose-300 transition flex flex-col items-center text-center space-y-2 tap-bounce"
+                className="p-4 rounded-2xl bg-slate-50 border border-slate-200 hover:border-slate-300 transition flex flex-col items-center text-center space-y-2 tap-bounce"
               >
-                <div className="w-11 h-11 rounded-2xl bg-rose-500 text-white flex items-center justify-center shadow-md shadow-rose-500/20">
+                <div className="w-11 h-11 rounded-2xl bg-slate-800 text-white flex items-center justify-center shadow-sm">
                   <Search className="w-5 h-5" />
                 </div>
                 <div>
@@ -117,7 +117,7 @@ const MobileBottomNav = () => {
             aria-label="Report lost or found item"
             className="flex flex-col items-center justify-center -mt-5 tap-bounce group"
           >
-            <div className="w-12 h-12 rounded-2xl bg-gradient-to-tr from-blue-600 via-indigo-600 to-purple-600 text-white flex items-center justify-center shadow-lg shadow-indigo-600/35 border-2 border-white group-hover:scale-105 transition-transform">
+            <div className="w-12 h-12 rounded-2xl bg-blue-600 text-white flex items-center justify-center shadow-md shadow-blue-500/25 border-2 border-white group-hover:scale-105 transition-transform">
               <Plus className="w-6 h-6 stroke-[2.5]" />
             </div>
             <span className="text-[10px] font-bold text-slate-700 mt-1">Report</span>

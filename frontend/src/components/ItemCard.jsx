@@ -29,7 +29,7 @@ const ItemCard = ({ item }) => {
           <span
             className={`px-3 py-1 text-[11px] font-black uppercase tracking-wider rounded-full shadow-sm ${
               item.type === 'lost'
-                ? 'bg-rose-500 text-white'
+                ? 'bg-slate-800 text-white'
                 : 'bg-blue-600 text-white'
             }`}
           >

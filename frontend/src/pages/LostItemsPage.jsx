@@ -86,7 +86,7 @@ const LostItemsPage = () => {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <div className="flex items-center space-x-2">
-            <span className="w-2.5 h-2.5 rounded-full bg-rose-500 animate-pulse" />
+            <span className="w-2.5 h-2.5 rounded-full bg-blue-600 animate-pulse" />
             <h1 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">
               Reported Lost Belongings
             </h1>
@@ -98,7 +98,7 @@ const LostItemsPage = () => {
 
         <Link
           to="/report/lost"
-          className="inline-flex items-center px-4 py-2.5 bg-rose-500 hover:bg-rose-600 text-white text-xs font-bold rounded-xl shadow-sm transition whitespace-nowrap self-start sm:self-auto"
+          className="inline-flex items-center px-4 py-2.5 bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold rounded-xl shadow-sm transition whitespace-nowrap self-start sm:self-auto"
         >
           <PlusCircle className="w-4 h-4 mr-1.5" />
           Report a Lost Item

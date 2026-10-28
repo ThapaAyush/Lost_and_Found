@@ -96,11 +96,7 @@ const Sidebar = ({ isOpen, isDesktopOpen = true, closeSidebar }) => {
                     `flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-bold transition-all ${
                       isActive
                         ? 'bg-blue-600 text-white shadow-sm shadow-blue-500/20'
-                        : link.isLost
-                        ? 'text-rose-600 hover:bg-rose-50'
-                        : link.isMatches
-                        ? 'text-purple-600 hover:bg-purple-50'
-                        : 'text-slate-600 hover:bg-slate-100 hover:text-slate-900'
+                        : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'
                     }`
                   }
                 >
@@ -111,10 +107,8 @@ const Sidebar = ({ isOpen, isDesktopOpen = true, closeSidebar }) => {
                           className={`w-4 h-4 shrink-0 ${
                             isActive
                               ? 'text-white'
-                              : link.isLost
-                              ? 'text-rose-500'
                               : link.isMatches
-                              ? 'text-purple-500'
+                              ? 'text-teal-600'
                               : 'text-slate-400'
                           }`}
                         />
@@ -123,7 +117,7 @@ const Sidebar = ({ isOpen, isDesktopOpen = true, closeSidebar }) => {
                       {link.badge && (
                         <span
                           className={`px-2 py-0.5 text-[10px] font-extrabold rounded-full shrink-0 ${
-                            isActive ? 'bg-white text-blue-600' : 'bg-blue-600 text-white'
+                            isActive ? 'bg-white text-blue-600' : 'bg-teal-600 text-white'
                           }`}
                         >
                           {link.badge}
@@ -146,12 +140,12 @@ const Sidebar = ({ isOpen, isDesktopOpen = true, closeSidebar }) => {
               className={({ isActive }) =>
                 `flex items-center space-x-3 px-3.5 py-2.5 rounded-xl text-xs font-bold transition ${
                   isActive
-                    ? 'bg-purple-700 text-white shadow-sm'
-                    : 'text-purple-700 bg-purple-50 hover:bg-purple-100'
+                    ? 'bg-slate-900 text-white shadow-sm'
+                    : 'text-slate-700 bg-slate-100 hover:bg-slate-200'
                 }`
               }
             >
-              <ShieldCheck className="w-4 h-4 shrink-0" />
+              <ShieldCheck className="w-4 h-4 shrink-0 text-blue-600" />
               <span className="truncate">Admin Oversight</span>
             </NavLink>
           )}

@@ -5,7 +5,7 @@ import { Compass, ArrowLeft, Home, Search } from 'lucide-react';
 const NotFoundPage = () => {
   return (
     <div className="min-h-[70vh] flex flex-col items-center justify-center text-center p-6">
-      <div className="w-20 h-20 rounded-3xl bg-gradient-to-tr from-blue-50 to-purple-50 border border-blue-100 text-blue-600 flex items-center justify-center mb-5 shadow-card">
+      <div className="w-20 h-20 rounded-3xl bg-blue-50 border border-blue-100 text-blue-600 flex items-center justify-center mb-5 shadow-card">
         <Compass className="w-10 h-10 animate-pulse" />
       </div>
 

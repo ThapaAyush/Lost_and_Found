@@ -88,7 +88,7 @@ const PotentialMatchesPage = () => {
       {/* Header */}
       <div>
         <div className="flex items-center space-x-2">
-          <div className="w-8 h-8 rounded-xl bg-purple-100 text-purple-700 flex items-center justify-center">
+          <div className="w-8 h-8 rounded-xl bg-teal-50 text-teal-700 flex items-center justify-center">
             <Sparkles className="w-5 h-5" />
           </div>
           <h1 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">
@@ -124,8 +124,8 @@ const PotentialMatchesPage = () => {
                   <span
                     className={`text-[10px] font-black uppercase px-2.5 py-1 rounded-full ${
                       group.myReport.type === 'lost'
-                        ? 'bg-rose-100 text-rose-700'
-                        : 'bg-blue-100 text-blue-700'
+                        ? 'bg-slate-100 text-slate-800'
+                        : 'bg-blue-50 text-blue-700'
                     }`}
                   >
                     Your {group.myReport.type} Report

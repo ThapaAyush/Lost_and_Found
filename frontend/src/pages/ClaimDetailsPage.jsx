@@ -168,7 +168,7 @@ const ClaimDetailsPage = () => {
             <button
               type="button"
               onClick={() => setWithdrawDialogOpen(true)}
-              className="text-xs font-bold text-rose-600 hover:text-rose-700 bg-rose-50 px-3 py-1 rounded-xl transition border border-rose-100"
+              className="text-xs font-bold text-slate-600 hover:text-slate-800 bg-slate-100 px-3 py-1 rounded-xl transition border border-slate-200"
             >
               Withdraw Claim
             </button>
@@ -200,7 +200,7 @@ const ClaimDetailsPage = () => {
             <div className="flex flex-wrap items-center gap-2">
               <Link
                 to="/conversations"
-                className="inline-flex items-center px-5 py-2.5 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-bold text-xs rounded-xl shadow-md shadow-blue-500/20 transition"
+                className="inline-flex items-center px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs rounded-xl shadow-sm transition"
               >
                 <MessageSquare className="w-4 h-4 mr-1.5" />
                 Open Private Chat
@@ -210,7 +210,7 @@ const ClaimDetailsPage = () => {
                 <button
                   type="button"
                   onClick={() => setReturnModalOpen(true)}
-                  className="inline-flex items-center px-4 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs rounded-xl shadow-sm transition"
+                  className="inline-flex items-center px-4 py-2.5 bg-teal-600 hover:bg-teal-700 text-white font-bold text-xs rounded-xl shadow-sm transition"
                 >
                   <CheckCircle2 className="w-4 h-4 mr-1.5" />
                   Mark as Returned
@@ -220,8 +220,8 @@ const ClaimDetailsPage = () => {
           </div>
 
           {isItemReturned && (
-            <div className="p-3 rounded-2xl bg-white/80 border border-emerald-200 text-xs text-emerald-800 font-bold flex items-center">
-              <CheckCircle2 className="w-4 h-4 mr-2 text-emerald-600" />
+            <div className="p-3 rounded-2xl bg-white/80 border border-teal-200 text-xs text-teal-800 font-bold flex items-center">
+              <CheckCircle2 className="w-4 h-4 mr-2 text-teal-600" />
               This item has been officially marked as RETURNED to the owner! Lifecycle complete.
             </div>
           )}

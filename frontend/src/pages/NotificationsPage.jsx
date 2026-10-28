@@ -77,7 +77,7 @@ const NotificationsPage = () => {
   const getNotificationIcon = (type) => {
     switch (type) {
       case 'potential_match':
-        return <Sparkles className="w-5 h-5 text-purple-600" />;
+        return <Sparkles className="w-5 h-5 text-teal-600" />;
       case 'new_claim':
       case 'claim_status':
         return <ShieldCheck className="w-5 h-5 text-emerald-600" />;
@@ -100,7 +100,7 @@ const NotificationsPage = () => {
               Notification Center
             </h1>
             {unreadCount > 0 && (
-              <span className="px-2.5 py-0.5 rounded-full text-xs font-bold bg-rose-100 text-rose-700">
+              <span className="px-2.5 py-0.5 rounded-full text-xs font-bold bg-teal-50 text-teal-800 border border-teal-100">
                 {unreadCount} unread
               </span>
             )}

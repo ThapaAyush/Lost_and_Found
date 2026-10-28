@@ -151,9 +151,9 @@ const MyReportsPage = () => {
         <div className="flex items-center space-x-2">
           <Link
             to="/report/lost"
-            className="inline-flex items-center px-3.5 py-2 bg-rose-500 hover:bg-rose-600 text-white text-xs font-bold rounded-xl shadow-sm transition"
+            className="inline-flex items-center px-3.5 py-2 bg-white hover:bg-slate-50 text-slate-800 border border-slate-200 text-xs font-bold rounded-xl shadow-sm transition"
           >
-            <PlusCircle className="w-3.5 h-3.5 mr-1.5" />
+            <PlusCircle className="w-3.5 h-3.5 mr-1.5 text-slate-500" />
             Report Lost
           </Link>
           <Link
@@ -222,8 +222,8 @@ const MyReportsPage = () => {
                     <span
                       className={`text-[10px] font-black uppercase px-2 py-0.5 rounded-full ${
                         item.type === 'lost'
-                          ? 'bg-rose-100 text-rose-700'
-                          : 'bg-blue-100 text-blue-700'
+                          ? 'bg-slate-100 text-slate-800'
+                          : 'bg-blue-50 text-blue-700'
                       }`}
                     >
                       {item.type}

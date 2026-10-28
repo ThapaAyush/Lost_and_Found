@@ -407,7 +407,7 @@ const ItemDetailsPage = () => {
             <div className="flex flex-wrap items-center gap-2">
               <Link
                 to="/conversations"
-                className="inline-flex items-center px-4 py-2.5 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white text-xs font-bold rounded-xl shadow-md transition"
+                className="inline-flex items-center px-4 py-2.5 bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold rounded-xl shadow-sm transition"
               >
                 <MessageSquare className="w-4 h-4 mr-1.5" />
                 Open In-App Chat with Finder
@@ -416,7 +416,7 @@ const ItemDetailsPage = () => {
                 <button
                   type="button"
                   onClick={openReturnModal}
-                  className="inline-flex items-center px-4 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold rounded-xl shadow-sm transition"
+                  className="inline-flex items-center px-4 py-2.5 bg-teal-600 hover:bg-teal-700 text-white text-xs font-bold rounded-xl shadow-sm transition"
                 >
                   <CheckCircle2 className="w-4 h-4 mr-1.5" />
                   Mark as Returned
@@ -521,7 +521,7 @@ const ItemDetailsPage = () => {
             <div className="absolute top-4 left-4">
               <span
                 className={`px-3 py-1 text-xs font-black uppercase tracking-wider rounded-full shadow-sm ${
-                  item.type === 'lost' ? 'bg-rose-500 text-white' : 'bg-blue-600 text-white'
+                  item.type === 'lost' ? 'bg-slate-800 text-white' : 'bg-blue-600 text-white'
                 }`}
               >
                 {item.type} Report
@@ -731,7 +731,7 @@ const ItemDetailsPage = () => {
       {matches.length > 0 && (
         <div className="space-y-4 pt-4 border-t border-slate-200">
           <div className="flex items-center space-x-2">
-            <div className="w-8 h-8 rounded-xl bg-purple-100 text-purple-700 flex items-center justify-center">
+            <div className="w-8 h-8 rounded-xl bg-teal-50 text-teal-700 flex items-center justify-center">
               <Sparkles className="w-4 h-4" />
             </div>
             <div>

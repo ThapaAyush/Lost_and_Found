@@ -140,7 +140,7 @@ const LoginPage = () => {
           <button
             type="button"
             onClick={() => fillQuickDemo('admin@lostandfound.com', 'AdminPassword123!')}
-            className="p-2 text-center rounded-xl bg-purple-50 hover:bg-purple-100 text-purple-700 font-bold border border-purple-200 transition"
+            className="p-2 text-center rounded-xl bg-teal-50 hover:bg-teal-100 text-teal-800 font-bold border border-teal-200 transition"
           >
             Admin: Support
           </button>

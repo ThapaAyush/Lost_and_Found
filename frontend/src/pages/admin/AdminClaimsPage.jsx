@@ -46,13 +46,13 @@ const AdminClaimsPage = () => {
         <div>
           <Link
             to="/admin"
-            className="inline-flex items-center text-xs font-bold text-slate-500 hover:text-purple-700 mb-2 transition"
+            className="inline-flex items-center text-xs font-bold text-slate-500 hover:text-blue-700 mb-2 transition"
           >
             <ArrowLeft className="w-3.5 h-3.5 mr-1" />
             Admin Overview
           </Link>
           <div className="flex items-center space-x-2">
-            <span className="w-2.5 h-2.5 rounded-full bg-purple-600 animate-pulse" />
+            <span className="w-2.5 h-2.5 rounded-full bg-blue-600 animate-pulse" />
             <h1 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">
               Ownership Claims Oversight ({totalCount})
             </h1>
@@ -67,7 +67,7 @@ const AdminClaimsPage = () => {
           <select
             value={status}
             onChange={(e) => setStatus(e.target.value)}
-            className="px-3.5 py-2 text-xs font-bold border border-slate-200 rounded-xl bg-white focus:outline-none focus:ring-2 focus:ring-purple-500/20 text-slate-700"
+            className="px-3.5 py-2 text-xs font-bold border border-slate-200 rounded-xl bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/20 text-slate-700"
           >
             <option value="All">All Statuses</option>
             <option value="pending">Pending Verification</option>

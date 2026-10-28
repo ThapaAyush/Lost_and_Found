@@ -63,7 +63,7 @@ const DashboardPage = () => {
       title: 'Lost Reports',
       count: stats.totalLost,
       icon: Search,
-      color: 'text-rose-600 bg-rose-50 border-rose-200',
+      color: 'text-slate-700 bg-slate-100 border-slate-200',
       link: '/my-reports?type=lost',
     },
     {
@@ -77,46 +77,45 @@ const DashboardPage = () => {
       title: 'Active Open',
       count: stats.openReports,
       icon: TrendingUp,
-      color: 'text-indigo-600 bg-indigo-50 border-indigo-200',
+      color: 'text-blue-600 bg-blue-50 border-blue-200',
       link: '/my-reports?status=open',
     },
     {
       title: 'Reunited / Returned',
       count: stats.returnedItems,
       icon: CheckCircle2,
-      color: 'text-emerald-600 bg-emerald-50 border-emerald-200',
+      color: 'text-teal-600 bg-teal-50 border-teal-200',
       link: '/my-reports?status=returned',
     },
     {
       title: 'Pending Claims',
       count: stats.pendingClaims,
       icon: ShieldAlert,
-      color: 'text-amber-600 bg-amber-50 border-amber-200',
+      color: 'text-blue-600 bg-blue-50 border-blue-200',
       link: '/claims',
     },
     {
       title: 'Candidate Matches',
       count: stats.potentialMatchesCount,
       icon: Sparkles,
-      color: 'text-purple-600 bg-purple-50 border-purple-200',
+      color: 'text-teal-600 bg-teal-50 border-teal-200',
       link: '/matches',
     },
   ];
 
   return (
     <div className="space-y-8 animate-in fade-in duration-200">
-      {/* Personalized Welcome Header Banner */}
-      <div className="bg-gradient-to-r from-blue-900 via-indigo-900 to-purple-950 rounded-3xl p-6 sm:p-8 text-white shadow-xl relative overflow-hidden">
-        <div className="absolute top-0 right-0 w-80 h-80 bg-blue-500/20 rounded-full blur-3xl pointer-events-none" />
+      {/* Personalized Welcome Header Banner - Soothing White & Ocean Blue */}
+      <div className="bg-gradient-to-b from-blue-50/50 via-white to-white border border-slate-200/90 rounded-3xl p-6 sm:p-8 text-slate-800 shadow-sm relative overflow-hidden">
         <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
           <div>
-            <span className="text-[11px] font-extrabold uppercase tracking-wider text-blue-200 bg-white/10 px-3 py-1 rounded-full border border-white/20">
+            <span className="text-[11px] font-extrabold uppercase tracking-wider text-blue-700 bg-blue-50 px-3 py-1 rounded-full border border-blue-200">
               Campus Member Dashboard
             </span>
-            <h1 className="text-2xl sm:text-3xl font-black tracking-tight mt-2 text-white">
+            <h1 className="text-2xl sm:text-3xl font-black tracking-tight mt-2 text-slate-900">
               Welcome Back, {user?.name || 'Community Member'}!
             </h1>
-            <p className="text-slate-300 text-xs sm:text-sm mt-1 max-w-xl">
+            <p className="text-slate-600 text-xs sm:text-sm mt-1 max-w-xl">
               Monitor your filed reports, check match scores, and verify ownership claims.
             </p>
           </div>
@@ -125,14 +124,14 @@ const DashboardPage = () => {
           <div className="flex flex-wrap items-center gap-3">
             <Link
               to="/report/lost"
-              className="inline-flex items-center px-4 py-2.5 bg-rose-500 hover:bg-rose-600 text-white text-xs font-bold rounded-xl shadow-md transition transform hover:-translate-y-0.5"
+              className="inline-flex items-center px-4 py-2.5 bg-white hover:bg-slate-50 text-slate-800 border border-slate-200 text-xs font-bold rounded-xl shadow-sm transition transform hover:-translate-y-0.5"
             >
-              <PlusCircle className="w-4 h-4 mr-1.5" />
+              <PlusCircle className="w-4 h-4 mr-1.5 text-slate-500" />
               Report Lost Item
             </Link>
             <Link
               to="/report/found"
-              className="inline-flex items-center px-4 py-2.5 bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold rounded-xl shadow-md transition transform hover:-translate-y-0.5"
+              className="inline-flex items-center px-4 py-2.5 bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold rounded-xl shadow-sm shadow-blue-500/20 transition transform hover:-translate-y-0.5"
             >
               <PlusCircle className="w-4 h-4 mr-1.5" />
               Report Found Item
@@ -172,9 +171,9 @@ const DashboardPage = () => {
 
       {/* Potential Matches Highlight Alert (If Any) */}
       {stats.potentialMatchesCount > 0 && (
-        <div className="bg-gradient-to-r from-purple-50 via-indigo-50 to-blue-50 border border-purple-200 rounded-3xl p-6 shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div className="bg-teal-50/50 border border-teal-200/70 rounded-3xl p-6 shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div className="flex items-start space-x-3">
-            <div className="w-10 h-10 rounded-2xl bg-purple-600 text-white flex items-center justify-center flex-shrink-0 shadow-md">
+            <div className="w-10 h-10 rounded-2xl bg-teal-600 text-white flex items-center justify-center flex-shrink-0 shadow-sm">
               <Sparkles className="w-5 h-5" />
             </div>
             <div>
@@ -189,7 +188,7 @@ const DashboardPage = () => {
           </div>
           <Link
             to="/matches"
-            className="inline-flex items-center px-4 py-2.5 bg-purple-600 hover:bg-purple-700 text-white font-bold text-xs rounded-xl shadow-sm transition whitespace-nowrap"
+            className="inline-flex items-center px-4 py-2.5 bg-teal-600 hover:bg-teal-700 text-white font-bold text-xs rounded-xl shadow-sm transition whitespace-nowrap"
           >
             Review Potential Matches
             <ArrowRight className="w-3.5 h-3.5 ml-1.5" />
