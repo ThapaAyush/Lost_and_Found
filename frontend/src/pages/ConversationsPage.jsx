@@ -11,6 +11,8 @@ import {
   Building2,
   ShieldCheck,
   ArrowLeft,
+  Check,
+  CheckCheck,
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { conversationAPI } from '../services/api';
@@ -63,6 +65,18 @@ const ConversationsPage = () => {
     if (switchToChatMobile) {
       setMobileView('chat');
     }
+    // Optimistically mark messages in this conversation as seen in local state
+    setConversations((prev) =>
+      prev.map((c) => {
+        if (c._id === conversationId && c.messages) {
+          return {
+            ...c,
+            messages: c.messages.map((m) => ({ ...m, isRead: true })),
+          };
+        }
+        return c;
+      })
+    );
     setLoadingMessages(true);
     try {
       const res = await conversationAPI.getConversationById(conversationId);
@@ -159,14 +173,24 @@ const ConversationsPage = () => {
                     : null;
                 const isSelected = activeConversation === conv._id;
 
+                const unreadMsgCount =
+                  conv.messages?.filter((m) => {
+                    const senderId = (m.sender?._id || m.sender || '').toString();
+                    const myId = (user?._id || '').toString();
+                    return senderId && senderId !== myId && !m.isRead;
+                  }).length || 0;
+                const hasUnread = unreadMsgCount > 0;
+
                 return (
                   <div
                     key={conv._id}
                     onClick={() => selectConversation(conv._id, true)}
-                    className={`p-4 cursor-pointer transition flex items-start space-x-3 ${
+                    className={`p-3.5 sm:p-4 cursor-pointer transition flex items-start space-x-3 border-l-4 ${
                       isSelected
-                        ? 'bg-blue-50/90 border-r-4 border-blue-600'
-                        : 'hover:bg-slate-100/70'
+                        ? 'bg-blue-50/90 border-l-blue-600'
+                        : hasUnread
+                        ? 'bg-blue-50/50 hover:bg-blue-100/50 border-l-blue-600'
+                        : 'hover:bg-slate-100/70 border-l-transparent'
                     }`}
                   >
                     {other?.avatar ? (
@@ -183,19 +207,50 @@ const ConversationsPage = () => {
 
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center justify-between">
-                        <h4 className="text-xs font-bold text-slate-900 truncate">
-                          {other?.name || 'Community Member'}
-                        </h4>
-                        <span className="text-[10px] text-slate-400 whitespace-nowrap ml-1">
-                          {formatTimeAgo(conv.lastMessageAt)}
-                        </span>
+                        <div className="flex items-center space-x-1.5 min-w-0">
+                          {hasUnread && (
+                            <span
+                              className="w-2 h-2 rounded-full bg-blue-600 ring-2 ring-blue-200 flex-shrink-0 animate-pulse"
+                              title="Unseen messages"
+                            />
+                          )}
+                          <h4
+                            className={`text-xs truncate ${
+                              hasUnread
+                                ? 'font-black text-slate-900 tracking-tight'
+                                : 'font-bold text-slate-700'
+                            }`}
+                          >
+                            {other?.name || 'Community Member'}
+                          </h4>
+                        </div>
+                        <div className="flex items-center space-x-1.5 flex-shrink-0 ml-1">
+                          <span
+                            className={`text-[10px] whitespace-nowrap ${
+                              hasUnread ? 'text-blue-700 font-bold' : 'text-slate-400'
+                            }`}
+                          >
+                            {formatTimeAgo(conv.lastMessageAt)}
+                          </span>
+                          {hasUnread && (
+                            <span className="px-1.5 py-0.2 rounded-full text-[9px] font-black bg-blue-600 text-white shadow-xs">
+                              {unreadMsgCount}
+                            </span>
+                          )}
+                        </div>
                       </div>
 
                       <p className="text-[11px] font-bold text-blue-600 truncate mt-0.5">
                         {conv.relatedItem?.title || conv.subject}
                       </p>
 
-                      <p className="text-xs text-slate-500 truncate mt-0.5">
+                      <p
+                        className={`text-xs truncate mt-0.5 ${
+                          hasUnread
+                            ? 'font-bold text-slate-900'
+                            : 'font-normal text-slate-500'
+                        }`}
+                      >
                         {lastMsg ? lastMsg.text : 'Conversation initiated'}
                       </p>
                     </div>
@@ -308,9 +363,36 @@ const ConversationsPage = () => {
                               {msg.text}
                             </div>
                           )}
-                          <span className="text-[10px] text-slate-400 mt-1 px-1">
-                            {formatTimeAgo(msg.timestamp)}
-                          </span>
+                          <div
+                            className={`flex items-center space-x-1.5 text-[10px] text-slate-400 mt-1 px-1 ${
+                              isMe ? 'justify-end' : 'justify-start'
+                            }`}
+                          >
+                            <span>{formatTimeAgo(msg.timestamp)}</span>
+                            {isMe && (
+                              <span className="flex items-center ml-1">
+                                {msg.isRead ? (
+                                  <span
+                                    className="inline-flex items-center text-teal-600 font-bold"
+                                    title="Seen by recipient"
+                                  >
+                                    <CheckCheck className="w-3.5 h-3.5 mr-0.5 text-teal-600" />
+                                    <span className="text-[9px] uppercase tracking-wider font-extrabold">
+                                      Seen
+                                    </span>
+                                  </span>
+                                ) : (
+                                  <span
+                                    className="inline-flex items-center text-slate-400 font-medium"
+                                    title="Delivered (Unseen)"
+                                  >
+                                    <Check className="w-3.5 h-3.5 mr-0.5 text-slate-400" />
+                                    <span className="text-[9px] uppercase tracking-wider">Sent</span>
+                                  </span>
+                                )}
+                              </span>
+                            )}
+                          </div>
                         </div>
                       );
                     })

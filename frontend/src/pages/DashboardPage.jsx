@@ -304,17 +304,46 @@ const DashboardPage = () => {
 
           <div className="bg-white rounded-3xl border border-slate-200 shadow-sm p-3 divide-y divide-slate-100">
             {data?.recentNotifications && data.recentNotifications.length > 0 ? (
-              data.recentNotifications.map((notif) => (
-                <div key={notif._id} className="py-3 px-2 first:pt-1 last:pb-1">
-                  <div className="flex items-start justify-between">
-                    <h5 className="text-xs font-bold text-slate-800 line-clamp-1">{notif.title}</h5>
-                    <span className="text-[10px] text-slate-400 whitespace-nowrap ml-2">
-                      {formatTimeAgo(notif.createdAt)}
-                    </span>
+              data.recentNotifications.map((notif) => {
+                const isUnread = !notif.isRead;
+                return (
+                  <div
+                    key={notif._id}
+                    className={`py-3 px-2.5 first:pt-2 last:pb-2 rounded-xl transition ${
+                      isUnread ? 'bg-blue-50/60 border-l-2 border-l-blue-600' : 'border-l-2 border-l-transparent'
+                    }`}
+                  >
+                    <div className="flex items-start justify-between">
+                      <div className="flex items-center space-x-1.5 min-w-0">
+                        {isUnread && (
+                          <span className="w-1.5 h-1.5 rounded-full bg-blue-600 ring-2 ring-blue-200 flex-shrink-0 animate-pulse" />
+                        )}
+                        <h5
+                          className={`text-xs line-clamp-1 ${
+                            isUnread ? 'font-black text-slate-900' : 'font-bold text-slate-700'
+                          }`}
+                        >
+                          {notif.title}
+                        </h5>
+                      </div>
+                      <span
+                        className={`text-[10px] whitespace-nowrap ml-2 ${
+                          isUnread ? 'text-blue-700 font-bold' : 'text-slate-400'
+                        }`}
+                      >
+                        {formatTimeAgo(notif.createdAt)}
+                      </span>
+                    </div>
+                    <p
+                      className={`text-xs line-clamp-2 mt-0.5 ${
+                        isUnread ? 'text-slate-700 font-medium' : 'text-slate-500'
+                      }`}
+                    >
+                      {notif.message}
+                    </p>
                   </div>
-                  <p className="text-xs text-slate-500 line-clamp-2 mt-0.5">{notif.message}</p>
-                </div>
-              ))
+                );
+              })
             ) : (
               <div className="py-8 text-center text-xs text-slate-400">
                 No new notifications at this time

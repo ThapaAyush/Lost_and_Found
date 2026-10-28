@@ -28,6 +28,7 @@ const NotificationsPage = () => {
   const [totalPages, setTotalPages] = useState(1);
   const [unreadCount, setUnreadCount] = useState(0);
   const [loading, setLoading] = useState(true);
+  const [filter, setFilter] = useState('all'); // 'all' | 'unread' | 'read'
 
   const fetchPage = async (page = 1) => {
     setLoading(true);
@@ -74,20 +75,37 @@ const NotificationsPage = () => {
     setUnreadCount(0);
   };
 
-  const getNotificationIcon = (type) => {
+  const handleMarkSingleAsRead = async (e, notifId) => {
+    e.stopPropagation();
+    await markAsRead(notifId);
+    setNotifications((prev) =>
+      prev.map((n) => (n._id === notifId ? { ...n, isRead: true } : n))
+    );
+    setUnreadCount((prev) => Math.max(0, prev - 1));
+  };
+
+  const getNotificationIcon = (type, isUnread) => {
     switch (type) {
       case 'potential_match':
-        return <Sparkles className="w-5 h-5 text-teal-600" />;
+        return <Sparkles className={`w-5 h-5 ${isUnread ? 'text-teal-600' : 'text-slate-400'}`} />;
       case 'new_claim':
       case 'claim_status':
-        return <ShieldCheck className="w-5 h-5 text-emerald-600" />;
+        return <ShieldCheck className={`w-5 h-5 ${isUnread ? 'text-emerald-600' : 'text-slate-400'}`} />;
       case 'new_message':
       case 'contact_request':
-        return <MessageSquare className="w-5 h-5 text-blue-600" />;
+        return <MessageSquare className={`w-5 h-5 ${isUnread ? 'text-blue-600' : 'text-slate-400'}`} />;
       default:
-        return <FileText className="w-5 h-5 text-blue-600" />;
+        return <FileText className={`w-5 h-5 ${isUnread ? 'text-blue-600' : 'text-slate-400'}`} />;
     }
   };
+
+  const filteredNotifications = notifications.filter((notif) => {
+    if (filter === 'unread') return !notif.isRead;
+    if (filter === 'read') return notif.isRead;
+    return true;
+  });
+
+  const readCount = Math.max(0, notifications.length - unreadCount);
 
   return (
     <div className="max-w-4xl mx-auto space-y-6 animate-in fade-in duration-150">
@@ -100,7 +118,7 @@ const NotificationsPage = () => {
               Notification Center
             </h1>
             {unreadCount > 0 && (
-              <span className="px-2.5 py-0.5 rounded-full text-xs font-bold bg-teal-50 text-teal-800 border border-teal-100">
+              <span className="px-2.5 py-0.5 rounded-full text-xs font-bold bg-blue-100 text-blue-800 border border-blue-200">
                 {unreadCount} unread
               </span>
             )}
@@ -114,7 +132,7 @@ const NotificationsPage = () => {
           <button
             type="button"
             onClick={handleMarkAll}
-            className="inline-flex items-center px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold rounded-xl transition"
+            className="inline-flex items-center px-4 py-2 bg-blue-50 hover:bg-blue-100 text-blue-700 border border-blue-200 text-xs font-bold rounded-xl transition shadow-xs"
           >
             <CheckCheck className="w-4 h-4 mr-1.5" />
             Mark All as Read
@@ -122,39 +140,159 @@ const NotificationsPage = () => {
         )}
       </div>
 
+      {/* Filter Tabs */}
+      <div className="flex items-center space-x-2 border-b border-slate-200 pb-2">
+        <button
+          type="button"
+          onClick={() => setFilter('all')}
+          className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition flex items-center space-x-1.5 ${
+            filter === 'all'
+              ? 'bg-blue-600 text-white shadow-xs'
+              : 'bg-white text-slate-600 hover:bg-slate-100 border border-slate-200'
+          }`}
+        >
+          <span>All Notifications</span>
+          <span className={`px-1.5 py-0.2 rounded-full text-[10px] ${
+            filter === 'all' ? 'bg-blue-700 text-white' : 'bg-slate-100 text-slate-500'
+          }`}>
+            {notifications.length}
+          </span>
+        </button>
+
+        <button
+          type="button"
+          onClick={() => setFilter('unread')}
+          className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition flex items-center space-x-1.5 ${
+            filter === 'unread'
+              ? 'bg-blue-600 text-white shadow-xs'
+              : 'bg-white text-slate-600 hover:bg-slate-100 border border-slate-200'
+          }`}
+        >
+          <span className="w-2 h-2 rounded-full bg-blue-500" />
+          <span>Unseen</span>
+          {unreadCount > 0 && (
+            <span className={`px-1.5 py-0.2 rounded-full text-[10px] font-black ${
+              filter === 'unread' ? 'bg-white text-blue-700' : 'bg-blue-100 text-blue-700'
+            }`}>
+              {unreadCount}
+            </span>
+          )}
+        </button>
+
+        <button
+          type="button"
+          onClick={() => setFilter('read')}
+          className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition flex items-center space-x-1.5 ${
+            filter === 'read'
+              ? 'bg-blue-600 text-white shadow-xs'
+              : 'bg-white text-slate-600 hover:bg-slate-100 border border-slate-200'
+          }`}
+        >
+          <span>Seen</span>
+          <span className={`px-1.5 py-0.2 rounded-full text-[10px] ${
+            filter === 'read' ? 'bg-blue-700 text-white' : 'bg-slate-100 text-slate-500'
+          }`}>
+            {readCount}
+          </span>
+        </button>
+      </div>
+
       {loading ? (
         <LoadingSpinner size="lg" message="Loading notifications..." />
-      ) : notifications.length > 0 ? (
+      ) : filteredNotifications.length > 0 ? (
         <div className="bg-white rounded-3xl border border-slate-200 shadow-sm divide-y divide-slate-100 overflow-hidden">
-          {notifications.map((notif) => (
-            <div
-              key={notif._id}
-              onClick={() => handleNotificationClick(notif)}
-              className={`p-5 cursor-pointer transition hover:bg-slate-50 flex items-start space-x-4 ${
-                !notif.isRead ? 'bg-blue-50/40' : ''
-              }`}
-            >
-              <div className="p-2.5 rounded-2xl bg-slate-100 flex-shrink-0">
-                {getNotificationIcon(notif.type)}
-              </div>
-
-              <div className="flex-1 min-w-0">
-                <div className="flex items-center justify-between">
-                  <h4 className="text-sm font-bold text-slate-900 truncate">{notif.title}</h4>
-                  <span className="text-[11px] text-slate-400 whitespace-nowrap ml-2 flex items-center">
-                    <Clock className="w-3 h-3 mr-1" />
-                    {formatTimeAgo(notif.createdAt)}
-                  </span>
+          {filteredNotifications.map((notif) => {
+            const isUnread = !notif.isRead;
+            return (
+              <div
+                key={notif._id}
+                onClick={() => handleNotificationClick(notif)}
+                className={`p-4 sm:p-5 cursor-pointer transition flex items-start space-x-3 sm:space-x-4 border-l-4 ${
+                  isUnread
+                    ? 'bg-blue-50/60 hover:bg-blue-100/50 border-l-blue-600'
+                    : 'bg-white hover:bg-slate-50 border-l-transparent'
+                }`}
+              >
+                {/* Icon Box */}
+                <div
+                  className={`p-2.5 rounded-2xl flex-shrink-0 transition ${
+                    isUnread
+                      ? 'bg-white border border-blue-200 shadow-xs ring-2 ring-blue-100'
+                      : 'bg-slate-100 text-slate-400'
+                  }`}
+                >
+                  {getNotificationIcon(notif.type, isUnread)}
                 </div>
 
-                <p className="text-xs text-slate-600 mt-1 leading-relaxed">{notif.message}</p>
-              </div>
+                {/* Content */}
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center justify-between gap-2">
+                    <div className="flex items-center space-x-2 min-w-0">
+                      {isUnread && (
+                        <span
+                          className="w-2.5 h-2.5 rounded-full bg-blue-600 ring-4 ring-blue-100 flex-shrink-0 animate-pulse"
+                          title="Unseen notification"
+                        />
+                      )}
+                      <h4
+                        className={`text-sm truncate ${
+                          isUnread
+                            ? 'font-black text-slate-900 tracking-tight'
+                            : 'font-semibold text-slate-600'
+                        }`}
+                      >
+                        {notif.title}
+                      </h4>
+                      {isUnread ? (
+                        <span className="px-2 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider bg-blue-600 text-white shadow-2xs flex-shrink-0">
+                          Unseen
+                        </span>
+                      ) : (
+                        <span className="px-1.5 py-0.2 rounded-full text-[9px] font-semibold bg-slate-100 text-slate-400 flex-shrink-0">
+                          Seen
+                        </span>
+                      )}
+                    </div>
+                    <span
+                      className={`text-[11px] whitespace-nowrap ml-2 flex items-center flex-shrink-0 ${
+                        isUnread ? 'text-blue-700 font-bold' : 'text-slate-400'
+                      }`}
+                    >
+                      <Clock className="w-3 h-3 mr-1" />
+                      {formatTimeAgo(notif.createdAt)}
+                    </span>
+                  </div>
 
-              <div className="text-slate-300 self-center">
-                <ArrowRight className="w-4 h-4" />
+                  <p
+                    className={`text-xs mt-1 leading-relaxed ${
+                      isUnread
+                        ? 'text-slate-800 font-medium'
+                        : 'text-slate-400 font-normal'
+                    }`}
+                  >
+                    {notif.message}
+                  </p>
+                </div>
+
+                {/* Right Actions */}
+                <div className="flex items-center space-x-2 self-center flex-shrink-0">
+                  {isUnread && (
+                    <button
+                      type="button"
+                      onClick={(e) => handleMarkSingleAsRead(e, notif._id)}
+                      title="Mark as seen"
+                      className="p-1.5 text-blue-600 hover:text-blue-800 hover:bg-blue-100/70 rounded-lg transition"
+                    >
+                      <Check className="w-4 h-4" />
+                    </button>
+                  )}
+                  <div className={`transition ${isUnread ? 'text-blue-600' : 'text-slate-300'}`}>
+                    <ArrowRight className="w-4 h-4" />
+                  </div>
+                </div>
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       ) : (
         <EmptyState

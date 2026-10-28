@@ -87,29 +87,57 @@ const NotificationDropdown = () => {
 
           <div className="max-h-[340px] overflow-y-auto divide-y divide-slate-100">
             {notifications && notifications.length > 0 ? (
-              notifications.map((notif) => (
-                <div
-                  key={notif._id}
-                  onClick={() => handleNotificationClick(notif)}
-                  className={`p-4 cursor-pointer transition hover:bg-slate-50 flex items-start space-x-3 ${
-                    !notif.isRead ? 'bg-blue-50/40' : ''
-                  }`}
-                >
-                  <span
-                    className={`w-2 h-2 rounded-full mt-1.5 flex-shrink-0 ${
-                      !notif.isRead ? 'bg-blue-600' : 'bg-transparent'
+              notifications.map((notif) => {
+                const isUnread = !notif.isRead;
+                return (
+                  <div
+                    key={notif._id}
+                    onClick={() => handleNotificationClick(notif)}
+                    className={`p-3.5 sm:p-4 cursor-pointer transition flex items-start space-x-3 border-l-4 ${
+                      isUnread
+                        ? 'bg-blue-50/70 hover:bg-blue-100/60 border-l-blue-600'
+                        : 'bg-white hover:bg-slate-50 border-l-transparent'
                     }`}
-                  />
-                  <div className="flex-1 min-w-0">
-                    <p className="text-xs font-bold text-slate-900 line-clamp-1">{notif.title}</p>
-                    <p className="text-xs text-slate-500 line-clamp-2 mt-0.5">{notif.message}</p>
-                    <span className="text-[10px] text-slate-400 mt-1 flex items-center">
-                      <Clock className="w-3 h-3 mr-1" />
-                      {formatTimeAgo(notif.createdAt)}
-                    </span>
+                  >
+                    <span
+                      className={`w-2 h-2 rounded-full mt-1.5 flex-shrink-0 ${
+                        isUnread ? 'bg-blue-600 ring-2 ring-blue-200 animate-pulse' : 'bg-slate-200'
+                      }`}
+                    />
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center justify-between gap-1">
+                        <p
+                          className={`text-xs line-clamp-1 ${
+                            isUnread ? 'font-black text-slate-900' : 'font-semibold text-slate-600'
+                          }`}
+                        >
+                          {notif.title}
+                        </p>
+                        {isUnread && (
+                          <span className="px-1.5 py-0.2 rounded text-[9px] font-black uppercase tracking-wider bg-blue-100 text-blue-700 flex-shrink-0">
+                            New
+                          </span>
+                        )}
+                      </div>
+                      <p
+                        className={`text-xs line-clamp-2 mt-0.5 ${
+                          isUnread ? 'text-slate-700 font-medium' : 'text-slate-400 font-normal'
+                        }`}
+                      >
+                        {notif.message}
+                      </p>
+                      <span
+                        className={`text-[10px] mt-1 flex items-center ${
+                          isUnread ? 'text-blue-700 font-bold' : 'text-slate-400'
+                        }`}
+                      >
+                        <Clock className="w-3 h-3 mr-1" />
+                        {formatTimeAgo(notif.createdAt)}
+                      </span>
+                    </div>
                   </div>
-                </div>
-              ))
+                );
+              })
             ) : (
               <div className="p-8 text-center text-xs text-slate-400">
                 You're all caught up! No notifications.
