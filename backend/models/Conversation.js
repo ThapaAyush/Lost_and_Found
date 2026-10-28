@@ -46,8 +46,8 @@ const conversationSchema = new mongoose.Schema(
     },
     status: {
       type: String,
-      enum: ['pending', 'accepted', 'declined', 'blocked'],
-      default: 'pending',
+      enum: ['pending', 'accepted', 'active', 'declined', 'blocked'],
+      default: 'accepted',
       index: true,
     },
     subject: {

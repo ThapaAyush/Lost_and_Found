@@ -40,6 +40,8 @@ const ItemDetailsPage = () => {
   const [isOwner, setIsOwner] = useState(false);
   const [hasActiveClaim, setHasActiveClaim] = useState(false);
   const [activeClaimId, setActiveClaimId] = useState(null);
+  const [claimStatus, setClaimStatus] = useState(null);
+  const [approvedConversationId, setApprovedConversationId] = useState(null);
   const [matches, setMatches] = useState([]);
   const [selectedImage, setSelectedImage] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -86,6 +88,8 @@ const ItemDetailsPage = () => {
           setIsOwner(res.data.isOwner);
           setHasActiveClaim(res.data.hasActiveClaim);
           setActiveClaimId(res.data.activeClaimId);
+          setClaimStatus(res.data.claimStatus);
+          setApprovedConversationId(res.data.approvedConversationId);
           setNewStatus(res.data.item.status);
           setStatusCustody(res.data.item.custodyDetails || '');
           if (res.data.item.images && res.data.item.images.length > 0) {
@@ -336,20 +340,50 @@ const ItemDetailsPage = () => {
                 </>
               )}
 
-              <button
-                type="button"
-                onClick={() => {
-                  if (!user) {
-                    navigate('/login', { state: { from: `/items/${id}` } });
-                  } else {
-                    setContactModalOpen(true);
-                  }
-                }}
-                className="inline-flex items-center px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs font-bold rounded-xl transition"
-              >
-                <MessageSquare className="w-4 h-4 mr-1.5 text-blue-600" />
-                Contact {item.type === 'found' ? 'Finder' : 'Reporter'}
-              </button>
+              {item.type === 'found' ? (
+                claimStatus === 'approved' ? (
+                  <Link
+                    to="/conversations"
+                    className="inline-flex items-center px-4 py-2 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white text-xs font-bold rounded-xl shadow-sm transition"
+                  >
+                    <MessageSquare className="w-4 h-4 mr-1.5" />
+                    Chat with Finder
+                  </Link>
+                ) : (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      if (!user) {
+                        navigate('/login', { state: { from: `/items/${id}` } });
+                      } else if (!hasActiveClaim) {
+                        setClaimModalOpen(true);
+                      } else {
+                        navigate(`/claims/${activeClaimId}`);
+                      }
+                    }}
+                    className="inline-flex items-center px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold rounded-xl transition"
+                    title="Claim verification required before private chat"
+                  >
+                    <Lock className="w-3.5 h-3.5 mr-1.5 text-slate-500" />
+                    {hasActiveClaim ? 'Chat Locked (Under Review)' : 'Chat Locked (Claim Required)'}
+                  </button>
+                )
+              ) : (
+                <button
+                  type="button"
+                  onClick={() => {
+                    if (!user) {
+                      navigate('/login', { state: { from: `/items/${id}` } });
+                    } else {
+                      setContactModalOpen(true);
+                    }
+                  }}
+                  className="inline-flex items-center px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs font-bold rounded-xl transition"
+                >
+                  <MessageSquare className="w-4 h-4 mr-1.5 text-blue-600" />
+                  Contact Reporter
+                </button>
+              )}
 
               <button
                 type="button"
@@ -363,6 +397,122 @@ const ItemDetailsPage = () => {
           )}
         </div>
       </div>
+
+      {/* Claim Status & Verification State Banners */}
+      {claimStatus === 'approved' && (
+        <div className="bg-gradient-to-r from-emerald-500/10 via-teal-500/10 to-blue-500/10 border border-emerald-200 rounded-3xl p-6 sm:p-7 space-y-4 shadow-sm">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div className="flex items-center space-x-3">
+              <div className="w-12 h-12 rounded-2xl bg-emerald-600 text-white flex items-center justify-center shrink-0 shadow-md">
+                <CheckCircle2 className="w-6 h-6" />
+              </div>
+              <div>
+                <span className="text-[10px] font-extrabold uppercase tracking-wider text-emerald-700 bg-emerald-100 px-2.5 py-0.5 rounded-full">
+                  Ownership Verified & Approved by Manager
+                </span>
+                <h2 className="text-base sm:text-lg font-black text-slate-900 mt-1">
+                  Full Found-Item Report & In-App Handover Chat Unlocked!
+                </h2>
+                <p className="text-xs text-slate-600">
+                  The campus administration has verified your proof of ownership. You can now chat privately with the finder to coordinate safe physical return on campus.
+                </p>
+              </div>
+            </div>
+
+            <div className="flex flex-wrap items-center gap-2">
+              <Link
+                to="/conversations"
+                className="inline-flex items-center px-4 py-2.5 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white text-xs font-bold rounded-xl shadow-md transition"
+              >
+                <MessageSquare className="w-4 h-4 mr-1.5" />
+                Open In-App Chat with Finder
+              </Link>
+              {item.status !== 'returned' && (
+                <button
+                  type="button"
+                  onClick={openReturnModal}
+                  className="inline-flex items-center px-4 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold rounded-xl shadow-sm transition"
+                >
+                  <CheckCircle2 className="w-4 h-4 mr-1.5" />
+                  Mark as Returned
+                </button>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {(claimStatus === 'pending' || claimStatus === 'under_review') && (
+        <div className="bg-amber-50/80 border border-amber-200 rounded-3xl p-5 sm:p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4 shadow-sm">
+          <div className="flex items-center space-x-3">
+            <div className="w-11 h-11 rounded-2xl bg-amber-500 text-white flex items-center justify-center shrink-0 shadow-sm">
+              <Clock3 className="w-5 h-5" />
+            </div>
+            <div>
+              <span className="text-[10px] font-extrabold uppercase tracking-wider text-amber-800 bg-amber-100 px-2.5 py-0.5 rounded-full">
+                Claim Awaiting Manager Verification
+              </span>
+              <h3 className="text-sm font-bold text-slate-900 mt-1">
+                Your proof of ownership is under administrator review
+              </h3>
+              <p className="text-xs text-slate-600">
+                Campus administration verifies serial numbers and purchase receipts to prevent wrongful handovers. Once approved, the private in-app messaging system will unlock.
+              </p>
+            </div>
+          </div>
+
+          <Link
+            to={`/claims/${activeClaimId}`}
+            className="inline-flex items-center px-4 py-2.5 bg-amber-600 hover:bg-amber-700 text-white text-xs font-bold rounded-xl shadow-sm transition whitespace-nowrap self-start sm:self-auto"
+          >
+            <ShieldCheck className="w-4 h-4 mr-1.5" />
+            View Submitted Proof
+          </Link>
+        </div>
+      )}
+
+      {item.type === 'found' && !isOwner && !hasActiveClaim && item.status !== 'returned' && (
+        <div className="bg-blue-50/70 border border-blue-200 rounded-3xl p-5 sm:p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4 shadow-sm">
+          <div className="flex items-center space-x-3">
+            <div className="w-11 h-11 rounded-2xl bg-blue-600 text-white flex items-center justify-center shrink-0 shadow-sm">
+              <ShieldCheck className="w-5 h-5" />
+            </div>
+            <div>
+              <span className="text-[10px] font-extrabold uppercase tracking-wider text-blue-800 bg-blue-100 px-2.5 py-0.5 rounded-full">
+                Found Item Verification Process
+              </span>
+              <h3 className="text-sm font-bold text-slate-900 mt-1">
+                Is this your lost belonging?
+              </h3>
+              <p className="text-xs text-slate-600">
+                Submit an ownership claim with photos or distinguishing details. Once the manager verifies your claim, private in-app chat is unlocked to arrange safe return.
+              </p>
+            </div>
+          </div>
+
+          <button
+            type="button"
+            onClick={() => {
+              if (!user) {
+                navigate('/login', { state: { from: `/items/${id}` } });
+              } else {
+                setClaimModalOpen(true);
+              }
+            }}
+            className="inline-flex items-center px-5 py-2.5 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white text-xs font-bold rounded-xl shadow-sm transition whitespace-nowrap self-start sm:self-auto"
+          >
+            <ShieldCheck className="w-4 h-4 mr-1.5" />
+            Claim Ownership Now
+          </button>
+        </div>
+      )}
+
+      {item.status === 'returned' && (
+        <div className="bg-emerald-50 border border-emerald-200 rounded-3xl p-5 flex items-center space-x-3 text-emerald-800 text-xs font-bold">
+          <CheckCircle2 className="w-5 h-5 text-emerald-600 shrink-0" />
+          <span>This item has been officially marked as RETURNED to its owner. The reconnection is complete!</span>
+        </div>
+      )}
 
       {/* Main Grid: Left Photos & Right Item Specifications */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">

@@ -91,7 +91,7 @@ const ItemCard = ({ item }) => {
             to={`/items/${item._id}`}
             className="w-full inline-flex items-center justify-center px-4 py-2.5 bg-slate-100 hover:bg-blue-600 text-slate-700 hover:text-white font-bold text-xs rounded-xl transition-all duration-200 group-hover:bg-blue-600 group-hover:text-white shadow-sm"
           >
-            <span>View Details & Claim</span>
+            <span>{item.type === 'found' ? 'View Details & Claim' : 'View Lost Report'}</span>
             <ArrowRight className="w-3.5 h-3.5 ml-1.5 group-hover:translate-x-0.5 transition-transform" />
           </Link>
         </div>

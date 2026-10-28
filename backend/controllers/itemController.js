@@ -117,12 +117,22 @@ export const getItemById = async (req, res, next) => {
 
     // Check if current user already has an active claim on this item
     let existingClaim = null;
+    let approvedConversationId = null;
     if (req.user && !isOwner) {
       existingClaim = await Claim.findOne({
         item: item._id,
         claimant: req.user._id,
         status: { $in: ['pending', 'under_review', 'approved'] },
       });
+
+      if (existingClaim && existingClaim.status === 'approved') {
+        const Conversation = (await import('../models/Conversation.js')).default;
+        const conv = await Conversation.findOne({
+          relatedItem: item._id,
+          participants: { $all: [req.user._id, item.owner._id] },
+        });
+        approvedConversationId = conv?._id || null;
+      }
     }
 
     res.status(200).json({
@@ -131,6 +141,8 @@ export const getItemById = async (req, res, next) => {
       isOwner,
       hasActiveClaim: Boolean(existingClaim),
       activeClaimId: existingClaim?._id || null,
+      claimStatus: existingClaim?.status || null,
+      approvedConversationId,
     });
   } catch (error) {
     next(error);
