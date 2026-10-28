@@ -185,8 +185,8 @@ const FoundItemsPage = () => {
 
                 <div className="grid grid-cols-2 gap-2 text-xs">
                   {/* Lost Item */}
-                  <div className="p-2.5 rounded-xl bg-slate-100 border border-slate-200">
-                    <span className="text-[9px] font-black uppercase text-slate-700 block">Lost Report</span>
+                  <div className="p-2.5 rounded-xl bg-rose-50/80 border border-rose-200">
+                    <span className="text-[9px] font-black uppercase text-rose-700 block">Lost Report</span>
                     <p className="font-bold text-slate-900 truncate mt-0.5">{match.lostItem?.title}</p>
                     <p className="text-[10px] text-slate-500 truncate">{match.lostItem?.category}</p>
                     <p className="text-[10px] text-slate-400 mt-1 truncate">By: {match.lostItem?.owner?.name}</p>

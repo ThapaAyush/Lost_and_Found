@@ -521,7 +521,7 @@ const ItemDetailsPage = () => {
             <div className="absolute top-4 left-4">
               <span
                 className={`px-3 py-1 text-xs font-black uppercase tracking-wider rounded-full shadow-sm ${
-                  item.type === 'lost' ? 'bg-slate-800 text-white' : 'bg-blue-600 text-white'
+                  item.type === 'lost' ? 'bg-rose-600 text-white' : 'bg-blue-600 text-white'
                 }`}
               >
                 {item.type} Report

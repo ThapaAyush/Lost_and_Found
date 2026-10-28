@@ -63,7 +63,7 @@ const DashboardPage = () => {
       title: 'Lost Reports',
       count: stats.totalLost,
       icon: Search,
-      color: 'text-slate-700 bg-slate-100 border-slate-200',
+      color: 'text-rose-600 bg-rose-50 border-rose-200',
       link: '/my-reports?type=lost',
     },
     {

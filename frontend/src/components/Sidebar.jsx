@@ -117,7 +117,7 @@ const Sidebar = ({ isOpen, isDesktopOpen = true, closeSidebar }) => {
                       {link.badge && (
                         <span
                           className={`px-2 py-0.5 text-[10px] font-extrabold rounded-full shrink-0 ${
-                            isActive ? 'bg-white text-blue-600' : 'bg-teal-600 text-white'
+                            isActive ? 'bg-white text-blue-600' : 'bg-rose-500 text-white'
                           }`}
                         >
                           {link.badge}

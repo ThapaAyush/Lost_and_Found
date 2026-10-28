@@ -220,10 +220,10 @@ const MyReportsPage = () => {
                 <div className="min-w-0">
                   <div className="flex items-center space-x-2">
                     <span
-                      className={`text-[10px] font-black uppercase px-2 py-0.5 rounded-full ${
+                      className={`text-[10px] font-black uppercase px-2 py-0.5 rounded-full border ${
                         item.type === 'lost'
-                          ? 'bg-slate-100 text-slate-800'
-                          : 'bg-blue-50 text-blue-700'
+                          ? 'bg-rose-50 text-rose-700 border-rose-200'
+                          : 'bg-blue-50 text-blue-700 border-blue-200'
                       }`}
                     >
                       {item.type}

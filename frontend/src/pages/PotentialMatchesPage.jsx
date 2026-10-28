@@ -122,10 +122,10 @@ const PotentialMatchesPage = () => {
               <div className="flex flex-col sm:flex-row sm:items-center justify-between pb-4 border-b border-slate-100 gap-3">
                 <div className="flex items-center space-x-3">
                   <span
-                    className={`text-[10px] font-black uppercase px-2.5 py-1 rounded-full ${
+                    className={`text-[10px] font-black uppercase px-2.5 py-1 rounded-full border ${
                       group.myReport.type === 'lost'
-                        ? 'bg-slate-100 text-slate-800'
-                        : 'bg-blue-50 text-blue-700'
+                        ? 'bg-rose-50 text-rose-700 border-rose-200'
+                        : 'bg-blue-50 text-blue-700 border-blue-200'
                     }`}
                   >
                     Your {group.myReport.type} Report

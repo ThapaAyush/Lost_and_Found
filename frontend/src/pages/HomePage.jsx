@@ -161,9 +161,9 @@ const HomePage = () => {
           <div className="flex flex-wrap items-center justify-center gap-3 pt-2">
             <Link
               to="/report/lost"
-              className="inline-flex items-center px-6 py-3.5 rounded-2xl bg-white hover:bg-slate-50 text-slate-800 font-bold text-sm border border-slate-200 shadow-sm transition transform hover:-translate-y-0.5"
+              className="inline-flex items-center px-6 py-3.5 rounded-2xl bg-white hover:bg-rose-50 text-rose-600 hover:text-rose-700 font-bold text-sm border border-rose-200 shadow-sm transition transform hover:-translate-y-0.5"
             >
-              <PlusCircle className="w-4 h-4 mr-2 text-slate-600" />
+              <PlusCircle className="w-4 h-4 mr-2 text-rose-500" />
               I Lost Something
             </Link>
 
@@ -394,7 +394,7 @@ const HomePage = () => {
               onClick={() => setActiveTab('lost')}
               className={`px-4 py-2 rounded-xl font-bold transition ${
                 activeTab === 'lost'
-                  ? 'bg-white text-slate-900 shadow-sm'
+                  ? 'bg-white text-rose-600 shadow-sm'
                   : 'text-slate-600 hover:text-slate-900'
               }`}
             >

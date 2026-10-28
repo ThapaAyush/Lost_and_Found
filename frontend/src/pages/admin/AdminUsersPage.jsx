@@ -212,7 +212,7 @@ const AdminUsersPage = () => {
                         className={`inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold ${
                           u.accountStatus === 'active'
                             ? 'bg-teal-50 text-teal-700 border border-teal-200'
-                            : 'bg-slate-100 text-slate-700 border border-slate-200'
+                            : 'bg-rose-50 text-rose-700 border border-rose-200'
                         }`}
                       >
                         <span className="w-1.5 h-1.5 rounded-full bg-current mr-1" />

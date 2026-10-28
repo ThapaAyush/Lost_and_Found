@@ -54,7 +54,8 @@ export const formatStatusLabel = (status) => {
 export const getStatusBadgeClass = (status) => {
   switch (status) {
     case 'lost':
-      return 'bg-slate-100 text-slate-700 border border-slate-200';
+    case 'rejected':
+      return 'bg-rose-50 text-rose-700 border border-rose-200/80';
     case 'found':
       return 'bg-blue-50 text-blue-700 border border-blue-200/80';
     case 'handed_over':
@@ -65,7 +66,6 @@ export const getStatusBadgeClass = (status) => {
     case 'pending':
       return 'bg-blue-50 text-blue-700 border border-blue-200/80';
     case 'closed':
-    case 'rejected':
     case 'withdrawn':
     default:
       return 'bg-slate-100 text-slate-600 border border-slate-200';

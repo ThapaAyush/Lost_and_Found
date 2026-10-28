@@ -168,7 +168,7 @@ const ClaimDetailsPage = () => {
             <button
               type="button"
               onClick={() => setWithdrawDialogOpen(true)}
-              className="text-xs font-bold text-slate-600 hover:text-slate-800 bg-slate-100 px-3 py-1 rounded-xl transition border border-slate-200"
+              className="text-xs font-bold text-rose-600 hover:text-rose-700 bg-rose-50 hover:bg-rose-100 px-3 py-1 rounded-xl transition border border-rose-200"
             >
               Withdraw Claim
             </button>

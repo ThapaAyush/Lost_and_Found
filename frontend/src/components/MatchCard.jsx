@@ -43,7 +43,7 @@ const MatchCard = ({ matchCandidate, match, layout = 'vertical', onClaim, onCont
             <div className="absolute top-3 left-3">
               <span
                 className={`px-3 py-1 text-[11px] font-black uppercase tracking-wider rounded-full shadow-sm ${
-                  item.type === 'lost' ? 'bg-slate-800 text-white' : 'bg-blue-600 text-white'
+                  item.type === 'lost' ? 'bg-rose-600 text-white' : 'bg-blue-600 text-white'
                 }`}
               >
                 {item.type} Report
@@ -165,7 +165,7 @@ const MatchCard = ({ matchCandidate, match, layout = 'vertical', onClaim, onCont
         <div className="absolute top-2.5 left-2.5">
           <span
             className={`px-2.5 py-0.5 text-[10px] font-black uppercase tracking-wider rounded-full shadow-sm ${
-              item.type === 'lost' ? 'bg-slate-800 text-white' : 'bg-blue-600 text-white'
+              item.type === 'lost' ? 'bg-rose-600 text-white' : 'bg-blue-600 text-white'
             }`}
           >
             {item.type}

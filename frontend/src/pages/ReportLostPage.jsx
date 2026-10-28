@@ -97,7 +97,7 @@ const ReportLostPage = () => {
           Back
         </button>
         <div className="flex items-center space-x-2">
-          <span className="w-3 h-3 rounded-full bg-blue-600 animate-pulse" />
+          <span className="w-3 h-3 rounded-full bg-rose-500 animate-pulse" />
           <h1 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">
             Report a Lost Item
           </h1>
@@ -306,7 +306,7 @@ const ReportLostPage = () => {
           <button
             type="submit"
             disabled={loading}
-            className="inline-flex items-center px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs rounded-xl shadow-sm transition disabled:opacity-50"
+            className="inline-flex items-center px-6 py-3 bg-rose-600 hover:bg-rose-700 text-white font-bold text-xs rounded-xl shadow-sm transition disabled:opacity-50"
           >
             {loading ? (
               <>

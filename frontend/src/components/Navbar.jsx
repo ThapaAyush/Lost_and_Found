@@ -165,9 +165,9 @@ const Navbar = ({ toggleSidebar, isSidebarOpen }) => {
                 <Link
                   to="/report/lost"
                   onClick={() => setReportDropdownOpen(false)}
-                  className="flex items-center px-4 py-2.5 text-xs font-semibold text-slate-700 hover:bg-slate-50 hover:text-slate-900 transition"
+                  className="flex items-center px-4 py-2.5 text-xs font-semibold text-slate-700 hover:bg-rose-50 hover:text-rose-600 transition"
                 >
-                  <span className="w-2 h-2 rounded-full bg-slate-700 mr-2.5" />
+                  <span className="w-2 h-2 rounded-full bg-rose-500 mr-2.5" />
                   Report Lost Belonging
                 </Link>
                 <Link
