@@ -137,11 +137,15 @@ const HomePage = () => {
 
   return (
     <div className="space-y-16 pb-12">
-      {/* 1. Hero Section - Soothing White & Ocean Blue */}
-      <section className="relative overflow-hidden rounded-3xl bg-gradient-to-b from-blue-50/50 via-white to-white border border-slate-200/90 text-slate-800 p-8 sm:p-12 lg:p-16 shadow-sm">
+      {/* 1. Hero Section - Soothing Light Tint */}
+      <section className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-blue-50/90 via-sky-50/50 to-teal-50/70 border border-blue-100/90 text-slate-800 p-8 sm:p-12 lg:p-16 shadow-sm">
+        {/* Soft Ambient Light Glows */}
+        <div className="absolute top-0 -left-10 w-72 h-72 bg-blue-200/30 rounded-full blur-3xl pointer-events-none" />
+        <div className="absolute bottom-0 -right-10 w-72 h-72 bg-teal-200/30 rounded-full blur-3xl pointer-events-none" />
+
         <div className="relative z-10 max-w-4xl mx-auto text-center space-y-6">
-          <div className="inline-flex items-center space-x-2 px-3.5 py-1.5 rounded-full bg-blue-50 border border-blue-200/80 text-blue-700 text-xs font-semibold">
-            <span className="w-2 h-2 rounded-full bg-blue-500 animate-pulse" />
+          <div className="inline-flex items-center space-x-2 px-3.5 py-1.5 rounded-full bg-white border border-blue-200 text-blue-700 text-xs font-semibold shadow-xs">
+            <span className="w-2 h-2 rounded-full bg-blue-600 animate-pulse" />
             <span>Campus Community Lost & Found Reconnection Platform</span>
           </div>
 
