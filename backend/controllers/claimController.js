@@ -101,19 +101,74 @@ export const submitClaim = async (req, res, next) => {
   }
 };
 
-// @desc    Get all claims submitted by the current user
+// @desc    Get all claims related to the current user (both submitted and received on user's found items)
 // @route   GET /api/claims/mine
 export const getMyClaims = async (req, res, next) => {
   try {
-    const claims = await Claim.find({ claimant: req.user._id })
+    // 1. Claims submitted by this user to recover their items
+    const submittedClaimsRaw = await Claim.find({ claimant: req.user._id })
       .populate('item')
       .populate('reviewer', 'name')
       .sort({ createdAt: -1 });
 
+    // 2. Find all items reported by this user (e.g. found belongings)
+    const ItemModel = (await import('../models/Item.js')).default;
+    const userItems = await ItemModel.find({ owner: req.user._id }).select('_id');
+    const userItemIds = userItems.map((i) => i._id);
+
+    // 3. Claims received on items reported by this user (submitted by other users)
+    const receivedClaimsRaw = await Claim.find({
+      item: { $in: userItemIds },
+      claimant: { $ne: req.user._id },
+    })
+      .populate('item')
+      .populate('claimant', 'name email avatar phone')
+      .populate('reviewer', 'name')
+      .sort({ createdAt: -1 });
+
+    // Attach conversationId if conversation exists
+    const Conversation = (await import('../models/Conversation.js')).default;
+
+    const receivedClaims = await Promise.all(
+      receivedClaimsRaw.map(async (c) => {
+        let conversationId = null;
+        if (c.item && c.claimant) {
+          const conv = await Conversation.findOne({
+            relatedItem: c.item._id,
+            participants: { $all: [c.claimant._id, req.user._id] },
+          });
+          conversationId = conv?._id || null;
+        }
+        return {
+          ...c.toObject(),
+          conversationId,
+        };
+      })
+    );
+
+    const submittedClaims = await Promise.all(
+      submittedClaimsRaw.map(async (c) => {
+        let conversationId = null;
+        if (c.item && c.item.owner) {
+          const conv = await Conversation.findOne({
+            relatedItem: c.item._id,
+            participants: { $all: [req.user._id, c.item.owner] },
+          });
+          conversationId = conv?._id || null;
+        }
+        return {
+          ...c.toObject(),
+          conversationId,
+        };
+      })
+    );
+
     res.status(200).json({
       success: true,
-      count: claims.length,
-      claims,
+      count: submittedClaims.length + receivedClaims.length,
+      claims: submittedClaims, // for backwards-compatibility
+      submittedClaims,
+      receivedClaims,
     });
   } catch (error) {
     next(error);
