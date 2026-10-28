@@ -196,7 +196,7 @@ const HomePage = () => {
                   type="text"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  placeholder="What did you lose or find? (e.g., iPhone 15, Blue Backpack, AirPods)"
+                  placeholder="What did you lose or find?"
                   className="w-full text-xs sm:text-sm bg-transparent border-none focus:outline-none placeholder-slate-400 text-slate-800"
                 />
               </div>
