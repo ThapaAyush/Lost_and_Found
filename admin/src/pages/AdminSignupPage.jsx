@@ -15,9 +15,8 @@ import {
   ShieldAlert,
   ArrowLeft,
   UserPlus,
-  ShieldCheck,
 } from 'lucide-react';
-import { adminAPI } from '../../services/api';
+import { adminAPI } from '../services/api';
 
 const AdminSignupPage = () => {
   const navigate = useNavigate();
@@ -159,7 +158,7 @@ const AdminSignupPage = () => {
       });
 
       if (res.data?.success) {
-        setSuccessMessage(`Account for "${formData.name}" (${formData.email}) created successfully as ${formData.role.toUpperCase()}!`);
+        setSuccessMessage(`Account for "${formData.name}" (${formData.email}) registered successfully as ${formData.role.toUpperCase()}!`);
         setFormData({
           name: '',
           email: '',
@@ -184,42 +183,42 @@ const AdminSignupPage = () => {
 
   return (
     <div className="space-y-6">
-      {/* Admin Folder Navigation Bar */}
+      {/* Top Folder Navigation Bar */}
       <div className="flex items-center space-x-2 border-b border-slate-200 pb-3 overflow-x-auto">
         <Link
-          to="/admin/items"
+          to="/items"
           className="inline-flex items-center space-x-2 px-3.5 py-2 rounded-xl text-xs font-bold text-slate-600 hover:bg-slate-100 transition shrink-0"
         >
           <Package className="w-4 h-4" />
           <span>Lost & Found Data</span>
         </Link>
         <Link
-          to="/admin/users"
+          to="/users"
           className="inline-flex items-center space-x-2 px-3.5 py-2 rounded-xl text-xs font-bold text-slate-600 hover:bg-slate-100 transition shrink-0"
         >
           <Users className="w-4 h-4" />
           <span>Users Section</span>
         </Link>
         <Link
-          to="/admin/signup"
+          to="/signup"
           className="inline-flex items-center space-x-2 px-3.5 py-2 rounded-xl text-xs font-bold bg-blue-600 text-white shadow-sm shadow-blue-500/20 shrink-0"
         >
           <UserPlus className="w-4 h-4" />
           <span>Sign-Up User</span>
         </Link>
         <Link
-          to="/admin/claims"
+          to="/claims"
           className="inline-flex items-center space-x-2 px-3.5 py-2 rounded-xl text-xs font-bold text-slate-600 hover:bg-slate-100 transition shrink-0"
         >
           <ShieldAlert className="w-4 h-4" />
           <span>Claims Oversight</span>
         </Link>
         <Link
-          to="/admin"
+          to="/"
           className="inline-flex items-center space-x-2 px-3.5 py-2 rounded-xl text-xs font-bold text-slate-600 hover:bg-slate-100 transition shrink-0"
         >
           <ArrowLeft className="w-4 h-4" />
-          <span>Admin Overview</span>
+          <span>Overview</span>
         </Link>
       </div>
 
@@ -236,11 +235,11 @@ const AdminSignupPage = () => {
         </div>
 
         <Link
-          to="/admin/users"
+          to="/users"
           className="inline-flex items-center px-4 py-2 text-xs font-bold text-slate-700 bg-white hover:bg-slate-50 border border-slate-200 rounded-xl transition"
         >
           <Users className="w-3.5 h-3.5 mr-1.5" />
-          <span>View All Registered Users</span>
+          <span>View Users Directory</span>
         </Link>
       </div>
 
@@ -252,7 +251,7 @@ const AdminSignupPage = () => {
             <span>{successMessage}</span>
           </div>
           <Link
-            to="/admin/users"
+            to="/users"
             className="px-3 py-1 bg-emerald-600 text-white font-bold rounded-lg hover:bg-emerald-700 transition"
           >
             Go to Users
@@ -267,7 +266,7 @@ const AdminSignupPage = () => {
         </div>
       )}
 
-      {/* Registration Card Form */}
+      {/* Form Card */}
       <div className="bg-white rounded-3xl border border-slate-200/80 p-6 sm:p-8 shadow-card max-w-2xl">
         <form onSubmit={handleSubmit} noValidate className="space-y-5">
           {/* Full Name */}
@@ -367,7 +366,7 @@ const AdminSignupPage = () => {
                 />
                 <div>
                   <p className="text-xs font-bold text-slate-800">Standard User</p>
-                  <p className="text-[11px] text-slate-500">Can report and claim lost items</p>
+                  <p className="text-[11px] text-slate-500">Can report and claim items</p>
                 </div>
               </label>
 
@@ -388,13 +387,13 @@ const AdminSignupPage = () => {
                 />
                 <div>
                   <p className="text-xs font-bold text-slate-800">Staff Administrator</p>
-                  <p className="text-[11px] text-slate-500">Full management capabilities</p>
+                  <p className="text-[11px] text-slate-500">Administrative capabilities</p>
                 </div>
               </label>
             </div>
           </div>
 
-          {/* Password Header & Quick Generator */}
+          {/* Password Header & Generator */}
           <div className="pt-2">
             <div className="flex items-center justify-between mb-1.5">
               <label className="text-xs font-bold text-slate-700 uppercase tracking-wider">

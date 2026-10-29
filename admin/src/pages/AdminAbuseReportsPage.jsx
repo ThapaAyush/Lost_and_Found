@@ -9,11 +9,11 @@ import {
   ShieldAlert,
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import { adminAPI } from '../../services/api';
-import Pagination from '../../components/Pagination';
-import LoadingSpinner from '../../components/LoadingSpinner';
-import Modal from '../../components/Modal';
-import { formatDate, formatTimeAgo } from '../../utils/formatters';
+import { adminAPI } from '../services/api';
+import Pagination from '../components/Pagination';
+import LoadingSpinner from '../components/LoadingSpinner';
+import Modal from '../components/Modal';
+import { formatDate, formatTimeAgo } from '../utils/formatters';
 
 const AdminAbuseReportsPage = () => {
   const [reports, setReports] = useState([]);
@@ -85,19 +85,11 @@ const AdminAbuseReportsPage = () => {
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <Link
-            to="/admin"
-            className="inline-flex items-center text-xs font-semibold text-slate-500 hover:text-blue-600 mb-2 transition"
-          >
-            <ArrowLeft className="w-3.5 h-3.5 mr-1" />
-            Admin Overview
-          </Link>
           <h1 className="text-2xl font-black text-slate-900 tracking-tight">
             Community Abuse Reports ({totalCount})
           </h1>
           <p className="text-xs text-slate-500 mt-1">
-            Review user-submitted reports regarding potential scams, harassment, or policy
-            violations.
+            Review user-submitted reports regarding potential scams, harassment, or policy violations.
           </p>
         </div>
 
@@ -117,6 +109,14 @@ const AdminAbuseReportsPage = () => {
 
       {loading ? (
         <LoadingSpinner size="lg" message="Loading abuse reports..." />
+      ) : reports.length === 0 ? (
+        <div className="bg-white rounded-3xl border border-slate-200/80 p-12 text-center shadow-card">
+          <AlertTriangle className="w-12 h-12 text-slate-300 mx-auto mb-3" />
+          <h3 className="text-base font-bold text-slate-800">No Abuse Reports</h3>
+          <p className="text-xs text-slate-500 mt-1">
+            {reviewStatus !== 'All' ? `No reports with status "${reviewStatus}".` : 'No flags submitted.'}
+          </p>
+        </div>
       ) : (
         <div className="bg-white rounded-3xl border border-slate-200/80 shadow-card overflow-hidden">
           <div className="overflow-x-auto">

@@ -6,7 +6,6 @@ import { NotificationProvider } from './context/NotificationContext';
 // Layouts
 import AuthLayout from './layouts/AuthLayout';
 import ProtectedRoute from './layouts/ProtectedRoute';
-import AdminRoute from './layouts/AdminRoute';
 import AppLayout from './layouts/AppLayout';
 
 // Public Pages
@@ -17,7 +16,6 @@ import ItemDetailsPage from './pages/ItemDetailsPage';
 
 // Auth Pages
 import LoginPage from './pages/LoginPage';
-import SignupPage from './pages/SignupPage';
 import ForgotPasswordPage from './pages/ForgotPasswordPage';
 import ResetPasswordPage from './pages/ResetPasswordPage';
 
@@ -33,15 +31,6 @@ import ClaimDetailsPage from './pages/ClaimDetailsPage';
 import ConversationsPage from './pages/ConversationsPage';
 import NotificationsPage from './pages/NotificationsPage';
 import ProfilePage from './pages/ProfilePage';
-
-// Admin Pages
-import AdminDashboardPage from './pages/admin/AdminDashboardPage';
-import AdminUsersPage from './pages/admin/AdminUsersPage';
-import AdminSignupPage from './pages/admin/AdminSignupPage';
-import AdminItemsPage from './pages/admin/AdminItemsPage';
-import AdminClaimsPage from './pages/admin/AdminClaimsPage';
-import AdminAbuseReportsPage from './pages/admin/AdminAbuseReportsPage';
-import AdminAuditLogsPage from './pages/admin/AdminAuditLogsPage';
 
 // Not Found
 import NotFoundPage from './pages/NotFoundPage';
@@ -81,17 +70,6 @@ function App() {
                 <Route path="/conversations" element={<ConversationsPage />} />
                 <Route path="/notifications" element={<NotificationsPage />} />
                 <Route path="/profile" element={<ProfilePage />} />
-
-                {/* Administrator Oversight Routes */}
-                <Route element={<AdminRoute />}>
-                  <Route path="/admin" element={<AdminDashboardPage />} />
-                  <Route path="/admin/users" element={<AdminUsersPage />} />
-                  <Route path="/admin/signup" element={<AdminSignupPage />} />
-                  <Route path="/admin/items" element={<AdminItemsPage />} />
-                  <Route path="/admin/claims" element={<AdminClaimsPage />} />
-                  <Route path="/admin/abuse-reports" element={<AdminAbuseReportsPage />} />
-                  <Route path="/admin/audit-logs" element={<AdminAuditLogsPage />} />
-                </Route>
               </Route>
 
               {/* 404 Fallback */}

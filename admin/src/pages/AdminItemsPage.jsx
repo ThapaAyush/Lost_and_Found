@@ -12,20 +12,24 @@ import {
   Package,
   Users,
   UserPlus,
+  ExternalLink,
 } from 'lucide-react';
-import { Link } from 'react-router-dom';
-import { adminAPI } from '../../services/api';
-import StatusBadge from '../../components/StatusBadge';
-import Pagination from '../../components/Pagination';
-import LoadingSpinner from '../../components/LoadingSpinner';
-import ConfirmDialog from '../../components/ConfirmDialog';
-import Modal from '../../components/Modal';
-import { formatDate } from '../../utils/formatters';
+import { Link, useSearchParams } from 'react-router-dom';
+import { adminAPI } from '../services/api';
+import StatusBadge from '../components/StatusBadge';
+import Pagination from '../components/Pagination';
+import LoadingSpinner from '../components/LoadingSpinner';
+import ConfirmDialog from '../components/ConfirmDialog';
+import Modal from '../components/Modal';
+import { formatDate } from '../utils/formatters';
 
 const AdminItemsPage = () => {
+  const [searchParams] = useSearchParams();
+  const initialType = searchParams.get('type') || 'All';
+
   const [items, setItems] = useState([]);
   const [search, setSearch] = useState('');
-  const [type, setType] = useState('All');
+  const [type, setType] = useState(initialType);
   const [isProhibited, setIsProhibited] = useState('All');
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
@@ -95,6 +99,8 @@ const AdminItemsPage = () => {
         reason: prohibitReason.trim() || 'Violates listing guidelines',
       });
       setModerateModalOpen(false);
+      setActionSuccess(`Listing "${selectedItem.title}" updated.`);
+      setTimeout(() => setActionSuccess(''), 4500);
       fetchItems(currentPage);
     } catch (err) {
       alert(err.message || 'Failed to update moderation state');
@@ -116,7 +122,7 @@ const AdminItemsPage = () => {
       setDeleteModalOpen(false);
       const title = itemToDelete.title;
       setItemToDelete(null);
-      setActionSuccess(`Listing "${title}" removed successfully.`);
+      setActionSuccess(`Post "${title}" removed successfully.`);
       setTimeout(() => setActionSuccess(''), 4500);
       fetchItems(currentPage);
     } catch (err) {
@@ -128,42 +134,42 @@ const AdminItemsPage = () => {
 
   return (
     <div className="space-y-6">
-      {/* Admin Folder Navigation Bar */}
+      {/* Top Folder Navigation Tabs */}
       <div className="flex items-center space-x-2 border-b border-slate-200 pb-3 overflow-x-auto">
         <Link
-          to="/admin/items"
+          to="/items"
           className="inline-flex items-center space-x-2 px-3.5 py-2 rounded-xl text-xs font-bold bg-blue-600 text-white shadow-sm shadow-blue-500/20 shrink-0"
         >
           <Package className="w-4 h-4" />
           <span>Lost & Found Data</span>
         </Link>
         <Link
-          to="/admin/users"
+          to="/users"
           className="inline-flex items-center space-x-2 px-3.5 py-2 rounded-xl text-xs font-bold text-slate-600 hover:bg-slate-100 transition shrink-0"
         >
           <Users className="w-4 h-4" />
           <span>Users Section</span>
         </Link>
         <Link
-          to="/admin/signup"
+          to="/signup"
           className="inline-flex items-center space-x-2 px-3.5 py-2 rounded-xl text-xs font-bold text-slate-600 hover:bg-slate-100 transition shrink-0"
         >
           <UserPlus className="w-4 h-4" />
           <span>Sign-Up User</span>
         </Link>
         <Link
-          to="/admin/claims"
+          to="/claims"
           className="inline-flex items-center space-x-2 px-3.5 py-2 rounded-xl text-xs font-bold text-slate-600 hover:bg-slate-100 transition shrink-0"
         >
           <ShieldAlert className="w-4 h-4" />
           <span>Claims Oversight</span>
         </Link>
         <Link
-          to="/admin"
+          to="/"
           className="inline-flex items-center space-x-2 px-3.5 py-2 rounded-xl text-xs font-bold text-slate-600 hover:bg-slate-100 transition shrink-0"
         >
           <ArrowLeft className="w-4 h-4" />
-          <span>Admin Overview</span>
+          <span>Overview</span>
         </Link>
       </div>
 
@@ -187,10 +193,10 @@ const AdminItemsPage = () => {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <h1 className="text-2xl font-black text-slate-900 tracking-tight">
-            Lost & Found Data Management ({totalCount})
+            Lost & Found Data ({totalCount})
           </h1>
           <p className="text-xs text-slate-500 mt-1">
-            Oversee all community lost reports and found belongings. Moderate listings or permanently remove invalid posts.
+            Review all community lost reports and found belongings. Moderate visibility or permanently delete invalid posts.
           </p>
         </div>
       </div>
@@ -252,9 +258,7 @@ const AdminItemsPage = () => {
                 {items.map((it) => (
                   <tr key={it._id} className="hover:bg-slate-50/60 transition">
                     <td className="py-3.5 px-4 font-bold text-slate-800">
-                      <Link to={`/items/${it._id}`} className="hover:text-blue-600 transition">
-                        {it.title}
-                      </Link>
+                      <p className="text-slate-900 font-bold">{it.title}</p>
                       <p className="text-[11px] text-slate-400 font-normal truncate max-w-xs">
                         {it.locationDescription}
                       </p>
@@ -295,12 +299,15 @@ const AdminItemsPage = () => {
                     </td>
 
                     <td className="py-3.5 px-4 text-right space-x-2 whitespace-nowrap">
-                      <Link
-                        to={`/items/${it._id}`}
-                        className="px-2.5 py-1 text-[11px] font-semibold rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 transition"
+                      <a
+                        href={`http://localhost:5173/items/${it._id}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="px-2.5 py-1 text-[11px] font-semibold rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 inline-flex items-center transition"
                       >
+                        <ExternalLink className="w-3 h-3 mr-1" />
                         View
-                      </Link>
+                      </a>
 
                       {it.isProhibited ? (
                         <button

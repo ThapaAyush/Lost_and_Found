@@ -263,19 +263,6 @@ const Navbar = ({ toggleSidebar, isSidebarOpen }) => {
                         <User className="w-4 h-4 mr-2 text-slate-400" />
                         Account Settings
                       </Link>
-
-                      {isAdmin && (
-                        <div className="pt-1 border-t border-slate-100">
-                          <Link
-                            to="/admin"
-                            onClick={() => setProfileDropdownOpen(false)}
-                            className="flex items-center px-4 py-2 text-xs font-bold text-blue-700 hover:bg-blue-50 transition"
-                          >
-                            <ShieldCheck className="w-4 h-4 mr-2 text-blue-600" />
-                            Admin Oversight Panel
-                          </Link>
-                        </div>
-                      )}
                     </div>
 
                     <div className="pt-1 border-t border-slate-100">

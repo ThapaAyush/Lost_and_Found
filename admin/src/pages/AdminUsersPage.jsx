@@ -9,22 +9,20 @@ import {
   XCircle,
   Loader2,
   ArrowLeft,
-  UserCheck,
-  UserX,
   Trash2,
   Package,
   UserPlus,
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
-import { adminAPI } from '../../services/api';
-import { useAuth } from '../../context/AuthContext';
-import Pagination from '../../components/Pagination';
-import LoadingSpinner from '../../components/LoadingSpinner';
-import ConfirmDialog from '../../components/ConfirmDialog';
-import { formatDate } from '../../utils/formatters';
+import { adminAPI } from '../services/api';
+import { useAdminAuth, ADMIN_EMAIL } from '../context/AdminAuthContext';
+import Pagination from '../components/Pagination';
+import LoadingSpinner from '../components/LoadingSpinner';
+import ConfirmDialog from '../components/ConfirmDialog';
+import { formatDate } from '../utils/formatters';
 
 const AdminUsersPage = () => {
-  const { user: currentAdmin } = useAuth();
+  const { adminUser } = useAdminAuth();
   const [users, setUsers] = useState([]);
   const [search, setSearch] = useState('');
   const [role, setRole] = useState('All');
@@ -104,6 +102,8 @@ const AdminUsersPage = () => {
         role: targetRole || undefined,
       });
       setDialogOpen(false);
+      setActionSuccess(`Updated ${selectedUser.name}'s account standing.`);
+      setTimeout(() => setActionSuccess(''), 4500);
       fetchUsers(currentPage);
     } catch (err) {
       alert(err.message || 'Failed to update user');
@@ -125,7 +125,7 @@ const AdminUsersPage = () => {
       setDeleteUserModalOpen(false);
       const name = userToDelete.name;
       setUserToDelete(null);
-      setActionSuccess(`User "${name}" and all associated data were permanently deleted.`);
+      setActionSuccess(`User "${name}" and all associated posts were permanently deleted.`);
       setTimeout(() => setActionSuccess(''), 4500);
       fetchUsers(currentPage);
     } catch (err) {
@@ -137,42 +137,42 @@ const AdminUsersPage = () => {
 
   return (
     <div className="space-y-6">
-      {/* Admin Folder Navigation Bar */}
+      {/* Top Folder Navigation Bar */}
       <div className="flex items-center space-x-2 border-b border-slate-200 pb-3 overflow-x-auto">
         <Link
-          to="/admin/items"
+          to="/items"
           className="inline-flex items-center space-x-2 px-3.5 py-2 rounded-xl text-xs font-bold text-slate-600 hover:bg-slate-100 transition shrink-0"
         >
           <Package className="w-4 h-4" />
           <span>Lost & Found Data</span>
         </Link>
         <Link
-          to="/admin/users"
+          to="/users"
           className="inline-flex items-center space-x-2 px-3.5 py-2 rounded-xl text-xs font-bold bg-blue-600 text-white shadow-sm shadow-blue-500/20 shrink-0"
         >
           <Users className="w-4 h-4" />
           <span>Users Section</span>
         </Link>
         <Link
-          to="/admin/signup"
+          to="/signup"
           className="inline-flex items-center space-x-2 px-3.5 py-2 rounded-xl text-xs font-bold text-slate-600 hover:bg-slate-100 transition shrink-0"
         >
           <UserPlus className="w-4 h-4" />
           <span>Sign-Up User</span>
         </Link>
         <Link
-          to="/admin/claims"
+          to="/claims"
           className="inline-flex items-center space-x-2 px-3.5 py-2 rounded-xl text-xs font-bold text-slate-600 hover:bg-slate-100 transition shrink-0"
         >
           <ShieldAlert className="w-4 h-4" />
           <span>Claims Oversight</span>
         </Link>
         <Link
-          to="/admin"
+          to="/"
           className="inline-flex items-center space-x-2 px-3.5 py-2 rounded-xl text-xs font-bold text-slate-600 hover:bg-slate-100 transition shrink-0"
         >
           <ArrowLeft className="w-4 h-4" />
-          <span>Admin Overview</span>
+          <span>Overview</span>
         </Link>
       </div>
 
@@ -196,7 +196,7 @@ const AdminUsersPage = () => {
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <h1 className="text-2xl font-black text-slate-900 tracking-tight">
-            Registered Users Management ({totalCount})
+            Registered Users ({totalCount})
           </h1>
           <p className="text-xs text-slate-500 mt-1">
             Manage permissions, inspect registration data, adjust account standing, or remove accounts.
@@ -204,7 +204,7 @@ const AdminUsersPage = () => {
         </div>
 
         <Link
-          to="/admin/signup"
+          to="/signup"
           className="inline-flex items-center self-start sm:self-auto px-4 py-2.5 text-xs font-bold bg-blue-600 hover:bg-blue-700 text-white rounded-xl shadow-sm shadow-blue-500/20 transition"
         >
           <UserPlus className="w-4 h-4 mr-1.5" />
@@ -265,90 +265,97 @@ const AdminUsersPage = () => {
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-100">
-                {users.map((u) => (
-                  <tr key={u._id} className="hover:bg-slate-50/60 transition">
-                    <td className="py-3.5 px-4 flex items-center space-x-3">
-                      {u.avatar ? (
-                        <img
-                          src={u.avatar}
-                          alt={u.name}
-                          className="w-9 h-9 rounded-full object-cover"
-                        />
-                      ) : (
+                {users.map((u) => {
+                  const isPermanentAdmin = u.email?.toLowerCase() === ADMIN_EMAIL.toLowerCase();
+
+                  return (
+                    <tr key={u._id} className="hover:bg-slate-50/60 transition">
+                      <td className="py-3.5 px-4 flex items-center space-x-3">
                         <div className="w-9 h-9 rounded-full bg-blue-100 text-blue-700 font-bold flex items-center justify-center text-xs">
                           {u.name?.charAt(0) || 'U'}
                         </div>
-                      )}
-                      <div>
-                        <p className="font-bold text-slate-800 text-xs">{u.name}</p>
-                        <p className="text-[11px] text-slate-400">{u.email}</p>
-                      </div>
-                    </td>
+                        <div>
+                          <div className="flex items-center space-x-1.5">
+                            <p className="font-bold text-slate-800 text-xs">{u.name}</p>
+                            {isPermanentAdmin && (
+                              <span className="text-[9px] font-black bg-blue-100 text-blue-700 px-1.5 py-0.5 rounded">
+                                PRIMARY ADMIN
+                              </span>
+                            )}
+                          </div>
+                          <p className="text-[11px] text-slate-400 font-mono">{u.email}</p>
+                        </div>
+                      </td>
 
-                    <td className="py-3.5 px-4">
-                      <span
-                        className={`px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider ${
-                          u.role === 'admin'
-                            ? 'bg-blue-50 text-blue-700 border border-blue-200'
-                            : 'bg-slate-100 text-slate-700'
-                        }`}
-                      >
-                        {u.role}
-                      </span>
-                    </td>
-
-                    <td className="py-3.5 px-4">
-                      <span
-                        className={`inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold ${
-                          u.accountStatus === 'active'
-                            ? 'bg-teal-50 text-teal-700 border border-teal-200'
-                            : 'bg-rose-50 text-rose-700 border border-rose-200'
-                        }`}
-                      >
-                        <span className="w-1.5 h-1.5 rounded-full bg-current mr-1" />
-                        {u.accountStatus}
-                      </span>
-                    </td>
-
-                    <td className="py-3.5 px-4 text-slate-500 whitespace-nowrap">
-                      {formatDate(u.createdAt)}
-                    </td>
-
-                    <td className="py-3.5 px-4 text-right space-x-2 whitespace-nowrap">
-                      <button
-                        type="button"
-                        onClick={() => openRoleToggle(u)}
-                        className="px-2.5 py-1 text-[11px] font-semibold rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 transition"
-                      >
-                        {u.role === 'admin' ? 'Demote' : 'Make Admin'}
-                      </button>
-
-                      <button
-                        type="button"
-                        onClick={() => openStatusToggle(u)}
-                        className={`px-2.5 py-1 text-[11px] font-semibold rounded-lg transition ${
-                          u.accountStatus === 'active'
-                            ? 'bg-amber-50 text-amber-700 hover:bg-amber-100'
-                            : 'bg-emerald-50 text-emerald-700 hover:bg-emerald-100'
-                        }`}
-                      >
-                        {u.accountStatus === 'active' ? 'Suspend' : 'Activate'}
-                      </button>
-
-                      {u._id !== currentAdmin?._id && (
-                        <button
-                          type="button"
-                          onClick={() => openDeleteUserModal(u)}
-                          className="px-2.5 py-1 text-[11px] font-semibold rounded-lg bg-rose-50 text-rose-700 hover:bg-rose-100 inline-flex items-center transition"
-                          title="Permanently remove user"
+                      <td className="py-3.5 px-4">
+                        <span
+                          className={`px-2.5 py-0.5 rounded-full text-[10px] font-bold uppercase tracking-wider ${
+                            u.role === 'admin'
+                              ? 'bg-blue-50 text-blue-700 border border-blue-200'
+                              : 'bg-slate-100 text-slate-700'
+                          }`}
                         >
-                          <Trash2 className="w-3 h-3 mr-1 text-rose-600" />
-                          Remove
-                        </button>
-                      )}
-                    </td>
-                  </tr>
-                ))}
+                          {u.role}
+                        </span>
+                      </td>
+
+                      <td className="py-3.5 px-4">
+                        <span
+                          className={`inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-bold ${
+                            u.accountStatus === 'active'
+                              ? 'bg-teal-50 text-teal-700 border border-teal-200'
+                              : 'bg-rose-50 text-rose-700 border border-rose-200'
+                          }`}
+                        >
+                          <span className="w-1.5 h-1.5 rounded-full bg-current mr-1" />
+                          {u.accountStatus}
+                        </span>
+                      </td>
+
+                      <td className="py-3.5 px-4 text-slate-500 whitespace-nowrap">
+                        {formatDate(u.createdAt)}
+                      </td>
+
+                      <td className="py-3.5 px-4 text-right space-x-2 whitespace-nowrap">
+                        {!isPermanentAdmin ? (
+                          <>
+                            <button
+                              type="button"
+                              onClick={() => openRoleToggle(u)}
+                              className="px-2.5 py-1 text-[11px] font-semibold rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 transition"
+                            >
+                              {u.role === 'admin' ? 'Demote' : 'Make Admin'}
+                            </button>
+
+                            <button
+                              type="button"
+                              onClick={() => openStatusToggle(u)}
+                              className={`px-2.5 py-1 text-[11px] font-semibold rounded-lg transition ${
+                                u.accountStatus === 'active'
+                                  ? 'bg-amber-50 text-amber-700 hover:bg-amber-100'
+                                  : 'bg-emerald-50 text-emerald-700 hover:bg-emerald-100'
+                              }`}
+                            >
+                              {u.accountStatus === 'active' ? 'Suspend' : 'Activate'}
+                            </button>
+
+                            <button
+                              type="button"
+                              onClick={() => openDeleteUserModal(u)}
+                              className="px-2.5 py-1 text-[11px] font-semibold rounded-lg bg-rose-50 text-rose-700 hover:bg-rose-100 inline-flex items-center transition"
+                              title="Permanently remove user"
+                            >
+                              <Trash2 className="w-3 h-3 mr-1 text-rose-600" />
+                              Remove
+                            </button>
+                          </>
+                        ) : (
+                          <span className="text-[11px] text-slate-400 italic">Protected</span>
+                        )}
+                      </td>
+                    </tr>
+                  );
+                })}
               </tbody>
             </table>
           </div>
@@ -383,7 +390,7 @@ const AdminUsersPage = () => {
         onClose={() => setDeleteUserModalOpen(false)}
         onConfirm={handleDeleteUserConfirm}
         title="Permanently Remove User Account?"
-        message={`Are you sure you want to permanently delete "${userToDelete?.name}" (${userToDelete?.email})? All posts and claims submitted by this user will also be removed. This action cannot be reversed.`}
+        message={`Are you sure you want to permanently delete "${userToDelete?.name}" (${userToDelete?.email})? All posts and claims submitted by this user will also be removed.`}
         confirmText="Delete User"
         isDanger={true}
         loading={deleteLoading}
