@@ -81,18 +81,18 @@ const LostItemsPage = () => {
   };
 
   return (
-    <div className="space-y-6">
-      {/* Header */}
+    <div className="space-y-8">
+      {/* Header & Main Call to Action */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <div className="flex items-center space-x-2">
             <span className="w-2.5 h-2.5 rounded-full bg-rose-500 animate-pulse" />
             <h1 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">
-              Reported Lost Belongings
+              Lost Reports
             </h1>
           </div>
           <p className="text-xs sm:text-sm text-slate-500 mt-1">
-            Browse items reported missing by community members ({totalCount} reports)
+            Browse items reported missing by community members and help reunite owners with their belongings.
           </p>
         </div>
 
@@ -105,50 +105,67 @@ const LostItemsPage = () => {
         </Link>
       </div>
 
-      {/* Filter Panel */}
-      <FilterPanel
-        search={search}
-        category={category}
-        location={location}
-        startDate={startDate}
-        sortBy={sortBy}
-        order={order}
-        onFilterChange={handleFilterChange}
-        onResetFilters={handleResetFilters}
-      />
-
-      {error && (
-        <div className="p-4 bg-rose-50 border border-rose-200 rounded-2xl flex items-center space-x-3 text-xs text-rose-700">
-          <AlertCircle className="w-4 h-4 flex-shrink-0" />
-          <span>{error}</span>
-        </div>
-      )}
-
-      {/* Items Grid */}
-      {loading ? (
-        <LoadingSpinner size="lg" message="Loading lost belongings listings..." />
-      ) : items.length > 0 ? (
-        <>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-            {items.map((item) => (
-              <ItemCard key={item._id} item={item} />
-            ))}
+      {/* Main All Lost Reports Section */}
+      <div className="space-y-6">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center space-x-2.5">
+            <h2 className="text-lg font-black text-slate-900">
+              All Lost Reports ({totalCount})
+            </h2>
+            <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-rose-50 text-rose-700 border border-rose-200">
+              Active Reports
+            </span>
           </div>
+          <span className="text-xs text-slate-400">
+            Updated in real-time
+          </span>
+        </div>
 
-          <Pagination
-            currentPage={currentPage}
-            totalPages={totalPages}
-            onPageChange={handlePageChange}
-          />
-        </>
-      ) : (
-        <EmptyState
-          title="No Lost Belongings Found Matching Filters"
-          description="Try broadening your search query or clear filters to view all active lost reports."
-          actionText="Clear Filter Parameters"
-          actionLink="/lost-items"
+        {/* Filter Panel */}
+        <FilterPanel
+          search={search}
+          category={category}
+          location={location}
+          startDate={startDate}
+          sortBy={sortBy}
+          order={order}
+          onFilterChange={handleFilterChange}
+          onResetFilters={handleResetFilters}
         />
-      )}
+
+        {error && (
+          <div className="p-4 bg-rose-50 border border-rose-200 rounded-2xl flex items-center space-x-3 text-xs text-rose-700">
+            <AlertCircle className="w-4 h-4 flex-shrink-0" />
+            <span>{error}</span>
+          </div>
+        )}
+
+        {/* Items Grid */}
+        {loading ? (
+          <LoadingSpinner size="lg" message="Loading lost belongings listings..." />
+        ) : items.length > 0 ? (
+          <>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+              {items.map((item) => (
+                <ItemCard key={item._id} item={item} />
+              ))}
+            </div>
+
+            <Pagination
+              currentPage={currentPage}
+              totalPages={totalPages}
+              onPageChange={handlePageChange}
+            />
+          </>
+        ) : (
+          <EmptyState
+            title="No Lost Belongings Found Matching Filters"
+            description="Try broadening your search query or clear filters to view all active lost reports."
+            actionText="Clear Filter Parameters"
+            actionLink="/lost-items"
+          />
+        )}
+      </div>
     </div>
   );
 };

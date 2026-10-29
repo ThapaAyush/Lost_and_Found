@@ -437,7 +437,7 @@ const HomePage = () => {
             to={activeTab === 'lost' ? '/lost-items' : '/found-items'}
             className="inline-flex items-center px-6 py-3 rounded-2xl bg-white hover:bg-slate-50 border border-slate-200 text-slate-800 text-xs font-bold shadow-sm transition hover:shadow"
           >
-            Browse All {activeTab === 'lost' ? 'Lost Items' : 'Found Items'}
+            Browse All {activeTab === 'lost' ? 'Lost Reports' : 'Found Items'}
             <ArrowRight className="w-4 h-4 ml-2 text-blue-600" />
           </Link>
         </div>
