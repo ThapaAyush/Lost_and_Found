@@ -1,60 +1,171 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { User, Mail, Phone, Lock, Eye, EyeOff, Loader2, ArrowRight } from 'lucide-react';
+import { User, Mail, Phone, Lock, Eye, EyeOff, Loader2, ArrowRight, AlertCircle } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 
 const SignupPage = () => {
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
-  const [phone, setPhone] = useState('');
-  const [password, setPassword] = useState('');
-  const [confirmPassword, setConfirmPassword] = useState('');
-  const [agreed, setAgreed] = useState(false);
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    phone: '',
+    password: '',
+    confirmPassword: '',
+    agreed: false,
+  });
+
+  const [errors, setErrors] = useState({});
+  const [touched, setTouched] = useState({});
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [errorMessage, setErrorMessage] = useState('');
+  const [generalError, setGeneralError] = useState('');
 
   const { signup } = useAuth();
   const navigate = useNavigate();
 
+  const validateField = (field, value, allValues = formData) => {
+    let error = '';
+
+    switch (field) {
+      case 'name':
+        if (!value || !value.trim()) {
+          error = 'Please enter your full name';
+        } else if (value.trim().length < 2) {
+          error = 'Full name must be at least 2 characters';
+        }
+        break;
+
+      case 'email': {
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!value || !value.trim()) {
+          error = 'Please enter your email address';
+        } else if (!emailRegex.test(value.trim())) {
+          error = 'Please enter a valid email address (e.g. alex@example.com)';
+        }
+        break;
+      }
+
+      case 'phone': {
+        if (value && value.trim()) {
+          const cleaned = value.replace(/[\s\-\(\)\+]/g, '');
+          if (cleaned.length < 7 || cleaned.length > 15 || !/^\d+$/.test(cleaned)) {
+            error = 'Please enter a valid phone number (or leave blank)';
+          }
+        }
+        break;
+      }
+
+      case 'password':
+        if (!value) {
+          error = 'Please create a password';
+        } else if (value.length < 6) {
+          error = 'Password must be at least 6 characters long';
+        }
+        break;
+
+      case 'confirmPassword':
+        if (!value) {
+          error = 'Please confirm your password';
+        } else if (allValues.password && value !== allValues.password) {
+          error = 'Passwords do not match';
+        }
+        break;
+
+      case 'agreed':
+        if (!value) {
+          error = 'Please accept the guidelines & terms to proceed';
+        }
+        break;
+
+      default:
+        break;
+    }
+
+    return error;
+  };
+
+  const validateAll = (data = formData) => {
+    const newErrors = {};
+    ['name', 'email', 'phone', 'password', 'confirmPassword', 'agreed'].forEach((key) => {
+      const err = validateField(key, data[key], data);
+      if (err) newErrors[key] = err;
+    });
+    return newErrors;
+  };
+
+  const handleChange = (field, value) => {
+    const updated = { ...formData, [field]: value };
+    setFormData(updated);
+
+    // If confirmPassword was touched and password changes, revalidate confirmPassword
+    if (field === 'password' && touched.confirmPassword) {
+      const confirmErr = validateField('confirmPassword', formData.confirmPassword, updated);
+      setErrors((prev) => ({ ...prev, confirmPassword: confirmErr }));
+    }
+
+    if (touched[field]) {
+      const err = validateField(field, value, updated);
+      setErrors((prev) => ({ ...prev, [field]: err }));
+    }
+  };
+
+  const handleBlur = (field) => {
+    setTouched((prev) => ({ ...prev, [field]: true }));
+    const err = validateField(field, formData[field], formData);
+    setErrors((prev) => ({ ...prev, [field]: err }));
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setErrorMessage('');
+    setGeneralError('');
 
-    if (!name.trim() || !email.trim() || !password) {
-      setErrorMessage('Please provide your name, email, and password.');
-      return;
-    }
+    // Mark all fields as touched to display inline errors
+    const allTouched = {
+      name: true,
+      email: true,
+      phone: true,
+      password: true,
+      confirmPassword: true,
+      agreed: true,
+    };
+    setTouched(allTouched);
 
-    if (password.length < 6) {
-      setErrorMessage('Password must be at least 6 characters long.');
-      return;
-    }
+    const validationErrors = validateAll(formData);
+    setErrors(validationErrors);
 
-    if (password !== confirmPassword) {
-      setErrorMessage('Passwords do not match.');
-      return;
-    }
-
-    if (!agreed) {
-      setErrorMessage('Please accept our terms of service.');
+    if (Object.keys(validationErrors).length > 0) {
       return;
     }
 
     setLoading(true);
     const result = await signup({
-      name: name.trim(),
-      email: email.trim(),
-      phone: phone.trim(),
-      password,
-      confirmPassword,
+      name: formData.name.trim(),
+      email: formData.email.trim(),
+      phone: formData.phone.trim(),
+      password: formData.password,
+      confirmPassword: formData.confirmPassword,
     });
     setLoading(false);
 
     if (result.success) {
       navigate('/dashboard', { replace: true });
     } else {
-      setErrorMessage(result.message || 'Signup failed. Please try again.');
+      const msg = result.message || 'Signup failed. Please try again.';
+      // Route backend message directly to the offending input box
+      if (/email.*already exists/i.test(msg)) {
+        setErrors((prev) => ({
+          ...prev,
+          email: 'An account with this email address already exists. Please sign in or use another email.',
+        }));
+        setTouched((prev) => ({ ...prev, email: true }));
+      } else if (/password/i.test(msg) && /match/i.test(msg)) {
+        setErrors((prev) => ({ ...prev, confirmPassword: 'Passwords do not match.' }));
+        setTouched((prev) => ({ ...prev, confirmPassword: true }));
+      } else if (/password/i.test(msg) && /6 characters/i.test(msg)) {
+        setErrors((prev) => ({ ...prev, password: 'Password must be at least 6 characters long.' }));
+        setTouched((prev) => ({ ...prev, password: true }));
+      } else {
+        setGeneralError(msg);
+      }
     }
   };
 
@@ -67,13 +178,14 @@ const SignupPage = () => {
         </p>
       </div>
 
-      {errorMessage && (
-        <div className="mb-5 p-3 rounded-xl bg-rose-50 border border-rose-200 text-xs text-rose-700">
-          {errorMessage}
+      {generalError && (
+        <div className="mb-5 p-3.5 rounded-2xl bg-rose-50 border border-rose-200 text-xs text-rose-700 flex items-start space-x-2 animate-in fade-in duration-200">
+          <AlertCircle className="w-4 h-4 shrink-0 mt-0.5" />
+          <span>{generalError}</span>
         </div>
       )}
 
-      <form onSubmit={handleSubmit} className="space-y-4">
+      <form onSubmit={handleSubmit} noValidate className="space-y-4">
         {/* Name */}
         <div>
           <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1">
@@ -82,14 +194,28 @@ const SignupPage = () => {
           <div className="relative">
             <input
               type="text"
-              required
-              value={name}
-              onChange={(e) => setName(e.target.value)}
+              value={formData.name}
+              onChange={(e) => handleChange('name', e.target.value)}
+              onBlur={() => handleBlur('name')}
               placeholder="Alex Johnson"
-              className="w-full pl-10 pr-4 py-2.5 bg-slate-50 focus:bg-white text-xs sm:text-sm text-slate-800 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition"
+              className={`w-full pl-10 pr-4 py-2.5 text-xs sm:text-sm text-slate-800 border rounded-xl focus:outline-none transition ${
+                touched.name && errors.name
+                  ? 'border-rose-400 bg-rose-50/40 focus:border-rose-500 focus:ring-2 focus:ring-rose-500/20'
+                  : 'bg-slate-50 focus:bg-white border-slate-200 focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500'
+              }`}
             />
-            <User className="w-4 h-4 text-slate-400 absolute left-3.5 top-3" />
+            <User
+              className={`w-4 h-4 absolute left-3.5 top-3 ${
+                touched.name && errors.name ? 'text-rose-400' : 'text-slate-400'
+              }`}
+            />
           </div>
+          {touched.name && errors.name && (
+            <p className="mt-1.5 text-xs text-rose-600 flex items-center space-x-1.5 font-medium animate-in fade-in duration-150">
+              <AlertCircle className="w-3.5 h-3.5 shrink-0" />
+              <span>{errors.name}</span>
+            </p>
+          )}
         </div>
 
         {/* Email */}
@@ -100,14 +226,28 @@ const SignupPage = () => {
           <div className="relative">
             <input
               type="email"
-              required
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              value={formData.email}
+              onChange={(e) => handleChange('email', e.target.value)}
+              onBlur={() => handleBlur('email')}
               placeholder="alex@college.edu"
-              className="w-full pl-10 pr-4 py-2.5 bg-slate-50 focus:bg-white text-xs sm:text-sm text-slate-800 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition"
+              className={`w-full pl-10 pr-4 py-2.5 text-xs sm:text-sm text-slate-800 border rounded-xl focus:outline-none transition ${
+                touched.email && errors.email
+                  ? 'border-rose-400 bg-rose-50/40 focus:border-rose-500 focus:ring-2 focus:ring-rose-500/20'
+                  : 'bg-slate-50 focus:bg-white border-slate-200 focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500'
+              }`}
             />
-            <Mail className="w-4 h-4 text-slate-400 absolute left-3.5 top-3" />
+            <Mail
+              className={`w-4 h-4 absolute left-3.5 top-3 ${
+                touched.email && errors.email ? 'text-rose-400' : 'text-slate-400'
+              }`}
+            />
           </div>
+          {touched.email && errors.email && (
+            <p className="mt-1.5 text-xs text-rose-600 flex items-center space-x-1.5 font-medium animate-in fade-in duration-150">
+              <AlertCircle className="w-3.5 h-3.5 shrink-0" />
+              <span>{errors.email}</span>
+            </p>
+          )}
         </div>
 
         {/* Phone */}
@@ -118,13 +258,28 @@ const SignupPage = () => {
           <div className="relative">
             <input
               type="tel"
-              value={phone}
-              onChange={(e) => setPhone(e.target.value)}
+              value={formData.phone}
+              onChange={(e) => handleChange('phone', e.target.value)}
+              onBlur={() => handleBlur('phone')}
               placeholder="+1 555-0199"
-              className="w-full pl-10 pr-4 py-2.5 bg-slate-50 focus:bg-white text-xs sm:text-sm text-slate-800 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition"
+              className={`w-full pl-10 pr-4 py-2.5 text-xs sm:text-sm text-slate-800 border rounded-xl focus:outline-none transition ${
+                touched.phone && errors.phone
+                  ? 'border-rose-400 bg-rose-50/40 focus:border-rose-500 focus:ring-2 focus:ring-rose-500/20'
+                  : 'bg-slate-50 focus:bg-white border-slate-200 focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500'
+              }`}
             />
-            <Phone className="w-4 h-4 text-slate-400 absolute left-3.5 top-3" />
+            <Phone
+              className={`w-4 h-4 absolute left-3.5 top-3 ${
+                touched.phone && errors.phone ? 'text-rose-400' : 'text-slate-400'
+              }`}
+            />
           </div>
+          {touched.phone && errors.phone && (
+            <p className="mt-1.5 text-xs text-rose-600 flex items-center space-x-1.5 font-medium animate-in fade-in duration-150">
+              <AlertCircle className="w-3.5 h-3.5 shrink-0" />
+              <span>{errors.phone}</span>
+            </p>
+          )}
         </div>
 
         {/* Password */}
@@ -135,21 +290,36 @@ const SignupPage = () => {
           <div className="relative">
             <input
               type={showPassword ? 'text' : 'password'}
-              required
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              value={formData.password}
+              onChange={(e) => handleChange('password', e.target.value)}
+              onBlur={() => handleBlur('password')}
               placeholder="••••••••"
-              className="w-full pl-10 pr-10 py-2.5 bg-slate-50 focus:bg-white text-xs sm:text-sm text-slate-800 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition"
+              className={`w-full pl-10 pr-10 py-2.5 text-xs sm:text-sm text-slate-800 border rounded-xl focus:outline-none transition ${
+                touched.password && errors.password
+                  ? 'border-rose-400 bg-rose-50/40 focus:border-rose-500 focus:ring-2 focus:ring-rose-500/20'
+                  : 'bg-slate-50 focus:bg-white border-slate-200 focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500'
+              }`}
             />
-            <Lock className="w-4 h-4 text-slate-400 absolute left-3.5 top-3" />
+            <Lock
+              className={`w-4 h-4 absolute left-3.5 top-3 ${
+                touched.password && errors.password ? 'text-rose-400' : 'text-slate-400'
+              }`}
+            />
             <button
               type="button"
               onClick={() => setShowPassword(!showPassword)}
-              className="absolute right-3.5 top-3 text-slate-400 hover:text-slate-600"
+              className="absolute right-3.5 top-3 text-slate-400 hover:text-slate-600 transition"
+              tabIndex={-1}
             >
               {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
             </button>
           </div>
+          {touched.password && errors.password && (
+            <p className="mt-1.5 text-xs text-rose-600 flex items-center space-x-1.5 font-medium animate-in fade-in duration-150">
+              <AlertCircle className="w-3.5 h-3.5 shrink-0" />
+              <span>{errors.password}</span>
+            </p>
+          )}
         </div>
 
         {/* Confirm Password */}
@@ -160,28 +330,51 @@ const SignupPage = () => {
           <div className="relative">
             <input
               type="password"
-              required
-              value={confirmPassword}
-              onChange={(e) => setConfirmPassword(e.target.value)}
+              value={formData.confirmPassword}
+              onChange={(e) => handleChange('confirmPassword', e.target.value)}
+              onBlur={() => handleBlur('confirmPassword')}
               placeholder="••••••••"
-              className="w-full pl-10 pr-4 py-2.5 bg-slate-50 focus:bg-white text-xs sm:text-sm text-slate-800 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition"
+              className={`w-full pl-10 pr-4 py-2.5 text-xs sm:text-sm text-slate-800 border rounded-xl focus:outline-none transition ${
+                touched.confirmPassword && errors.confirmPassword
+                  ? 'border-rose-400 bg-rose-50/40 focus:border-rose-500 focus:ring-2 focus:ring-rose-500/20'
+                  : 'bg-slate-50 focus:bg-white border-slate-200 focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500'
+              }`}
             />
-            <Lock className="w-4 h-4 text-slate-400 absolute left-3.5 top-3" />
+            <Lock
+              className={`w-4 h-4 absolute left-3.5 top-3 ${
+                touched.confirmPassword && errors.confirmPassword ? 'text-rose-400' : 'text-slate-400'
+              }`}
+            />
           </div>
+          {touched.confirmPassword && errors.confirmPassword && (
+            <p className="mt-1.5 text-xs text-rose-600 flex items-center space-x-1.5 font-medium animate-in fade-in duration-150">
+              <AlertCircle className="w-3.5 h-3.5 shrink-0" />
+              <span>{errors.confirmPassword}</span>
+            </p>
+          )}
         </div>
 
         {/* Terms agreement */}
-        <div className="flex items-start space-x-2 pt-1">
-          <input
-            id="terms"
-            type="checkbox"
-            checked={agreed}
-            onChange={(e) => setAgreed(e.target.checked)}
-            className="mt-0.5 rounded border-slate-300 text-blue-600 focus:ring-blue-500/20"
-          />
-          <label htmlFor="terms" className="text-xs text-slate-600 leading-snug">
-            I agree to the community guidelines, truthful reporting policy, and confidential claim verification process.
-          </label>
+        <div>
+          <div className="flex items-start space-x-2 pt-1">
+            <input
+              id="terms"
+              type="checkbox"
+              checked={formData.agreed}
+              onChange={(e) => handleChange('agreed', e.target.checked)}
+              onBlur={() => handleBlur('agreed')}
+              className="mt-0.5 rounded border-slate-300 text-blue-600 focus:ring-blue-500/20 cursor-pointer"
+            />
+            <label htmlFor="terms" className="text-xs text-slate-600 leading-snug cursor-pointer select-none">
+              I agree to the community guidelines, truthful reporting policy, and confidential claim verification process.
+            </label>
+          </div>
+          {touched.agreed && errors.agreed && (
+            <p className="mt-1.5 text-xs text-rose-600 flex items-center space-x-1.5 font-medium animate-in fade-in duration-150">
+              <AlertCircle className="w-3.5 h-3.5 shrink-0" />
+              <span>{errors.agreed}</span>
+            </p>
+          )}
         </div>
 
         {/* Submit */}
