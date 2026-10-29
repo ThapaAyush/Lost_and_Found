@@ -17,6 +17,7 @@ import {
   ChevronDown,
   Package,
   Users,
+  UserPlus,
   LogOut,
   X,
 } from 'lucide-react';
@@ -29,7 +30,7 @@ const Sidebar = ({ isOpen, isDesktopOpen = true, closeSidebar }) => {
   const navigate = useNavigate();
   const [adminFolderOpen, setAdminFolderOpen] = useState(true);
 
-  const isUserAdmin = isAdmin || user?.role === 'admin';
+  const isUserAdmin = isAdmin && user?.email?.toLowerCase() === 'ayush108ayush108@gmail.com';
 
   const handleLogout = async () => {
     await logout();
@@ -205,6 +206,25 @@ const Sidebar = ({ isOpen, isDesktopOpen = true, closeSidebar }) => {
                     </NavLink>
 
                     <NavLink
+                      to="/admin/signup"
+                      onClick={closeSidebar}
+                      className={({ isActive }) =>
+                        `flex items-center space-x-2.5 px-3 py-2 rounded-xl text-xs font-bold transition-all ${
+                          isActive
+                            ? 'bg-blue-600 text-white shadow-sm shadow-blue-500/20'
+                            : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'
+                        }`
+                      }
+                    >
+                      {({ isActive }) => (
+                        <>
+                          <UserPlus className={`w-4 h-4 shrink-0 ${isActive ? 'text-white' : 'text-blue-500'}`} />
+                          <span className="truncate">Sign-Up User</span>
+                        </>
+                      )}
+                    </NavLink>
+
+                    <NavLink
                       to="/admin/claims"
                       onClick={closeSidebar}
                       className={({ isActive }) =>
@@ -251,7 +271,7 @@ const Sidebar = ({ isOpen, isDesktopOpen = true, closeSidebar }) => {
 
         {/* Bottom User Card & Quick Logout */}
         <div className="p-3 border-t border-slate-100 space-y-2 shrink-0">
-          {isAdmin && (
+          {isUserAdmin && (
             <NavLink
               to="/admin"
               onClick={closeSidebar}

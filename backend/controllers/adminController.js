@@ -107,6 +107,13 @@ export const updateUserStatus = async (req, res, next) => {
       return res.status(404).json({ success: false, message: 'User not found' });
     }
 
+    if (user.email?.toLowerCase() === 'ayush108ayush108@gmail.com') {
+      return res.status(400).json({
+        success: false,
+        message: 'The designated permanent administrator account cannot be demoted or suspended.',
+      });
+    }
+
     if (accountStatus && ['active', 'suspended'].includes(accountStatus)) {
       user.accountStatus = accountStatus;
     }
@@ -154,6 +161,13 @@ export const deleteUser = async (req, res, next) => {
       return res.status(404).json({ success: false, message: 'User not found' });
     }
 
+    if (user.email?.toLowerCase() === 'ayush108ayush108@gmail.com') {
+      return res.status(400).json({
+        success: false,
+        message: 'The designated permanent administrator account cannot be deleted.',
+      });
+    }
+
     await User.findByIdAndDelete(targetUserId);
     await Item.deleteMany({ owner: targetUserId });
     await Claim.deleteMany({ claimant: targetUserId });
@@ -170,6 +184,81 @@ export const deleteUser = async (req, res, next) => {
     res.status(200).json({
       success: true,
       message: `User "${user.name}" and associated records were removed successfully`,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+// @desc    Register / Sign up a new user from the admin part
+// @route   POST /api/admin/users
+export const createUser = async (req, res, next) => {
+  try {
+    const { name, email, password, phone, role } = req.body;
+
+    if (!name || !email || !password) {
+      return res.status(400).json({
+        success: false,
+        message: 'Name, email, and password are required',
+      });
+    }
+
+    if (password.length < 6) {
+      return res.status(400).json({
+        success: false,
+        message: 'Password must be at least 6 characters long',
+      });
+    }
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      return res.status(400).json({
+        success: false,
+        message: 'Please provide a valid email address',
+      });
+    }
+
+    const existingUser = await User.findOne({ email: email.toLowerCase().trim() });
+    if (existingUser) {
+      return res.status(409).json({
+        success: false,
+        message: 'An account with this email address already exists.',
+      });
+    }
+
+    const newUser = new User({
+      name: name.trim(),
+      email: email.toLowerCase().trim(),
+      password,
+      phone: phone ? phone.trim() : '',
+      role: role === 'admin' ? 'admin' : 'user',
+      accountStatus: 'active',
+      emailVerified: true,
+    });
+
+    await newUser.save();
+
+    await logAudit({
+      actor: req.user._id,
+      action: 'ADMIN_USER_CREATED',
+      targetType: 'User',
+      targetId: newUser._id,
+      metadata: { name: newUser.name, email: newUser.email, role: newUser.role },
+      req,
+    });
+
+    res.status(201).json({
+      success: true,
+      message: `User account for "${newUser.name}" was registered successfully`,
+      user: {
+        _id: newUser._id,
+        name: newUser.name,
+        email: newUser.email,
+        phone: newUser.phone,
+        role: newUser.role,
+        accountStatus: newUser.accountStatus,
+        createdAt: newUser.createdAt,
+      },
     });
   } catch (error) {
     next(error);

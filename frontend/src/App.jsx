@@ -37,6 +37,7 @@ import ProfilePage from './pages/ProfilePage';
 // Admin Pages
 import AdminDashboardPage from './pages/admin/AdminDashboardPage';
 import AdminUsersPage from './pages/admin/AdminUsersPage';
+import AdminSignupPage from './pages/admin/AdminSignupPage';
 import AdminItemsPage from './pages/admin/AdminItemsPage';
 import AdminClaimsPage from './pages/admin/AdminClaimsPage';
 import AdminAbuseReportsPage from './pages/admin/AdminAbuseReportsPage';
@@ -54,7 +55,7 @@ function App() {
             {/* Unauthenticated Auth Pages */}
             <Route element={<AuthLayout />}>
               <Route path="/login" element={<LoginPage />} />
-              <Route path="/signup" element={<SignupPage />} />
+              <Route path="/signup" element={<Navigate to="/login" replace />} />
               <Route path="/forgot-password" element={<ForgotPasswordPage />} />
               <Route path="/reset-password/:token" element={<ResetPasswordPage />} />
             </Route>
@@ -85,6 +86,7 @@ function App() {
                 <Route element={<AdminRoute />}>
                   <Route path="/admin" element={<AdminDashboardPage />} />
                   <Route path="/admin/users" element={<AdminUsersPage />} />
+                  <Route path="/admin/signup" element={<AdminSignupPage />} />
                   <Route path="/admin/items" element={<AdminItemsPage />} />
                   <Route path="/admin/claims" element={<AdminClaimsPage />} />
                   <Route path="/admin/abuse-reports" element={<AdminAbuseReportsPage />} />

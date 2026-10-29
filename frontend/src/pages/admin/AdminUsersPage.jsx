@@ -13,6 +13,7 @@ import {
   UserX,
   Trash2,
   Package,
+  UserPlus,
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { adminAPI } from '../../services/api';
@@ -153,6 +154,13 @@ const AdminUsersPage = () => {
           <span>Users Section</span>
         </Link>
         <Link
+          to="/admin/signup"
+          className="inline-flex items-center space-x-2 px-3.5 py-2 rounded-xl text-xs font-bold text-slate-600 hover:bg-slate-100 transition shrink-0"
+        >
+          <UserPlus className="w-4 h-4" />
+          <span>Sign-Up User</span>
+        </Link>
+        <Link
           to="/admin/claims"
           className="inline-flex items-center space-x-2 px-3.5 py-2 rounded-xl text-xs font-bold text-slate-600 hover:bg-slate-100 transition shrink-0"
         >
@@ -194,6 +202,14 @@ const AdminUsersPage = () => {
             Manage permissions, inspect registration data, adjust account standing, or remove accounts.
           </p>
         </div>
+
+        <Link
+          to="/admin/signup"
+          className="inline-flex items-center self-start sm:self-auto px-4 py-2.5 text-xs font-bold bg-blue-600 hover:bg-blue-700 text-white rounded-xl shadow-sm shadow-blue-500/20 transition"
+        >
+          <UserPlus className="w-4 h-4 mr-1.5" />
+          <span>Sign Up New User</span>
+        </Link>
       </div>
 
       {/* Filter / Search Bar */}

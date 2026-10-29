@@ -520,10 +520,10 @@ const HomePage = () => {
           ) : (
             <>
               <Link
-                to="/signup"
+                to="/found-items"
                 className="px-6 py-3.5 bg-white text-blue-700 font-bold text-xs rounded-2xl shadow-lg hover:bg-slate-100 transition"
               >
-                Create Free Account
+                Browse Community Items
               </Link>
               <Link
                 to="/login"

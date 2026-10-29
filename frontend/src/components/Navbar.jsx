@@ -296,15 +296,9 @@ const Navbar = ({ toggleSidebar, isSidebarOpen }) => {
             <div className="flex items-center space-x-2">
               <Link
                 to="/login"
-                className="px-3.5 py-2 text-xs font-bold text-slate-700 hover:text-blue-600 transition"
+                className="px-4 py-2 text-xs font-bold bg-blue-600 hover:bg-blue-700 text-white rounded-xl shadow-sm shadow-blue-500/20 transition"
               >
                 Log In
-              </Link>
-              <Link
-                to="/signup"
-                className="px-4 py-2 text-xs font-bold bg-slate-900 hover:bg-slate-800 text-white rounded-xl shadow-sm transition"
-              >
-                Sign Up
               </Link>
             </div>
           )}

@@ -14,6 +14,7 @@ import {
   ShieldCheck,
   Package,
   LayoutDashboard,
+  UserPlus,
 } from 'lucide-react';
 import { adminAPI } from '../../services/api';
 import LoadingSpinner from '../../components/LoadingSpinner';
@@ -109,6 +110,13 @@ const AdminDashboardPage = () => {
         >
           <Users className="w-4 h-4" />
           <span>Users Section</span>
+        </Link>
+        <Link
+          to="/admin/signup"
+          className="inline-flex items-center space-x-2 px-3.5 py-2 rounded-xl text-xs font-bold text-slate-600 hover:bg-slate-100 transition shrink-0"
+        >
+          <UserPlus className="w-4 h-4" />
+          <span>Sign-Up User</span>
         </Link>
         <Link
           to="/admin/claims"

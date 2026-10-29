@@ -105,6 +105,7 @@ export const reportAPI = {
 export const adminAPI = {
   getStats: () => api.get('/admin/stats'),
   getUsers: (params) => api.get('/admin/users', { params }),
+  createUser: (data) => api.post('/admin/users', data),
   updateUserStatus: (id, data) => api.patch(`/admin/users/${id}/status`, data),
   deleteUser: (id) => api.delete(`/admin/users/${id}`),
   getItems: (params) => api.get('/admin/items', { params }),

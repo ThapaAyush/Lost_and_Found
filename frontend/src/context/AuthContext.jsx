@@ -1,6 +1,8 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { authAPI } from '../services/api';
 
+export const ADMIN_EMAIL = 'ayush108ayush108@gmail.com';
+
 const AuthContext = createContext(null);
 
 export const AuthProvider = ({ children }) => {
@@ -88,7 +90,7 @@ export const AuthProvider = ({ children }) => {
         logout,
         updateUser,
         refreshUser,
-        isAdmin: user?.role === 'admin',
+        isAdmin: user?.role === 'admin' && user?.email?.toLowerCase() === ADMIN_EMAIL.toLowerCase(),
         isAuthenticated: Boolean(user),
       }}
     >

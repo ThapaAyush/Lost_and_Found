@@ -1,10 +1,10 @@
 import React from 'react';
 import { Navigate, useLocation, Outlet } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext';
+import { useAuth, ADMIN_EMAIL } from '../context/AuthContext';
 import LoadingSpinner from '../components/LoadingSpinner';
 
 const AdminRoute = () => {
-  const { isAuthenticated, isAdmin, loading } = useAuth();
+  const { user, isAuthenticated, isAdmin, loading } = useAuth();
   const location = useLocation();
 
   if (loading) {
@@ -19,7 +19,10 @@ const AdminRoute = () => {
     return <Navigate to="/login" state={{ from: location }} replace />;
   }
 
-  if (!isAdmin) {
+  const isDesignatedAdmin =
+    isAdmin && user?.email?.toLowerCase() === (ADMIN_EMAIL || 'ayush108ayush108@gmail.com').toLowerCase();
+
+  if (!isDesignatedAdmin) {
     return <Navigate to="/" replace />;
   }
 

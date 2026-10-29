@@ -209,11 +209,8 @@ const LoginPage = () => {
         </button>
       </form>
 
-      <div className="mt-6 text-center text-xs text-slate-500">
-        Don't have an account yet?{' '}
-        <Link to="/signup" className="font-bold text-blue-600 hover:text-blue-700">
-          Create one now
-        </Link>
+      <div className="mt-6 text-center text-xs text-slate-500 bg-slate-50 p-3 rounded-2xl border border-slate-100">
+        Account registrations are managed and provisioned by the platform administrator.
       </div>
     </div>
   );
