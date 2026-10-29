@@ -38,7 +38,6 @@ const AuthLayout = () => {
               <h1 className="font-black text-2xl tracking-tight">
                 Lost <span className="text-teal-300">&</span> Found
               </h1>
-              <p className="text-xs text-blue-100">Campus Reconnection Platform</p>
             </div>
           </Link>
         </div>
