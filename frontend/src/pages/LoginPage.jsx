@@ -35,11 +35,6 @@ const LoginPage = () => {
     }
   };
 
-  const fillQuickDemo = (demoEmail, demoPass) => {
-    setEmail(demoEmail);
-    setPassword(demoPass);
-  };
-
   return (
     <div className="bg-white p-8 rounded-3xl border border-slate-200 shadow-xl">
       <div className="mb-6">
@@ -123,29 +118,6 @@ const LoginPage = () => {
           )}
         </button>
       </form>
-
-      {/* Quick Demo Credentials Helper */}
-      <div className="mt-6 pt-5 border-t border-slate-100">
-        <p className="text-[11px] text-slate-400 font-bold text-center mb-2 uppercase tracking-wider">
-          One-Click Demo Logins
-        </p>
-        <div className="grid grid-cols-2 gap-2 text-xs">
-          <button
-            type="button"
-            onClick={() => fillQuickDemo('john@example.com', 'Password123!')}
-            className="p-2 text-center rounded-xl bg-slate-50 hover:bg-slate-100 text-slate-700 font-bold border border-slate-200 transition"
-          >
-            User: John
-          </button>
-          <button
-            type="button"
-            onClick={() => fillQuickDemo('admin@lostandfound.com', 'AdminPassword123!')}
-            className="p-2 text-center rounded-xl bg-teal-50 hover:bg-teal-100 text-teal-800 font-bold border border-teal-200 transition"
-          >
-            Admin: Support
-          </button>
-        </div>
-      </div>
 
       <div className="mt-6 text-center text-xs text-slate-500">
         Don't have an account yet?{' '}
