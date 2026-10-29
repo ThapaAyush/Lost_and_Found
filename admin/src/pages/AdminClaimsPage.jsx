@@ -200,3 +200,4 @@ const AdminClaimsPage = () => {
 };
 
 export default AdminClaimsPage;
+

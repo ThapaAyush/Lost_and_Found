@@ -11,6 +11,8 @@ import {
   LogOut,
   ExternalLink,
   ShieldCheck,
+  Globe,
+  ArrowUpRight,
 } from 'lucide-react';
 import { useAdminAuth, ADMIN_EMAIL } from '../context/AdminAuthContext';
 
@@ -84,18 +86,18 @@ const AdminSidebar = () => {
           })}
 
           <div className="pt-4 px-3 pb-1.5 text-[10px] font-black uppercase tracking-wider text-slate-400">
-            External Links
+            Switch Application
           </div>
           <a
             href="http://localhost:5173"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-bold text-slate-400 hover:text-white hover:bg-slate-800/60 transition"
+            className="flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-bold text-slate-200 hover:text-white bg-slate-800/80 hover:bg-slate-800 border border-slate-700/60 transition group"
+            title="Switch to Frontend Page (Port 5173)"
           >
-            <div className="flex items-center space-x-3">
-              <ExternalLink className="w-4 h-4 text-teal-400" />
-              <span>Public Portal (5173)</span>
+            <div className="flex items-center space-x-2.5">
+              <Globe className="w-4 h-4 text-teal-400 shrink-0" />
+              <span>Switch to Frontend</span>
             </div>
+            <ArrowUpRight className="w-3.5 h-3.5 text-slate-400 group-hover:text-teal-400 transition" />
           </a>
         </nav>
       </div>
@@ -121,3 +123,4 @@ const AdminSidebar = () => {
 };
 
 export default AdminSidebar;
+

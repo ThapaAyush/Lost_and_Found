@@ -42,3 +42,4 @@ const StatusBadge = ({ status, size = 'sm' }) => {
 };
 
 export default StatusBadge;
+

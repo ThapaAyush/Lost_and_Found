@@ -140,3 +140,4 @@ const AdminAuditLogsPage = () => {
 };
 
 export default AdminAuditLogsPage;
+

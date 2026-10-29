@@ -1,33 +1,37 @@
 import React from 'react';
-import { ShieldCheck, LogOut, ExternalLink, User } from 'lucide-react';
+import { ShieldCheck, LogOut, ExternalLink, User, Globe, ArrowUpRight } from 'lucide-react';
 import { useAdminAuth, ADMIN_EMAIL } from '../context/AdminAuthContext';
 
 const AdminNavbar = () => {
   const { adminUser, logout } = useAdminAuth();
 
   return (
-    <header className="h-16 bg-white border-b border-slate-200 px-6 flex items-center justify-between sticky top-0 z-30 shadow-sm">
+    <header className="h-16 bg-white border-b border-slate-200 px-4 sm:px-6 flex items-center justify-between sticky top-0 z-30 shadow-sm">
       <div className="flex items-center space-x-3">
         <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse" />
-        <h2 className="text-sm font-black text-slate-800 tracking-tight">
-          Platform Governance Console
+        <h2 className="text-sm font-black text-slate-800 tracking-tight hidden sm:inline-block">
+          Governance Console
         </h2>
-        <span className="text-[10px] font-bold uppercase bg-slate-100 text-slate-600 px-2 py-0.5 rounded-full border border-slate-200 hidden sm:inline-block">
-          Local Port 5174
-        </span>
+
+        {/* Portal Switcher Tabs */}
+        <div className="inline-flex items-center p-1 bg-slate-100 rounded-xl border border-slate-200 shadow-inner">
+          <span className="px-3 py-1.5 rounded-lg text-xs font-black bg-blue-600 text-white shadow-sm flex items-center space-x-1.5 cursor-default">
+            <ShieldCheck className="w-3.5 h-3.5" />
+            <span>Admin Page</span>
+          </span>
+          <a
+            href="http://localhost:5173"
+            className="px-3 py-1.5 rounded-lg text-xs font-bold text-slate-600 hover:text-blue-700 hover:bg-white transition flex items-center space-x-1.5 group"
+            title="Switch to Frontend Page (Port 5173)"
+          >
+            <Globe className="w-3.5 h-3.5 text-slate-400 group-hover:text-blue-600" />
+            <span>Frontend Page</span>
+            <ArrowUpRight className="w-3 h-3 text-slate-400 group-hover:text-blue-600" />
+          </a>
+        </div>
       </div>
 
       <div className="flex items-center space-x-3">
-        <a
-          href="http://localhost:5173"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="hidden md:inline-flex items-center text-xs font-bold text-slate-600 hover:text-blue-600 px-3 py-1.5 rounded-xl border border-slate-200 hover:bg-slate-50 transition"
-        >
-          <ExternalLink className="w-3.5 h-3.5 mr-1 text-slate-400" />
-          <span>Open Public Site</span>
-        </a>
-
         <div className="flex items-center space-x-2 pl-3 border-l border-slate-200">
           <div className="w-8 h-8 rounded-full bg-blue-600 text-white font-bold flex items-center justify-center text-xs shadow-sm">
             A
@@ -47,3 +51,4 @@ const AdminNavbar = () => {
 };
 
 export default AdminNavbar;
+

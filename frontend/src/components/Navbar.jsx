@@ -14,6 +14,8 @@ import {
   MessageSquare,
   Sparkles,
   LayoutDashboard,
+  Globe,
+  ArrowUpRight,
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import NotificationDropdown from './NotificationDropdown';
@@ -145,6 +147,33 @@ const Navbar = ({ toggleSidebar, isSidebarOpen }) => {
 
         {/* Right Actions */}
         <div className="flex items-center space-x-2 sm:space-x-3">
+          {/* Portal Switcher Tabs */}
+          <div className="hidden sm:inline-flex items-center p-1 bg-slate-100 rounded-xl border border-slate-200 shadow-inner">
+            <span className="px-3 py-1.5 rounded-lg text-xs font-black bg-blue-600 text-white shadow-sm flex items-center space-x-1.5 cursor-default">
+              <Globe className="w-3.5 h-3.5" />
+              <span>Frontend Page</span>
+            </span>
+            <a
+              href="http://localhost:5174"
+              className="px-3 py-1.5 rounded-lg text-xs font-bold text-slate-600 hover:text-blue-700 hover:bg-white transition flex items-center space-x-1.5 group"
+              title="Switch to Admin Page (Port 5174)"
+            >
+              <ShieldCheck className="w-3.5 h-3.5 text-slate-400 group-hover:text-blue-600" />
+              <span>Admin Page</span>
+              <ArrowUpRight className="w-3 h-3 text-slate-400 group-hover:text-blue-600" />
+            </a>
+          </div>
+
+          {/* Mobile Admin Link Button */}
+          <a
+            href="http://localhost:5174"
+            className="sm:hidden p-2 rounded-xl text-slate-600 hover:bg-slate-100 hover:text-blue-600 transition"
+            title="Switch to Admin Page (Port 5174)"
+            aria-label="Switch to Admin Page"
+          >
+            <ShieldCheck className="w-5 h-5 text-blue-600" />
+          </a>
+
           {/* Quick "Report Item" Dropdown (Always visible for easy access) */}
           <div className="relative" ref={reportRef}>
             <button
