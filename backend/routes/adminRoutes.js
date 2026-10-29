@@ -3,6 +3,7 @@ import {
   getAdminStats,
   getUsers,
   updateUserStatus,
+  deleteUser,
   getAdminItems,
   moderateItem,
   getAdminClaims,
@@ -21,6 +22,7 @@ router.use(protect, adminOnly);
 router.get('/stats', getAdminStats);
 router.get('/users', getUsers);
 router.patch('/users/:id/status', updateUserStatus);
+router.delete('/users/:id', deleteUser);
 router.get('/items', getAdminItems);
 router.patch('/items/:id/moderate', moderateItem);
 router.get('/claims', getAdminClaims);

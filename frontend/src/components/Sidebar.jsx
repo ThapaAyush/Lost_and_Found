@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import {
   Home,
@@ -13,6 +13,10 @@ import {
   MessageSquare,
   User,
   ShieldCheck,
+  FolderLock,
+  ChevronDown,
+  Package,
+  Users,
   LogOut,
   X,
 } from 'lucide-react';
@@ -23,6 +27,9 @@ const Sidebar = ({ isOpen, isDesktopOpen = true, closeSidebar }) => {
   const { user, logout, isAdmin } = useAuth();
   const { unreadCount } = useNotifications();
   const navigate = useNavigate();
+  const [adminFolderOpen, setAdminFolderOpen] = useState(true);
+
+  const isUserAdmin = isAdmin || user?.role === 'admin';
 
   const handleLogout = async () => {
     await logout();
@@ -128,6 +135,117 @@ const Sidebar = ({ isOpen, isDesktopOpen = true, closeSidebar }) => {
                 </NavLink>
               );
             })}
+
+            {/* Admin Folder Section */}
+            {isUserAdmin && (
+              <div className="pt-2.5 mt-2.5 border-t border-slate-100">
+                <div className="px-3 pb-1 flex items-center justify-between text-[10px] font-black uppercase tracking-wider text-slate-400">
+                  <span>Admin Zone</span>
+                  <span className="bg-blue-100 text-blue-700 text-[9px] px-1.5 py-0.5 rounded font-black">
+                    ADMIN
+                  </span>
+                </div>
+
+                <button
+                  type="button"
+                  onClick={() => setAdminFolderOpen(!adminFolderOpen)}
+                  className="w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs font-bold text-slate-700 hover:bg-slate-50 transition group"
+                >
+                  <div className="flex items-center space-x-2.5">
+                    <div className="w-5 h-5 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center">
+                      <FolderLock className="w-3.5 h-3.5" />
+                    </div>
+                    <span className="text-slate-800 font-extrabold">Admin Folder</span>
+                  </div>
+                  <ChevronDown
+                    className={`w-3.5 h-3.5 text-slate-400 transition-transform duration-200 ${
+                      adminFolderOpen ? 'rotate-180' : ''
+                    }`}
+                  />
+                </button>
+
+                {adminFolderOpen && (
+                  <div className="mt-1 pl-2 space-y-1">
+                    <NavLink
+                      to="/admin/items"
+                      onClick={closeSidebar}
+                      className={({ isActive }) =>
+                        `flex items-center space-x-2.5 px-3 py-2 rounded-xl text-xs font-bold transition-all ${
+                          isActive
+                            ? 'bg-blue-600 text-white shadow-sm shadow-blue-500/20'
+                            : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'
+                        }`
+                      }
+                    >
+                      {({ isActive }) => (
+                        <>
+                          <Package className={`w-4 h-4 shrink-0 ${isActive ? 'text-white' : 'text-blue-500'}`} />
+                          <span className="truncate">Lost & Found Data</span>
+                        </>
+                      )}
+                    </NavLink>
+
+                    <NavLink
+                      to="/admin/users"
+                      onClick={closeSidebar}
+                      className={({ isActive }) =>
+                        `flex items-center space-x-2.5 px-3 py-2 rounded-xl text-xs font-bold transition-all ${
+                          isActive
+                            ? 'bg-blue-600 text-white shadow-sm shadow-blue-500/20'
+                            : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'
+                        }`
+                      }
+                    >
+                      {({ isActive }) => (
+                        <>
+                          <Users className={`w-4 h-4 shrink-0 ${isActive ? 'text-white' : 'text-blue-500'}`} />
+                          <span className="truncate">Users Section</span>
+                        </>
+                      )}
+                    </NavLink>
+
+                    <NavLink
+                      to="/admin/claims"
+                      onClick={closeSidebar}
+                      className={({ isActive }) =>
+                        `flex items-center space-x-2.5 px-3 py-2 rounded-xl text-xs font-bold transition-all ${
+                          isActive
+                            ? 'bg-blue-600 text-white shadow-sm shadow-blue-500/20'
+                            : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'
+                        }`
+                      }
+                    >
+                      {({ isActive }) => (
+                        <>
+                          <ShieldAlert className={`w-4 h-4 shrink-0 ${isActive ? 'text-white' : 'text-blue-500'}`} />
+                          <span className="truncate">Claims Oversight</span>
+                        </>
+                      )}
+                    </NavLink>
+
+                    <NavLink
+                      to="/admin"
+                      end
+                      onClick={closeSidebar}
+                      className={({ isActive }) =>
+                        `flex items-center space-x-2.5 px-3 py-2 rounded-xl text-xs font-bold transition-all ${
+                          isActive
+                            ? 'bg-blue-600 text-white shadow-sm shadow-blue-500/20'
+                            : 'text-slate-600 hover:bg-slate-50 hover:text-slate-900'
+                        }`
+                      }
+                    >
+                      {({ isActive }) => (
+                        <>
+                          <LayoutDashboard className={`w-4 h-4 shrink-0 ${isActive ? 'text-white' : 'text-blue-500'}`} />
+                          <span className="truncate">Admin Overview</span>
+                        </>
+                      )}
+                    </NavLink>
+                  </div>
+                )}
+              </div>
+            )}
           </nav>
         </div>
 

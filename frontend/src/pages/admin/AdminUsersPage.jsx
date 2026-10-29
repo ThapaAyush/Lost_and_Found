@@ -11,15 +11,19 @@ import {
   ArrowLeft,
   UserCheck,
   UserX,
+  Trash2,
+  Package,
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { adminAPI } from '../../services/api';
+import { useAuth } from '../../context/AuthContext';
 import Pagination from '../../components/Pagination';
 import LoadingSpinner from '../../components/LoadingSpinner';
 import ConfirmDialog from '../../components/ConfirmDialog';
 import { formatDate } from '../../utils/formatters';
 
 const AdminUsersPage = () => {
+  const { user: currentAdmin } = useAuth();
   const [users, setUsers] = useState([]);
   const [search, setSearch] = useState('');
   const [role, setRole] = useState('All');
@@ -35,6 +39,12 @@ const AdminUsersPage = () => {
   const [targetRole, setTargetRole] = useState('');
   const [dialogOpen, setDialogOpen] = useState(false);
   const [actionLoading, setActionLoading] = useState(false);
+
+  // Delete User Dialog State
+  const [deleteUserModalOpen, setDeleteUserModalOpen] = useState(false);
+  const [userToDelete, setUserToDelete] = useState(null);
+  const [deleteLoading, setDeleteLoading] = useState(false);
+  const [actionSuccess, setActionSuccess] = useState('');
 
   const fetchUsers = async (page = 1) => {
     setLoading(true);
@@ -101,23 +111,87 @@ const AdminUsersPage = () => {
     }
   };
 
+  const openDeleteUserModal = (targetUser) => {
+    setUserToDelete(targetUser);
+    setDeleteUserModalOpen(true);
+  };
+
+  const handleDeleteUserConfirm = async () => {
+    if (!userToDelete) return;
+    setDeleteLoading(true);
+    try {
+      await adminAPI.deleteUser(userToDelete._id);
+      setDeleteUserModalOpen(false);
+      const name = userToDelete.name;
+      setUserToDelete(null);
+      setActionSuccess(`User "${name}" and all associated data were permanently deleted.`);
+      setTimeout(() => setActionSuccess(''), 4500);
+      fetchUsers(currentPage);
+    } catch (err) {
+      alert(err.message || 'Failed to delete user');
+    } finally {
+      setDeleteLoading(false);
+    }
+  };
+
   return (
     <div className="space-y-6">
+      {/* Admin Folder Navigation Bar */}
+      <div className="flex items-center space-x-2 border-b border-slate-200 pb-3 overflow-x-auto">
+        <Link
+          to="/admin/items"
+          className="inline-flex items-center space-x-2 px-3.5 py-2 rounded-xl text-xs font-bold text-slate-600 hover:bg-slate-100 transition shrink-0"
+        >
+          <Package className="w-4 h-4" />
+          <span>Lost & Found Data</span>
+        </Link>
+        <Link
+          to="/admin/users"
+          className="inline-flex items-center space-x-2 px-3.5 py-2 rounded-xl text-xs font-bold bg-blue-600 text-white shadow-sm shadow-blue-500/20 shrink-0"
+        >
+          <Users className="w-4 h-4" />
+          <span>Users Section</span>
+        </Link>
+        <Link
+          to="/admin/claims"
+          className="inline-flex items-center space-x-2 px-3.5 py-2 rounded-xl text-xs font-bold text-slate-600 hover:bg-slate-100 transition shrink-0"
+        >
+          <ShieldAlert className="w-4 h-4" />
+          <span>Claims Oversight</span>
+        </Link>
+        <Link
+          to="/admin"
+          className="inline-flex items-center space-x-2 px-3.5 py-2 rounded-xl text-xs font-bold text-slate-600 hover:bg-slate-100 transition shrink-0"
+        >
+          <ArrowLeft className="w-4 h-4" />
+          <span>Admin Overview</span>
+        </Link>
+      </div>
+
+      {actionSuccess && (
+        <div className="p-3.5 bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs font-semibold rounded-2xl flex items-center justify-between shadow-sm">
+          <span className="flex items-center">
+            <CheckCircle2 className="w-4 h-4 mr-2 text-emerald-600 shrink-0" />
+            {actionSuccess}
+          </span>
+          <button
+            type="button"
+            onClick={() => setActionSuccess('')}
+            className="text-emerald-600 hover:text-emerald-800 text-xs font-bold px-2 py-0.5"
+          >
+            Dismiss
+          </button>
+        </div>
+      )}
+
       {/* Top Header */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <Link
-            to="/admin"
-            className="inline-flex items-center text-xs font-semibold text-slate-500 hover:text-blue-600 mb-2 transition"
-          >
-            <ArrowLeft className="w-3.5 h-3.5 mr-1" />
-            Admin Overview
-          </Link>
           <h1 className="text-2xl font-black text-slate-900 tracking-tight">
-            User Accounts ({totalCount})
+            Registered Users Management ({totalCount})
           </h1>
           <p className="text-xs text-slate-500 mt-1">
-            Manage permissions, inspect registration data, and moderate account standing.
+            Manage permissions, inspect registration data, adjust account standing, or remove accounts.
           </p>
         </div>
       </div>
@@ -224,13 +298,13 @@ const AdminUsersPage = () => {
                       {formatDate(u.createdAt)}
                     </td>
 
-                    <td className="py-3.5 px-4 text-right space-x-2">
+                    <td className="py-3.5 px-4 text-right space-x-2 whitespace-nowrap">
                       <button
                         type="button"
                         onClick={() => openRoleToggle(u)}
                         className="px-2.5 py-1 text-[11px] font-semibold rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 transition"
                       >
-                        {u.role === 'admin' ? 'Demote to User' : 'Promote to Admin'}
+                        {u.role === 'admin' ? 'Demote' : 'Make Admin'}
                       </button>
 
                       <button
@@ -238,12 +312,24 @@ const AdminUsersPage = () => {
                         onClick={() => openStatusToggle(u)}
                         className={`px-2.5 py-1 text-[11px] font-semibold rounded-lg transition ${
                           u.accountStatus === 'active'
-                            ? 'bg-rose-50 text-rose-700 hover:bg-rose-100'
+                            ? 'bg-amber-50 text-amber-700 hover:bg-amber-100'
                             : 'bg-emerald-50 text-emerald-700 hover:bg-emerald-100'
                         }`}
                       >
                         {u.accountStatus === 'active' ? 'Suspend' : 'Activate'}
                       </button>
+
+                      {u._id !== currentAdmin?._id && (
+                        <button
+                          type="button"
+                          onClick={() => openDeleteUserModal(u)}
+                          className="px-2.5 py-1 text-[11px] font-semibold rounded-lg bg-rose-50 text-rose-700 hover:bg-rose-100 inline-flex items-center transition"
+                          title="Permanently remove user"
+                        >
+                          <Trash2 className="w-3 h-3 mr-1 text-rose-600" />
+                          Remove
+                        </button>
+                      )}
                     </td>
                   </tr>
                 ))}
@@ -259,7 +345,7 @@ const AdminUsersPage = () => {
         </div>
       )}
 
-      {/* Confirm Dialog */}
+      {/* Status / Role Confirm Dialog */}
       <ConfirmDialog
         isOpen={dialogOpen}
         onClose={() => setDialogOpen(false)}
@@ -273,6 +359,18 @@ const AdminUsersPage = () => {
         confirmText="Confirm Modification"
         isDanger={targetStatus === 'suspended'}
         loading={actionLoading}
+      />
+
+      {/* Delete User Confirm Dialog */}
+      <ConfirmDialog
+        isOpen={deleteUserModalOpen}
+        onClose={() => setDeleteUserModalOpen(false)}
+        onConfirm={handleDeleteUserConfirm}
+        title="Permanently Remove User Account?"
+        message={`Are you sure you want to permanently delete "${userToDelete?.name}" (${userToDelete?.email})? All posts and claims submitted by this user will also be removed. This action cannot be reversed.`}
+        confirmText="Delete User"
+        isDanger={true}
+        loading={deleteLoading}
       />
     </div>
   );

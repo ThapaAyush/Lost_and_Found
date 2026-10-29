@@ -1,5 +1,15 @@
 import React, { useState, useEffect } from 'react';
-import { ShieldAlert, ArrowLeft, ArrowRight, User, CheckCircle2, Sparkles, Filter } from 'lucide-react';
+import {
+  ShieldAlert,
+  ArrowLeft,
+  ArrowRight,
+  User,
+  CheckCircle2,
+  Sparkles,
+  Filter,
+  Package,
+  Users,
+} from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { adminAPI } from '../../services/api';
 import StatusBadge from '../../components/StatusBadge';
@@ -42,15 +52,40 @@ const AdminClaimsPage = () => {
 
   return (
     <div className="space-y-6">
+      {/* Admin Folder Navigation Bar */}
+      <div className="flex items-center space-x-2 border-b border-slate-200 pb-3 overflow-x-auto">
+        <Link
+          to="/admin/items"
+          className="inline-flex items-center space-x-2 px-3.5 py-2 rounded-xl text-xs font-bold text-slate-600 hover:bg-slate-100 transition shrink-0"
+        >
+          <Package className="w-4 h-4" />
+          <span>Lost & Found Data</span>
+        </Link>
+        <Link
+          to="/admin/users"
+          className="inline-flex items-center space-x-2 px-3.5 py-2 rounded-xl text-xs font-bold text-slate-600 hover:bg-slate-100 transition shrink-0"
+        >
+          <Users className="w-4 h-4" />
+          <span>Users Section</span>
+        </Link>
+        <Link
+          to="/admin/claims"
+          className="inline-flex items-center space-x-2 px-3.5 py-2 rounded-xl text-xs font-bold bg-blue-600 text-white shadow-sm shadow-blue-500/20 shrink-0"
+        >
+          <ShieldAlert className="w-4 h-4" />
+          <span>Claims Oversight</span>
+        </Link>
+        <Link
+          to="/admin"
+          className="inline-flex items-center space-x-2 px-3.5 py-2 rounded-xl text-xs font-bold text-slate-600 hover:bg-slate-100 transition shrink-0"
+        >
+          <ArrowLeft className="w-4 h-4" />
+          <span>Admin Overview</span>
+        </Link>
+      </div>
+
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <Link
-            to="/admin"
-            className="inline-flex items-center text-xs font-bold text-slate-500 hover:text-blue-700 mb-2 transition"
-          >
-            <ArrowLeft className="w-3.5 h-3.5 mr-1" />
-            Admin Overview
-          </Link>
           <div className="flex items-center space-x-2">
             <span className="w-2.5 h-2.5 rounded-full bg-blue-600 animate-pulse" />
             <h1 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">

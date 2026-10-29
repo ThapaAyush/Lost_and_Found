@@ -136,6 +136,46 @@ export const updateUserStatus = async (req, res, next) => {
   }
 };
 
+// @desc    Delete user account and related records
+// @route   DELETE /api/admin/users/:id
+export const deleteUser = async (req, res, next) => {
+  try {
+    const targetUserId = req.params.id;
+
+    if (targetUserId === req.user._id.toString()) {
+      return res.status(400).json({
+        success: false,
+        message: 'Administrators cannot delete their own account.',
+      });
+    }
+
+    const user = await User.findById(targetUserId);
+    if (!user) {
+      return res.status(404).json({ success: false, message: 'User not found' });
+    }
+
+    await User.findByIdAndDelete(targetUserId);
+    await Item.deleteMany({ owner: targetUserId });
+    await Claim.deleteMany({ claimant: targetUserId });
+
+    await logAudit({
+      actor: req.user._id,
+      action: 'ADMIN_USER_DELETED',
+      targetType: 'User',
+      targetId: user._id,
+      metadata: { name: user.name, email: user.email },
+      req,
+    });
+
+    res.status(200).json({
+      success: true,
+      message: `User "${user.name}" and associated records were removed successfully`,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 // @desc    Get all items for moderation
 // @route   GET /api/admin/items
 export const getAdminItems = async (req, res, next) => {
