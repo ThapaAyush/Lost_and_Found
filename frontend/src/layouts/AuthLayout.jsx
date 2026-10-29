@@ -43,18 +43,13 @@ const AuthLayout = () => {
         </div>
 
         <div className="relative z-10 my-10 md:my-0 max-w-md space-y-6">
-          <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-white/10 text-white text-xs font-semibold">
-            <Sparkles className="w-3.5 h-3.5" />
-            <span>Campus Community Portal</span>
-          </div>
-
           <h2 className="text-3xl sm:text-4xl font-black tracking-tight leading-tight">
             Every Lost Item Deserves A Safe Way Home.
           </h2>
 
           <p className="text-xs sm:text-sm text-blue-100 leading-relaxed">
             Report misplaced belongings, verify ownership with confidential proof, and safely
-            coordinate handovers with fellow students and campus staff.
+            coordinate handovers with community members and administrators.
           </p>
 
           <div className="space-y-3 pt-2 text-xs">
@@ -69,13 +64,13 @@ const AuthLayout = () => {
               <div className="w-7 h-7 rounded-lg bg-teal-500/30 flex items-center justify-center flex-shrink-0">
                 <HeartHandshake className="w-4 h-4 text-teal-200" />
               </div>
-              <span>Private in-app messaging to preserve student privacy</span>
+              <span>Private in-app messaging to preserve user privacy</span>
             </div>
           </div>
         </div>
 
         <div className="relative z-10 text-[11px] text-blue-200">
-          © {new Date().getFullYear()} Campus Lost & Found Community Hub
+          © {new Date().getFullYear()} Lost & Found Community Hub
         </div>
       </div>
 

@@ -47,7 +47,7 @@ const AdminDashboardPage = () => {
 
   const cards = [
     {
-      title: 'Total Campus Users',
+      title: 'Total Users',
       count: stats.totalUsers || 0,
       icon: Users,
       link: '/admin/users',
@@ -102,7 +102,7 @@ const AdminDashboardPage = () => {
             Administrator Oversight Portal
           </h1>
           <p className="text-xs sm:text-sm text-slate-300 mt-1 max-w-xl">
-            Verify ownership claims, enforce campus moderation, and audit handover compliance.
+            Verify ownership claims, enforce platform moderation, and audit handover compliance.
           </p>
         </div>
 

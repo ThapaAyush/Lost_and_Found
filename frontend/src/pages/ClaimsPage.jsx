@@ -65,7 +65,7 @@ const ClaimsPage = () => {
         itemId: claim.item?._id,
         recipientId,
         subject: `Regarding claim on ${claim.item?.title || 'item'}`,
-        initialMessage: `Hello, I am reaching out regarding the claim for "${claim.item?.title}". Let's coordinate the verification and safe handover on campus.`,
+        initialMessage: `Hello, I am reaching out regarding the claim for "${claim.item?.title}". Let's coordinate the verification and safe handover.`,
       });
       navigate('/conversations');
     } catch (err) {

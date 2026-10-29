@@ -194,7 +194,7 @@ const seedDatabase = async () => {
           fromStatus: null,
           toStatus: 'found',
           changedBy: adminUser._id,
-          note: 'Logged by campus security',
+          note: 'Logged by security',
         },
       ],
     });

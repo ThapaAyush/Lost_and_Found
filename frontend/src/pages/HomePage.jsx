@@ -115,7 +115,7 @@ const HomePage = () => {
     {
       step: '04',
       title: 'Admin Verification',
-      desc: 'Campus administrators review the submitted proof of ownership to verify legitimate claims.',
+      desc: 'Platform administrators review the submitted proof of ownership to verify legitimate claims.',
       icon: ShieldAlert,
       accent: 'bg-teal-600',
     },
@@ -129,7 +129,7 @@ const HomePage = () => {
     {
       step: '06',
       title: 'Handover & Mark Returned',
-      desc: 'Meet safely at campus security or union desks, complete the return, and mark the item as returned.',
+      desc: 'Meet safely at designated reception or security desks, complete the return, and mark the item as returned.',
       icon: CheckCircle2,
       accent: 'bg-teal-600',
     },
@@ -144,10 +144,6 @@ const HomePage = () => {
         <div className="absolute bottom-0 -right-10 w-72 h-72 bg-teal-200/30 rounded-full blur-3xl pointer-events-none" />
 
         <div className="relative z-10 max-w-4xl mx-auto text-center space-y-6">
-          <div className="inline-flex items-center space-x-2 px-3.5 py-1.5 rounded-full bg-white border border-blue-200 text-blue-700 text-xs font-semibold shadow-xs">
-            <span className="w-2 h-2 rounded-full bg-blue-600 animate-pulse" />
-            <span>Campus Community Lost & Found Reconnection Platform</span>
-          </div>
 
           <h1 className="text-3xl sm:text-5xl lg:text-6xl font-black tracking-tight leading-tight text-slate-900">
             Every Lost Item Deserves <br className="hidden sm:inline" />
@@ -157,7 +153,7 @@ const HomePage = () => {
           </h1>
 
           <p className="text-sm sm:text-base lg:text-lg text-slate-600 max-w-2xl mx-auto leading-relaxed">
-            Report misplaced belongings, register items you've found on campus, and let our smart matching
+            Report misplaced belongings, register items you've found, and let our smart matching
             and verified handover system connect you securely.
           </p>
 
@@ -230,7 +226,7 @@ const HomePage = () => {
         </div>
       </section>
 
-      {/* 2. Campus Reconnection Stats */}
+      {/* 2. Reconnection Stats */}
       <section className="grid grid-cols-2 md:grid-cols-4 gap-4">
         {[
           { label: 'Reconnection Rate', value: '94%', icon: TrendingUp, color: 'text-blue-600', bg: 'bg-blue-50' },
@@ -266,7 +262,7 @@ const HomePage = () => {
               </div>
               <div>
                 <div className="flex items-center space-x-2">
-                  <h2 className="text-lg font-black text-slate-900">Live Campus Matches Detected</h2>
+                  <h2 className="text-lg font-black text-slate-900">Live Matches Detected</h2>
                   <span className="px-2.5 py-0.5 rounded-full bg-teal-600 text-white text-[10px] font-bold">
                     {communityMatches.length} Matches
                   </span>
@@ -334,7 +330,7 @@ const HomePage = () => {
             How It Works
           </span>
           <h2 className="text-2xl sm:text-3xl font-black text-slate-900 tracking-tight">
-            The Campus Reconnection Workflow
+            The Reconnection Workflow
           </h2>
           <p className="text-xs sm:text-sm text-slate-500 leading-relaxed">
             From initial report to verified handover, every step is built for transparency, privacy, and community safety.
@@ -447,24 +443,24 @@ const HomePage = () => {
         </div>
       </section>
 
-      {/* 6. Campus Safe Zones & Handover Advice */}
+      {/* 6. Safe Zones & Handover Advice */}
       <section className="bg-white rounded-3xl border border-slate-200/90 p-8 sm:p-10 shadow-sm space-y-6">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
           <div className="space-y-2 max-w-xl">
             <span className="text-xs font-bold uppercase tracking-wider text-teal-700 bg-teal-50 px-3 py-1 rounded-full border border-teal-100">
-              Campus Handover Zones
+              Safe Handover Zones
             </span>
             <h2 className="text-2xl font-black text-slate-900">Recommended Safe Handover Locations</h2>
             <p className="text-xs text-slate-500 leading-relaxed">
               When arranging item handovers following verified admin claim approvals, we strongly encourage
-              meeting at supervised campus locations during standard operating hours.
+              meeting at supervised public locations during standard operating hours.
             </p>
           </div>
 
           <div className="flex items-center space-x-3">
             <Building2 className="w-12 h-12 text-blue-600 p-2.5 bg-blue-50 rounded-2xl flex-shrink-0" />
             <div>
-              <p className="text-xs font-bold text-slate-900">Campus Security & Lost Property Desk</p>
+              <p className="text-xs font-bold text-slate-900">Security & Lost Property Desk</p>
               <p className="text-[11px] text-slate-400">Open Daily 08:00 – 20:00 • Building A Central</p>
             </div>
           </div>
@@ -474,7 +470,7 @@ const HomePage = () => {
           {[
             {
               title: 'Student Union Hub',
-              desc: 'High foot-traffic, well-lit reception desk with campus staff presence.',
+              desc: 'High foot-traffic, well-lit reception desk with official staff presence.',
               icon: Users,
             },
             {
@@ -509,7 +505,7 @@ const HomePage = () => {
             Ready to Help Reunite Someone Today?
           </h2>
           <p className="text-xs sm:text-sm text-blue-100 leading-relaxed">
-            Join hundreds of students and campus members who make our community safer and more connected.
+            Join hundreds of community members who make our network safer and more connected.
           </p>
         </div>
 

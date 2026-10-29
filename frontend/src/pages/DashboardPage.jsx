@@ -110,7 +110,7 @@ const DashboardPage = () => {
         <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
           <div>
             <span className="text-[11px] font-extrabold uppercase tracking-wider text-blue-700 bg-blue-50 px-3 py-1 rounded-full border border-blue-200">
-              Campus Member Dashboard
+              Member Dashboard
             </span>
             <h1 className="text-2xl sm:text-3xl font-black tracking-tight mt-2 text-slate-900">
               Welcome Back, {user?.name || 'Community Member'}!
@@ -203,7 +203,7 @@ const DashboardPage = () => {
           <div className="flex items-center justify-between">
             <div>
               <h3 className="text-base font-bold text-slate-900">Your Recent Reports</h3>
-              <p className="text-xs text-slate-500">Items you have reported lost or found on campus</p>
+              <p className="text-xs text-slate-500">Items you have reported lost or found</p>
             </div>
             <Link
               to="/my-reports"
@@ -279,7 +279,7 @@ const DashboardPage = () => {
           ) : (
             <EmptyState
               title="No reports filed yet"
-              description="Have you lost an item or found someone's belonging on campus? File your first report to connect with the community."
+              description="Have you lost an item or found someone's belonging? File your first report to connect with the community."
               actionText="Report an Item"
               actionLink="/report/lost"
             />
@@ -355,11 +355,11 @@ const DashboardPage = () => {
           <div className="bg-slate-50 border border-slate-200 rounded-3xl p-5 text-xs text-slate-600 space-y-2">
             <div className="flex items-center space-x-2 text-indigo-700 font-bold">
               <Building2 className="w-4 h-4" />
-              <span>Campus Safe Handover Advice</span>
+              <span>Safe Handover Advice</span>
             </div>
             <p className="leading-relaxed">
-              Always arrange item handovers at designated supervised spots such as the Campus
-              Security Desk or Student Union Reception during business hours.
+              Always arrange item handovers at designated supervised spots such as the
+              Security Desk or Reception Desk during business hours.
             </p>
           </div>
         </div>

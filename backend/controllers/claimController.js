@@ -300,10 +300,10 @@ export const updateClaimStatus = async (req, res, next) => {
 
       const isLostItem = claim.item.type === 'lost';
       const approvalNote = isLostItem
-        ? `🎉 System Notice: Lost item report for "${claim.item.title}" has been verified and confirmed with the finder. You can now safely communicate here to coordinate the safe return on campus (recommended meetup: Campus Security Desk or Student Union).`
+        ? `🎉 System Notice: Lost item report for "${claim.item.title}" has been verified and confirmed with the finder. You can now safely communicate here to coordinate safe return (recommended meetup: Main Security Desk or Reception Desk).`
         : `🎉 System Notice: Ownership claim on "${claim.item.title}" has been verified and APPROVED by ${
             isAdmin ? 'the Administrator' : 'the finder'
-          }. You can now safely communicate here to coordinate the item handover on campus (recommended handover point: Campus Security Desk or Student Union).`;
+          }. You can now safely communicate here to coordinate item handover (recommended handover point: Main Security Desk or Reception Desk).`;
 
       if (!conversation) {
         conversation = await Conversation.create({

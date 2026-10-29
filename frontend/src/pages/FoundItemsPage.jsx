@@ -98,7 +98,7 @@ const FoundItemsPage = () => {
             </h1>
           </div>
           <p className="text-xs sm:text-sm text-slate-500 mt-1">
-            Browse items discovered on campus and submit ownership claims to recover your property.
+            Browse items discovered and submit ownership claims to recover your property.
           </p>
         </div>
 
@@ -163,7 +163,7 @@ const FoundItemsPage = () => {
         ) : (
           <EmptyState
             title="No Found Belongings Match Your Criteria"
-            description="Try adjusting your keyword searches or filter parameters, or register a new found report if you discovered an item on campus."
+            description="Try adjusting your keyword searches or filter parameters, or register a new found report if you discovered an item."
             actionText="Report Found Item"
             actionLink="/report/found"
           />

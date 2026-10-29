@@ -115,7 +115,7 @@ describe('Lost & Found REST API Test Suite', () => {
         title: 'Blue Water Bottle HydroFlask',
         category: 'Accessories',
         description: 'Lost 32oz blue metal hydroflask with sticker near gym.',
-        locationDescription: 'Campus Recreation Center Locker Room',
+        locationDescription: 'Community Recreation Center Locker Room',
         incidentDate: new Date().toISOString(),
       });
 

@@ -76,9 +76,6 @@ const Navbar = ({ toggleSidebar, isSidebarOpen }) => {
               <span className="font-black text-lg tracking-tight text-slate-900 group-hover:text-blue-600 transition whitespace-nowrap">
                 Lost <span className="text-teal-600">&</span> Found
               </span>
-              <p className="text-[10px] text-slate-400 font-bold tracking-wider uppercase -mt-0.5 whitespace-nowrap">
-                Campus Portal
-              </p>
             </div>
           </Link>
         </div>

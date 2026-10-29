@@ -296,7 +296,7 @@ const MyReportsPage = () => {
       ) : (
         <EmptyState
           title="No reports found in this category"
-          description="Have you lost an item or discovered something on campus? Create a new report to begin."
+          description="Have you lost an item or discovered something? Create a new report to begin."
           actionText="Report an Item"
           actionLink="/report/lost"
         />
@@ -336,7 +336,7 @@ const MyReportsPage = () => {
                   type="text"
                   value={statusHandoverLoc}
                   onChange={(e) => setStatusHandoverLoc(e.target.value)}
-                  placeholder="e.g. Campus Security Desk, Student Union Info Desk"
+                  placeholder="e.g. Security Desk, Information Reception Desk"
                   className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 text-xs rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/20"
                 />
               </div>

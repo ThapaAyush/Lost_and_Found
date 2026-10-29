@@ -322,7 +322,7 @@ const ConversationsPage = () => {
                 <div className="px-3 sm:px-4 py-2 bg-blue-50/60 border-b border-slate-100 text-[10px] sm:text-[11px] text-slate-600 flex items-center justify-between">
                   <span className="flex items-center truncate mr-2">
                     <Building2 className="w-3.5 h-3.5 mr-1.5 text-blue-600 flex-shrink-0" />
-                    Meetup recommendation: Campus Security Desk or Student Union Foyer.
+                    Meetup recommendation: Security Desk or Reception Foyer.
                   </span>
                   <span className="font-bold text-blue-700 hidden sm:inline whitespace-nowrap">
                     Safe Handover
@@ -398,7 +398,7 @@ const ConversationsPage = () => {
                     })
                   ) : (
                     <div className="py-12 text-center text-xs text-slate-400">
-                      No messages yet. Send a greeting to coordinate your campus handover!
+                      No messages yet. Send a greeting to coordinate your safe handover!
                     </div>
                   )}
                   <div ref={messagesEndRef} />

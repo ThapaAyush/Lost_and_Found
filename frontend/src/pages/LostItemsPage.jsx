@@ -92,7 +92,7 @@ const LostItemsPage = () => {
             </h1>
           </div>
           <p className="text-xs sm:text-sm text-slate-500 mt-1">
-            Browse items reported missing by students and faculty on campus ({totalCount} reports)
+            Browse items reported missing by community members ({totalCount} reports)
           </p>
         </div>
 

@@ -142,8 +142,8 @@ const ItemDetailsPage = () => {
   const openReturnModal = () => {
     setNewStatus('returned');
     setStatusCustody('returned_to_owner');
-    setStatusNote('Item successfully returned to verified owner after safe campus handover.');
-    setStatusHandoverLoc('Campus Security Desk / Lost Property Office');
+    setStatusNote('Item successfully returned to verified owner after safe handover.');
+    setStatusHandoverLoc('Security Desk / Lost Property Office');
     setStatusModalOpen(true);
   };
 
@@ -413,7 +413,7 @@ const ItemDetailsPage = () => {
                   Full Found-Item Report & In-App Handover Chat Unlocked!
                 </h2>
                 <p className="text-xs text-slate-600">
-                  The campus administration has verified your proof of ownership. You can now chat privately with the finder to coordinate safe physical return on campus.
+                  The administration has verified your proof of ownership. You can now chat privately with the finder to coordinate safe physical return.
                 </p>
               </div>
             </div>
@@ -459,7 +459,7 @@ const ItemDetailsPage = () => {
               <p className="text-xs text-slate-600">
                 {item.type === 'lost'
                   ? 'The owner can view your submission in their claims center and message you directly to coordinate safe return.'
-                  : 'Campus administration verifies serial numbers and purchase receipts to prevent wrongful handovers. Once approved, the private in-app messaging system will unlock.'}
+                  : 'Administration verifies serial numbers and purchase receipts to prevent wrongful handovers. Once approved, the private in-app messaging system will unlock.'}
               </p>
             </div>
           </div>
@@ -708,7 +708,7 @@ const ItemDetailsPage = () => {
                 )}
                 {item.travelRoute && (
                   <p>
-                    <span className="font-bold text-slate-700">Travel Route on Campus: </span>
+                    <span className="font-bold text-slate-700">Travel Route: </span>
                     <span className="text-slate-600">{item.travelRoute}</span>
                   </p>
                 )}
@@ -839,7 +839,7 @@ const ItemDetailsPage = () => {
                 type="text"
                 value={statusHandoverLoc}
                 onChange={(e) => setStatusHandoverLoc(e.target.value)}
-                placeholder="e.g. Campus Security Desk, Student Union Info Desk"
+                placeholder="e.g. Security Desk, Information Reception Desk"
                 className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 text-xs rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/20"
               />
             </div>
@@ -901,7 +901,7 @@ const ItemDetailsPage = () => {
             <p className="text-[11px] text-blue-700">
               {item?.type === 'lost'
                 ? 'Provide details on where and when you found this item, and a personal message to the owner. This will be sent directly to their Claims section so you can coordinate safe handover.'
-                : 'Your explanation, secret serial numbers, and uploaded proofs are kept confidential and only reviewed by campus administrators and the finder.'}
+                : 'Your explanation, secret serial numbers, and uploaded proofs are kept confidential and only reviewed by administrators and the finder.'}
             </p>
           </div>
 

@@ -19,8 +19,8 @@ const CATEGORIES = [
 
 const CUSTODY_OPTIONS = [
   { value: 'still_with_finder', label: 'Still with me (Finder safekeeping)' },
-  { value: 'reception_or_security', label: 'Handed over to Campus Reception / Security Desk' },
-  { value: 'lost_property_office', label: 'Deposited at Campus Lost Property Office' },
+  { value: 'reception_or_security', label: 'Handed over to Reception / Security Desk' },
+  { value: 'lost_property_office', label: 'Deposited at Lost Property Office' },
 ];
 
 const ReportFoundPage = () => {
@@ -236,7 +236,7 @@ const ReportFoundPage = () => {
               required
               value={locationDescription}
               onChange={(e) => setLocationDescription(e.target.value)}
-              placeholder="e.g. Under Bench near Main Campus Fountain, Library 1st Floor Cafe"
+              placeholder="e.g. Under Bench near Central Fountain, Library 1st Floor Cafe"
               className="w-full px-4 py-2.5 bg-slate-50 focus:bg-white text-xs sm:text-sm border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition"
             />
           </div>

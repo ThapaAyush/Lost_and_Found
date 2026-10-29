@@ -37,7 +37,7 @@ const SignupPage = () => {
     }
 
     if (!agreed) {
-      setErrorMessage('Please accept our campus community terms of service.');
+      setErrorMessage('Please accept our terms of service.');
       return;
     }
 
@@ -63,7 +63,7 @@ const SignupPage = () => {
       <div className="mb-6">
         <h2 className="text-2xl font-black text-slate-900 tracking-tight">Create Account</h2>
         <p className="text-xs text-slate-500 mt-1">
-          Join our campus community lost & found network to report and recover items.
+          Join our community lost & found network to report and recover items.
         </p>
       </div>
 
@@ -180,7 +180,7 @@ const SignupPage = () => {
             className="mt-0.5 rounded border-slate-300 text-blue-600 focus:ring-blue-500/20"
           />
           <label htmlFor="terms" className="text-xs text-slate-600 leading-snug">
-            I agree to the campus community guidelines, truthful reporting policy, and confidential claim verification process.
+            I agree to the community guidelines, truthful reporting policy, and confidential claim verification process.
           </label>
         </div>
 

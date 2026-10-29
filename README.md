@@ -9,7 +9,7 @@ A complete, production-ready, full-stack MERN application that connects people w
 ## 🌟 Key Features & Workflow
 
 ### 1. Complete End-to-End Lifecycle
-1. **Report Lost Item** (`/report/lost`): Users describe lost items with photos, campus landmarks, dates, categories, and secret verification questions.
+1. **Report Lost Item** (`/report/lost`): Users describe lost items with photos, location landmarks, dates, categories, and secret verification questions.
 2. **Report Found Item** (`/report/found`): Finders log discovered items, custody status, and safekeeping locations.
 3. **Smart Matching in Found Section** (`/found-items`): When matching lost and found reports are submitted, the lost item appears in the found items section with match confidence indicators.
 4. **Claim Ownership with Proof** (`/items/:id`): True owners can click "Claim Ownership" to upload private proof of ownership (purchase receipts, serial numbers, distinguishing marks).

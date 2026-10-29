@@ -58,7 +58,7 @@ const AdminClaimsPage = () => {
             </h1>
           </div>
           <p className="text-xs sm:text-sm text-slate-500 mt-1">
-            Review claimant statements, verify proof documents, and approve handovers across campus.
+            Review claimant statements, verify proof documents, and approve handovers.
           </p>
         </div>
 

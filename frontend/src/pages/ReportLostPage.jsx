@@ -103,7 +103,7 @@ const ReportLostPage = () => {
           </h1>
         </div>
         <p className="text-xs sm:text-sm text-slate-500 mt-1">
-          Provide accurate details so our multi-factor matching engine and campus community can identify your belonging.
+          Provide accurate details so our multi-factor matching engine and community can identify your belonging.
         </p>
       </div>
 
@@ -264,7 +264,7 @@ const ReportLostPage = () => {
 
           <div>
             <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
-              Circumstances / Travel Route on Campus
+              Circumstances / Travel Route
             </label>
             <textarea
               rows={2}

@@ -46,10 +46,10 @@ const AppLayout = () => {
       <footer className="bg-white border-t border-slate-200 py-6 px-6 text-center text-xs text-slate-500 hidden lg:block">
         <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
           <p className="font-medium">
-            © {new Date().getFullYear()} Campus Lost & Found Platform — Every Lost Item Deserves a Way Home.
+            © {new Date().getFullYear()} Lost & Found Platform — Every Lost Item Deserves a Way Home.
           </p>
           <div className="flex items-center space-x-4 text-xs font-semibold text-slate-600">
-            <span>Student Affairs & Campus Security</span>
+            <span>Community Support & Security</span>
             <span>•</span>
             <span>Safe Handover Program</span>
           </div>

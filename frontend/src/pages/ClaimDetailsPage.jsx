@@ -41,7 +41,7 @@ const ClaimDetailsPage = () => {
 
   // Return Modal State
   const [returnModalOpen, setReturnModalOpen] = useState(false);
-  const [returnLocation, setReturnLocation] = useState('Campus Security Desk');
+  const [returnLocation, setReturnLocation] = useState('Security Desk');
   const [returnNotes, setReturnNotes] = useState('Item successfully returned to verified claimant.');
   const [returnSubmitting, setReturnSubmitting] = useState(false);
 
@@ -137,7 +137,7 @@ const ClaimDetailsPage = () => {
         itemId: claim.item?._id,
         recipientId: targetUserId,
         subject: `Regarding ${claim.item?.title || 'item'}`,
-        initialMessage: `Hello! Reaching out regarding "${claim.item?.title}". Let's coordinate safe handover on campus.`,
+        initialMessage: `Hello! Reaching out regarding "${claim.item?.title}". Let's coordinate safe handover.`,
       });
       navigate('/conversations');
     } catch (err) {
@@ -210,7 +210,7 @@ const ClaimDetailsPage = () => {
                   Private Handover Coordination Unlocked
                 </h2>
                 <p className="text-xs text-slate-600">
-                  Campus administration has verified this claim. Both users can now chat in-app to arrange a safe physical handover.
+                  Administration has verified this claim. Both users can now chat in-app to arrange a safe physical handover.
                 </p>
               </div>
             </div>
@@ -370,7 +370,7 @@ const ClaimDetailsPage = () => {
           </h3>
           <p className="text-xs text-slate-500">
             {claim.item?.type === 'lost'
-              ? "Review the finder's details and message above. If this is your item, approve to connect and coordinate physical return on campus, or message them directly."
+              ? "Review the finder's details and message above. If this is your item, approve to connect and coordinate physical return, or message them directly."
               : "Verify the claimant's proof and secret identifiers above against the item details. If satisfied, approve the claim to unlock direct in-app messaging and coordinate the handover."}
           </p>
 
@@ -470,7 +470,7 @@ const ClaimDetailsPage = () => {
               required
               value={returnLocation}
               onChange={(e) => setReturnLocation(e.target.value)}
-              placeholder="e.g. Campus Security Desk, Student Union Info Desk"
+              placeholder="e.g. Security Desk, Information Reception Desk"
               className="w-full px-4 py-2.5 bg-slate-50 border border-slate-200 text-xs rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/20"
             />
           </div>
