@@ -93,15 +93,15 @@ const AdminDashboardPage = () => {
   return (
     <div className="space-y-8 animate-in fade-in duration-150">
       {/* Top Banner */}
-      <div className="bg-slate-900 text-white rounded-3xl p-6 sm:p-8 shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-4">
+      <div className="bg-white text-slate-900 border border-slate-200 rounded-3xl p-6 sm:p-8 shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <span className="px-3 py-1 rounded-full text-xs font-bold bg-white/10 text-blue-300 border border-white/20">
-            Dedicated Admin Server & Portal
+          <span className="px-3 py-1 rounded-full text-xs font-bold bg-teal-50 text-teal-700 border border-teal-200">
+            Dedicated Admin Portal
           </span>
-          <h1 className="text-2xl sm:text-3xl font-black tracking-tight mt-2 text-white">
+          <h1 className="text-2xl sm:text-3xl font-black tracking-tight mt-2 text-slate-900">
             Administrator Oversight Portal
           </h1>
-          <p className="text-xs sm:text-sm text-slate-300 mt-1 max-w-xl">
+          <p className="text-xs sm:text-sm text-slate-500 mt-1 max-w-xl">
             Verify ownership claims, enforce platform moderation, manage user directory, and audit compliance.
           </p>
         </div>
@@ -109,14 +109,14 @@ const AdminDashboardPage = () => {
         <div className="flex flex-wrap items-center gap-2">
           <Link
             to="/signup"
-            className="px-4 py-2.5 bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold rounded-xl shadow-sm transition flex items-center space-x-1.5"
+            className="px-4 py-2.5 bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold rounded-xl shadow-sm shadow-blue-500/20 transition flex items-center space-x-1.5"
           >
             <UserPlus className="w-4 h-4" />
             <span>Sign-Up User</span>
           </Link>
           <Link
             to="/items"
-            className="px-4 py-2.5 bg-white/10 hover:bg-white/20 border border-white/20 text-white text-xs font-bold rounded-xl transition flex items-center space-x-1.5"
+            className="px-4 py-2.5 bg-slate-50 hover:bg-slate-100 border border-slate-200 text-slate-700 text-xs font-bold rounded-xl transition flex items-center space-x-1.5"
           >
             <Package className="w-4 h-4" />
             <span>Lost & Found Data</span>

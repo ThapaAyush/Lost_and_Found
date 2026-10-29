@@ -10,7 +10,7 @@ const AdminLayout = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-slate-900 text-white">
+      <div className="min-h-screen flex items-center justify-center bg-slate-50 text-slate-900">
         <LoadingSpinner size="lg" message="Authenticating administrator clearance..." />
       </div>
     );
