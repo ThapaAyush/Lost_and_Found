@@ -6,12 +6,11 @@ import {
   CheckCircle2,
   ShieldAlert,
   FileText,
-  AlertTriangle,
-  History,
-  ArrowRight,
-  TrendingUp,
   Package,
   UserPlus,
+  ShieldCheck,
+  TrendingUp,
+  Globe,
 } from 'lucide-react';
 import { adminAPI } from '../services/api';
 import LoadingSpinner from '../components/LoadingSpinner';
@@ -72,7 +71,7 @@ const AdminDashboardPage = () => {
       count: stats.returnedItems || 0,
       icon: CheckCircle2,
       link: '/items?status=returned',
-      color: 'text-emerald-600 bg-emerald-50 border-emerald-200',
+      color: 'text-teal-600 bg-teal-50 border-teal-200',
     },
     {
       title: 'Pending Ownership Claims',
@@ -80,13 +79,6 @@ const AdminDashboardPage = () => {
       icon: ShieldAlert,
       link: '/claims',
       color: 'text-amber-600 bg-amber-50 border-amber-200',
-    },
-    {
-      title: 'Community Abuse Flags',
-      count: stats.openAbuseReports || 0,
-      icon: AlertTriangle,
-      link: '/abuse-reports',
-      color: 'text-rose-600 bg-rose-50 border-rose-200',
     },
   ];
 
@@ -125,7 +117,7 @@ const AdminDashboardPage = () => {
       </div>
 
       {/* Stats Cards */}
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
         {cards.map((card, idx) => {
           const Icon = card.icon;
           return (
@@ -152,42 +144,6 @@ const AdminDashboardPage = () => {
 
       {/* Overview Panels */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Recent Audit Activity */}
-        <div className="bg-white rounded-3xl border border-slate-200 p-6 shadow-sm">
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="text-base font-bold text-slate-900 flex items-center">
-              <History className="w-4 h-4 mr-2 text-blue-600" />
-              Recent Audit Log Activity
-            </h2>
-            <Link to="/audit-logs" className="text-xs font-bold text-blue-600 hover:underline">
-              View All Logs
-            </Link>
-          </div>
-
-          <div className="space-y-3">
-            {data?.recentAuditLogs?.length > 0 ? (
-              data.recentAuditLogs.map((log) => (
-                <div
-                  key={log._id}
-                  className="p-3 bg-slate-50 rounded-xl border border-slate-100 flex items-center justify-between text-xs"
-                >
-                  <div>
-                    <span className="font-bold text-slate-800">{log.action?.replace(/_/g, ' ')}</span>
-                    <p className="text-[11px] text-slate-400">
-                      Target: {log.targetType} {log.metadata?.title || log.metadata?.name || ''}
-                    </p>
-                  </div>
-                  <span className="text-[10px] text-slate-400 whitespace-nowrap">
-                    {formatTimeAgo(log.createdAt)}
-                  </span>
-                </div>
-              ))
-            ) : (
-              <p className="text-xs text-slate-400 text-center py-6">No recent audit logs.</p>
-            )}
-          </div>
-        </div>
-
         {/* Quick Administration Controls */}
         <div className="bg-white rounded-3xl border border-slate-200 p-6 shadow-sm flex flex-col justify-between">
           <div>
@@ -240,7 +196,63 @@ const AdminDashboardPage = () => {
 
           <div className="mt-6 pt-4 border-t border-slate-100 flex items-center justify-between text-xs text-slate-500">
             <span>Primary Admin: <strong className="text-slate-800">ayush108ayush108@gmail.com</strong></span>
-            <span className="text-emerald-600 font-bold">● Active Session</span>
+            <span className="text-teal-600 font-bold">● Active Session</span>
+          </div>
+        </div>
+
+        {/* Platform Status & Security Card */}
+        <div className="bg-white rounded-3xl border border-slate-200 p-6 shadow-sm flex flex-col justify-between">
+          <div>
+            <h2 className="text-base font-bold text-slate-900 flex items-center mb-4">
+              <ShieldCheck className="w-4 h-4 mr-2 text-blue-600" />
+              Governance & Security Standards
+            </h2>
+            <p className="text-xs text-slate-500 mb-4">
+              Platform policy, admin credential rules, and system oversight overview.
+            </p>
+
+            <div className="space-y-3">
+              <div className="p-3 bg-slate-50 rounded-2xl border border-slate-200/80 flex items-start space-x-3">
+                <div className="w-7 h-7 rounded-lg bg-blue-50 border border-blue-200 text-blue-600 flex items-center justify-center shrink-0 mt-0.5">
+                  <ShieldCheck className="w-4 h-4" />
+                </div>
+                <div>
+                  <p className="text-xs font-bold text-slate-900">Designated Single Administrator Gate</p>
+                  <p className="text-[11px] text-slate-500">
+                    Restricted exclusively to <code className="text-blue-700 font-bold">ayush108ayush108@gmail.com</code> with permanent credentials.
+                  </p>
+                </div>
+              </div>
+
+              <div className="p-3 bg-slate-50 rounded-2xl border border-slate-200/80 flex items-start space-x-3">
+                <div className="w-7 h-7 rounded-lg bg-teal-50 border border-teal-200 text-teal-600 flex items-center justify-center shrink-0 mt-0.5">
+                  <CheckCircle2 className="w-4 h-4" />
+                </div>
+                <div>
+                  <p className="text-xs font-bold text-slate-900">Direct Post & Account Governance</p>
+                  <p className="text-[11px] text-slate-500">
+                    Removal authority for both lost & found posts and rogue user accounts with automated cascade cleanup.
+                  </p>
+                </div>
+              </div>
+
+              <div className="p-3 bg-slate-50 rounded-2xl border border-slate-200/80 flex items-start space-x-3">
+                <div className="w-7 h-7 rounded-lg bg-blue-50 border border-blue-200 text-blue-600 flex items-center justify-center shrink-0 mt-0.5">
+                  <Globe className="w-4 h-4" />
+                </div>
+                <div>
+                  <p className="text-xs font-bold text-slate-900">Bidirectional Portal Switcher</p>
+                  <p className="text-[11px] text-slate-500">
+                    Seamless 1-click transition between this Admin portal (port 5174) and Public Frontend (port 5173).
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div className="mt-6 pt-4 border-t border-slate-100 flex items-center justify-between text-xs text-slate-500">
+            <span>Local Server: <strong className="text-slate-800">http://localhost:5174</strong></span>
+            <span className="text-teal-600 font-bold">● System Healthy</span>
           </div>
         </div>
       </div>

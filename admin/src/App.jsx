@@ -9,8 +9,6 @@ import AdminItemsPage from './pages/AdminItemsPage';
 import AdminUsersPage from './pages/AdminUsersPage';
 import AdminSignupPage from './pages/AdminSignupPage';
 import AdminClaimsPage from './pages/AdminClaimsPage';
-import AdminAbuseReportsPage from './pages/AdminAbuseReportsPage';
-import AdminAuditLogsPage from './pages/AdminAuditLogsPage';
 
 function App() {
   return (
@@ -27,8 +25,6 @@ function App() {
             <Route path="/users" element={<AdminUsersPage />} />
             <Route path="/signup" element={<AdminSignupPage />} />
             <Route path="/claims" element={<AdminClaimsPage />} />
-            <Route path="/abuse-reports" element={<AdminAbuseReportsPage />} />
-            <Route path="/audit-logs" element={<AdminAuditLogsPage />} />
           </Route>
 
           {/* Fallback */}

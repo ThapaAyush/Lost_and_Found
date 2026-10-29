@@ -6,8 +6,6 @@ import {
   Users,
   UserPlus,
   ShieldAlert,
-  AlertTriangle,
-  History,
   LogOut,
   ExternalLink,
   ShieldCheck,
@@ -31,8 +29,6 @@ const AdminSidebar = () => {
     { to: '/users', label: 'Users Section', icon: Users },
     { to: '/signup', label: 'Sign-Up User', icon: UserPlus },
     { to: '/claims', label: 'Claims Oversight', icon: ShieldAlert },
-    { to: '/abuse-reports', label: 'Abuse Reports', icon: AlertTriangle },
-    { to: '/audit-logs', label: 'Audit Trail', icon: History },
   ];
 
   return (
