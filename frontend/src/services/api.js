@@ -38,10 +38,7 @@ export const authAPI = {
 // User Profile Endpoints
 export const userAPI = {
   getProfile: () => api.get('/users/me'),
-  updateProfile: (formData) =>
-    api.patch('/users/me', formData, {
-      headers: { 'Content-Type': 'multipart/form-data' },
-    }),
+  updateProfile: (formData) => api.patch('/users/me', formData),
   changePassword: (data) => api.post('/users/change-password', data),
   getStats: () => api.get('/users/stats'),
 };

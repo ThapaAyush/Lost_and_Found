@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import {
   User,
   Mail,
@@ -29,9 +29,23 @@ const ProfilePage = () => {
   const [phone, setPhone] = useState(user?.phone || '');
   const [avatarFile, setAvatarFile] = useState(null);
   const [avatarPreview, setAvatarPreview] = useState(user?.avatar || '');
+  const [avatarUploading, setAvatarUploading] = useState(false);
+  const [avatarImgError, setAvatarImgError] = useState(false);
   const [profileSaving, setProfileSaving] = useState(false);
   const [profileSuccess, setProfileSuccess] = useState('');
   const [profileError, setProfileError] = useState('');
+
+  // Sync state whenever user data loads or updates
+  useEffect(() => {
+    if (user) {
+      if (user.name) setName(user.name);
+      if (user.phone !== undefined) setPhone(user.phone || '');
+      if (user.avatar) {
+        setAvatarPreview(user.avatar);
+        setAvatarImgError(false);
+      }
+    }
+  }, [user]);
 
   // Password Change State
   const [currentPassword, setCurrentPassword] = useState('');
@@ -41,11 +55,46 @@ const ProfilePage = () => {
   const [passwordSuccess, setPasswordSuccess] = useState('');
   const [passwordError, setPasswordError] = useState('');
 
-  const handleAvatarChange = (e) => {
+  // Auto-upload and save avatar immediately upon file selection
+  const handleAvatarChange = async (e) => {
     const file = e.target.files?.[0];
-    if (file) {
-      setAvatarFile(file);
-      setAvatarPreview(URL.createObjectURL(file));
+    if (!file) return;
+
+    if (file.size > 5 * 1024 * 1024) {
+      setProfileError('Image size exceeds 5MB limit. Please choose a smaller image.');
+      return;
+    }
+
+    setAvatarFile(file);
+    const localBlob = URL.createObjectURL(file);
+    setAvatarPreview(localBlob);
+    setAvatarImgError(false);
+    setAvatarUploading(true);
+    setProfileError('');
+    setProfileSuccess('');
+
+    try {
+      const formData = new FormData();
+      formData.append('avatar', file);
+      if (name) formData.append('name', name.trim());
+      if (phone !== undefined) formData.append('phone', phone.trim());
+
+      const res = await userAPI.updateProfile(formData);
+      if (res.data?.success && res.data?.user) {
+        updateUser(res.data.user);
+        setAvatarPreview(res.data.user.avatar || localBlob);
+        setProfileSuccess('Profile picture updated and saved successfully!');
+        setTimeout(() => setProfileSuccess(''), 4000);
+      }
+    } catch (err) {
+      console.error('[Avatar Upload Error]', err);
+      setProfileError(err.message || 'Failed to upload profile picture. Please try again.');
+      setAvatarPreview(user?.avatar || '');
+    } finally {
+      setAvatarUploading(false);
+      if (fileInputRef.current) {
+        fileInputRef.current.value = '';
+      }
     }
   };
 
@@ -121,10 +170,11 @@ const ProfilePage = () => {
 
         {/* Avatar with Camera Overlay */}
         <div className="relative group shrink-0">
-          {avatarPreview ? (
+          {(avatarPreview || user?.avatar) && !avatarImgError ? (
             <img
-              src={avatarPreview}
+              src={avatarPreview || user?.avatar}
               alt={user?.name}
+              onError={() => setAvatarImgError(true)}
               className="w-24 h-24 sm:w-28 sm:h-28 rounded-full object-cover border-4 border-white shadow-md ring-2 ring-blue-500/20"
             />
           ) : (
@@ -133,13 +183,24 @@ const ProfilePage = () => {
             </div>
           )}
 
+          {avatarUploading && (
+            <div className="absolute inset-0 bg-slate-900/40 rounded-full flex items-center justify-center border-4 border-white">
+              <Loader2 className="w-6 h-6 animate-spin text-white" />
+            </div>
+          )}
+
           <button
             type="button"
+            disabled={avatarUploading}
             onClick={() => fileInputRef.current?.click()}
-            className="absolute bottom-0 right-0 p-2.5 bg-blue-600 hover:bg-blue-700 active:scale-95 text-white rounded-full shadow-lg transition"
+            className="absolute bottom-0 right-0 p-2.5 bg-blue-600 hover:bg-blue-700 active:scale-95 text-white rounded-full shadow-lg transition disabled:opacity-75"
             title="Upload profile picture"
           >
-            <Camera className="w-4 h-4" />
+            {avatarUploading ? (
+              <Loader2 className="w-4 h-4 animate-spin" />
+            ) : (
+              <Camera className="w-4 h-4" />
+            )}
           </button>
           <input
             type="file"

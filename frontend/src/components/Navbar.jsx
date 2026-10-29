@@ -204,6 +204,9 @@ const Navbar = ({ toggleSidebar, isSidebarOpen }) => {
                     <img
                       src={user.avatar}
                       alt={user.name}
+                      onError={(e) => {
+                        e.currentTarget.style.display = 'none';
+                      }}
                       className="w-8 h-8 rounded-full object-cover border border-slate-200"
                     />
                   ) : (
