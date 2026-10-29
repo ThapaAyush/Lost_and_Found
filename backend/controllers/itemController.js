@@ -1,5 +1,6 @@
 import Item, { ITEM_CATEGORIES, ITEM_STATUSES, CUSTODY_OPTIONS } from '../models/Item.js';
 import Claim from '../models/Claim.js';
+import Notification from '../models/Notification.js';
 import { processUploadedFiles } from '../middleware/uploadMiddleware.js';
 import { logAudit } from '../services/auditService.js';
 import { createNotification } from '../services/notificationService.js';
@@ -235,37 +236,49 @@ export const createItem = async (req, res, next) => {
       req,
     });
 
-    // Notify user of successful creation
-    await createNotification({
-      recipient: req.user._id,
-      type: 'report_created',
-      title: `${type === 'lost' ? 'Lost' : 'Found'} Item Report Published`,
-      message: `Your report for "${item.title}" is now active and visible to the community.`,
-      relatedItem: item._id,
-    });
-
-    // Check for potential matches asynchronously and notify if high confidence match found!
-    findMatchesForItem(item._id, 40)
+    // Check for high-confidence smart matches asynchronously and notify ONLY when a genuine smart match occurs (>= 60%)
+    findMatchesForItem(item._id, 60)
       .then(async (matches) => {
-        if (matches.length > 0) {
-          const topMatch = matches[0];
-          // Notify creator of new item
-          await createNotification({
+        const smartMatches = matches.filter((m) => m.score >= 60);
+        if (smartMatches.length > 0) {
+          const topMatch = smartMatches[0];
+
+          // Check if creator was already notified to prevent duplicate notifications
+          const existingCreatorNotif = await Notification.findOne({
             recipient: req.user._id,
             type: 'potential_match',
-            title: `Potential Match Discovered for "${item.title}"!`,
-            message: `A candidate match "${topMatch.item.title}" with a ${topMatch.score}% match score was found.`,
             relatedItem: item._id,
           });
 
-          // Also notify owner of the matched opposite report
-          await createNotification({
+          if (!existingCreatorNotif) {
+            await createNotification({
+              recipient: req.user._id,
+              type: 'potential_match',
+              title: `Smart Match Discovered for "${item.title}" (${topMatch.score}% Match)!`,
+              message: `A candidate match "${topMatch.item.title}" with a ${topMatch.score}% match score was found in ${
+                item.type === 'lost' ? 'Found Belongings' : 'Lost Reports'
+              }. Click to view details and submit a claim.`,
+              relatedItem: item._id,
+            });
+          }
+
+          // Check if owner of matched opposite report was already notified
+          const existingOppositeNotif = await Notification.findOne({
             recipient: topMatch.item.owner._id,
             type: 'potential_match',
-            title: `New Candidate Match for your "${topMatch.item.title}"!`,
-            message: `A newly filed report "${item.title}" matches your report (${topMatch.score}% match).`,
             relatedItem: topMatch.item._id,
+            message: { $regex: item.title, $options: 'i' },
           });
+
+          if (!existingOppositeNotif) {
+            await createNotification({
+              recipient: topMatch.item.owner._id,
+              type: 'potential_match',
+              title: `Smart Match Discovered for your "${topMatch.item.title}" (${topMatch.score}% Match)!`,
+              message: `A newly filed report "${item.title}" matches your report (${topMatch.score}% match). Click to view details and confirm if it belongs to you.`,
+              relatedItem: topMatch.item._id,
+            });
+          }
         }
       })
       .catch((err) => console.error('[Match Discovery Error]', err.message));
