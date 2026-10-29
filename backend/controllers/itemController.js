@@ -386,19 +386,13 @@ export const updateItemStatus = async (req, res, next) => {
     const isOwner = item.owner.toString() === req.user._id.toString();
     const isAdmin = req.user.role === 'admin';
 
-    // Allow owner, admin, or a verified claimant (for returning) to update status
-    const approvedClaim = await Claim.findOne({
-      item: item._id,
-      claimant: req.user._id,
-      status: 'approved',
-    });
-
-    const canUpdate = isOwner || isAdmin || (approvedClaim && status === 'returned');
+    // Allow only the report owner or an administrator to update status
+    const canUpdate = isOwner || isAdmin;
 
     if (!canUpdate) {
       return res.status(403).json({
         success: false,
-        message: 'Unauthorized. Only the report owner, administrator, or verified claimant can update this status.',
+        message: 'Unauthorized. Only the user who uploaded this report or an administrator can update its status.',
       });
     }
 

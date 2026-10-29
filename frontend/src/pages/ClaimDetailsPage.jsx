@@ -224,7 +224,7 @@ const ClaimDetailsPage = () => {
                 Open Private Chat
               </Link>
 
-              {!isItemReturned && (canReview || isClaimant) && (
+              {!isItemReturned && canReview && (
                 <button
                   type="button"
                   onClick={() => setReturnModalOpen(true)}

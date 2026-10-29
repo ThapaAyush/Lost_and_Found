@@ -426,7 +426,7 @@ const ItemDetailsPage = () => {
                 <MessageSquare className="w-4 h-4 mr-1.5" />
                 Open In-App Chat with Finder
               </Link>
-              {item.status !== 'returned' && (
+              {(isOwner || user?.role === 'admin') && item.status !== 'returned' && (
                 <button
                   type="button"
                   onClick={openReturnModal}
