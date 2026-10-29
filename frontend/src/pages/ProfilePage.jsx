@@ -203,59 +203,63 @@ const ProfilePage = () => {
       <div className="bg-white rounded-3xl border border-slate-200/80 p-6 sm:p-8 shadow-card flex flex-col sm:flex-row items-center sm:items-start space-y-5 sm:space-y-0 sm:space-x-6 relative overflow-hidden">
         <div className="absolute top-0 right-0 w-64 h-32 bg-gradient-to-bl from-blue-100/30 via-teal-100/20 to-transparent pointer-events-none rounded-bl-full" />
 
-        {/* Avatar with Camera & Remove Controls */}
+        {/* Avatar with Sleek Modern Controls */}
         <div className="flex flex-col items-center shrink-0">
           <div className="relative group shrink-0">
-            {hasAvatar ? (
-              <img
-                src={avatarPreview || user?.avatar}
-                alt={user?.name}
-                onError={() => setAvatarImgError(true)}
-                className="w-24 h-24 sm:w-28 sm:h-28 rounded-full object-cover border-4 border-white shadow-md ring-2 ring-blue-500/20"
-              />
-            ) : (
-              <div className="w-24 h-24 sm:w-28 sm:h-28 rounded-full bg-gradient-to-tr from-blue-600 to-indigo-600 text-white font-black text-3xl flex items-center justify-center border-4 border-white shadow-md ring-2 ring-blue-500/20">
-                {user?.name?.charAt(0) || 'U'}
-              </div>
-            )}
+            {/* Clickable Avatar Circle with Hover Effect */}
+            <div
+              onClick={() => {
+                if (!avatarUploading && !avatarRemoving) {
+                  fileInputRef.current?.click();
+                }
+              }}
+              className="relative w-24 h-24 sm:w-28 sm:h-28 rounded-full overflow-hidden border-4 border-white shadow-md ring-2 ring-slate-100 cursor-pointer group-hover:ring-blue-400/50 transition-all duration-300"
+            >
+              {hasAvatar ? (
+                <img
+                  src={avatarPreview || user?.avatar}
+                  alt={user?.name}
+                  onError={() => setAvatarImgError(true)}
+                  className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+                />
+              ) : (
+                <div className="w-full h-full bg-gradient-to-tr from-blue-600 to-indigo-600 text-white font-black text-3xl sm:text-4xl flex items-center justify-center transition-transform duration-300 group-hover:scale-105">
+                  {user?.name?.charAt(0) || 'U'}
+                </div>
+              )}
 
-            {(avatarUploading || avatarRemoving) && (
-              <div className="absolute inset-0 bg-slate-900/40 rounded-full flex items-center justify-center border-4 border-white">
-                <Loader2 className="w-6 h-6 animate-spin text-white" />
-              </div>
-            )}
+              {/* Hover Dark Frosted Overlay */}
+              {!avatarUploading && !avatarRemoving && (
+                <div className="absolute inset-0 bg-slate-950/45 opacity-0 group-hover:opacity-100 transition-opacity duration-200 flex flex-col items-center justify-center text-white backdrop-blur-[1px]">
+                  <Camera className="w-5 h-5 mb-0.5 text-white/95" />
+                  <span className="text-[10px] font-bold tracking-wider uppercase text-white/90">
+                    {hasAvatar ? 'Change' : 'Upload'}
+                  </span>
+                </div>
+              )}
 
-            {/* Remove Profile Picture Button (Bottom Left on badge) */}
-            {hasAvatar && (
-              <button
-                type="button"
-                disabled={avatarUploading || avatarRemoving}
-                onClick={() => setRemoveAvatarModalOpen(true)}
-                className="absolute bottom-0 left-0 p-2.5 bg-rose-600 hover:bg-rose-700 active:scale-95 text-white rounded-full shadow-lg transition disabled:opacity-75"
-                title="Remove profile picture"
-              >
-                {avatarRemoving ? (
-                  <Loader2 className="w-4 h-4 animate-spin" />
-                ) : (
-                  <Trash2 className="w-4 h-4" />
-                )}
-              </button>
-            )}
+              {/* Loading State Overlay */}
+              {(avatarUploading || avatarRemoving) && (
+                <div className="absolute inset-0 bg-slate-900/60 flex flex-col items-center justify-center text-white backdrop-blur-[2px] z-10">
+                  <Loader2 className="w-6 h-6 animate-spin text-white mb-1" />
+                  <span className="text-[10px] font-bold text-white/90">
+                    {avatarUploading ? 'Saving...' : 'Removing...'}
+                  </span>
+                </div>
+              )}
+            </div>
 
-            {/* Upload/Change Button (Bottom Right on badge) */}
+            {/* Subtle Camera Badge at Bottom Right */}
             <button
               type="button"
               disabled={avatarUploading || avatarRemoving}
               onClick={() => fileInputRef.current?.click()}
-              className="absolute bottom-0 right-0 p-2.5 bg-blue-600 hover:bg-blue-700 active:scale-95 text-white rounded-full shadow-lg transition disabled:opacity-75"
-              title="Upload profile picture"
+              className="absolute -bottom-1 -right-1 w-8 h-8 rounded-full bg-white text-slate-700 hover:text-blue-600 border border-slate-200/90 shadow-md flex items-center justify-center hover:scale-105 active:scale-95 transition disabled:opacity-50"
+              title={hasAvatar ? 'Change profile photo' : 'Upload profile photo'}
             >
-              {avatarUploading ? (
-                <Loader2 className="w-4 h-4 animate-spin" />
-              ) : (
-                <Camera className="w-4 h-4" />
-              )}
+              <Camera className="w-4 h-4" />
             </button>
+
             <input
               type="file"
               ref={fileInputRef}
@@ -265,32 +269,42 @@ const ProfilePage = () => {
             />
           </div>
 
-          {/* Quick Action Text Links Below Avatar */}
-          <div className="flex items-center justify-center gap-2 mt-2.5">
+          {/* Clean Segmented Pill Action Bar */}
+          {hasAvatar ? (
+            <div className="inline-flex items-center mt-3 p-1 bg-slate-100/80 hover:bg-slate-100 border border-slate-200/80 rounded-xl shadow-xs transition">
+              <button
+                type="button"
+                disabled={avatarUploading || avatarRemoving}
+                onClick={() => fileInputRef.current?.click()}
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold text-slate-700 hover:text-blue-700 hover:bg-white hover:shadow-xs active:scale-95 transition disabled:opacity-50"
+              >
+                <Camera className="w-3.5 h-3.5 text-blue-600" />
+                <span>Change Photo</span>
+              </button>
+
+              <div className="w-px h-3.5 bg-slate-300 mx-0.5" />
+
+              <button
+                type="button"
+                disabled={avatarUploading || avatarRemoving}
+                onClick={() => setRemoveAvatarModalOpen(true)}
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold text-rose-600 hover:text-rose-700 hover:bg-white hover:shadow-xs active:scale-95 transition disabled:opacity-50"
+              >
+                <Trash2 className="w-3.5 h-3.5 text-rose-500" />
+                <span>Remove</span>
+              </button>
+            </div>
+          ) : (
             <button
               type="button"
               disabled={avatarUploading || avatarRemoving}
               onClick={() => fileInputRef.current?.click()}
-              className="text-xs font-bold text-blue-600 hover:text-blue-700 hover:underline transition inline-flex items-center disabled:opacity-50"
+              className="mt-3 inline-flex items-center gap-1.5 px-3.5 py-1.5 bg-blue-50 hover:bg-blue-100 text-blue-700 text-xs font-bold rounded-xl border border-blue-200/80 shadow-xs active:scale-95 transition disabled:opacity-50"
             >
-              <Camera className="w-3.5 h-3.5 mr-1" />
-              {hasAvatar ? 'Change Photo' : 'Upload Photo'}
+              <Camera className="w-3.5 h-3.5 text-blue-600" />
+              <span>Upload Photo</span>
             </button>
-            {hasAvatar && (
-              <>
-                <span className="text-slate-300">•</span>
-                <button
-                  type="button"
-                  disabled={avatarUploading || avatarRemoving}
-                  onClick={() => setRemoveAvatarModalOpen(true)}
-                  className="text-xs font-bold text-rose-600 hover:text-rose-700 hover:underline transition inline-flex items-center disabled:opacity-50"
-                >
-                  <Trash2 className="w-3.5 h-3.5 mr-1" />
-                  Remove
-                </button>
-              </>
-            )}
-          </div>
+          )}
         </div>
 
         {/* User Identity Details */}
