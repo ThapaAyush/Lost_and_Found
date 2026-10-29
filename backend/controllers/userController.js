@@ -34,8 +34,10 @@ export const updateProfile = async (req, res, next) => {
     if (req.body.name) user.name = req.body.name.trim();
     if (req.body.phone !== undefined) user.phone = req.body.phone.trim();
 
-    // Check if an avatar was uploaded
-    if (req.file) {
+    // Check if user requested avatar removal or upload
+    if (req.body.removeAvatar === 'true' || req.body.removeAvatar === true || req.body.avatar === '') {
+      user.avatar = '';
+    } else if (req.file) {
       const avatarUrl = await processUploadedFile(req.file, req);
       if (avatarUrl) {
         user.avatar = avatarUrl;
@@ -52,13 +54,45 @@ export const updateProfile = async (req, res, next) => {
       action: 'USER_PROFILE_UPDATED',
       targetType: 'User',
       targetId: user._id,
-      metadata: { name: user.name, phone: user.phone },
+      metadata: { name: user.name, phone: user.phone, avatar: user.avatar },
       req,
     });
 
     res.status(200).json({
       success: true,
       message: 'Profile updated successfully',
+      user,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+// @desc    Remove user profile picture / avatar
+// @route   DELETE /api/users/me/avatar
+export const deleteAvatar = async (req, res, next) => {
+  try {
+    const user = await User.findById(req.user._id);
+
+    if (!user) {
+      return res.status(404).json({ success: false, message: 'User not found' });
+    }
+
+    user.avatar = '';
+    await user.save();
+
+    await logAudit({
+      actor: user._id,
+      action: 'USER_AVATAR_REMOVED',
+      targetType: 'User',
+      targetId: user._id,
+      metadata: {},
+      req,
+    });
+
+    res.status(200).json({
+      success: true,
+      message: 'Profile picture removed successfully',
       user,
     });
   } catch (error) {

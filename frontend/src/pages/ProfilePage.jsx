@@ -6,6 +6,7 @@ import {
   Calendar,
   ShieldCheck,
   Camera,
+  Trash2,
   Lock,
   Save,
   CheckCircle2,
@@ -18,6 +19,7 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { userAPI } from '../services/api';
 import { formatDate } from '../utils/formatters';
+import ConfirmDialog from '../components/ConfirmDialog';
 
 const ProfilePage = () => {
   const { user, updateUser, logout } = useAuth();
@@ -30,6 +32,8 @@ const ProfilePage = () => {
   const [avatarFile, setAvatarFile] = useState(null);
   const [avatarPreview, setAvatarPreview] = useState(user?.avatar || '');
   const [avatarUploading, setAvatarUploading] = useState(false);
+  const [avatarRemoving, setAvatarRemoving] = useState(false);
+  const [removeAvatarModalOpen, setRemoveAvatarModalOpen] = useState(false);
   const [avatarImgError, setAvatarImgError] = useState(false);
   const [profileSaving, setProfileSaving] = useState(false);
   const [profileSuccess, setProfileSuccess] = useState('');
@@ -43,6 +47,8 @@ const ProfilePage = () => {
       if (user.avatar) {
         setAvatarPreview(user.avatar);
         setAvatarImgError(false);
+      } else {
+        setAvatarPreview('');
       }
     }
   }, [user]);
@@ -92,6 +98,33 @@ const ProfilePage = () => {
       setAvatarPreview(user?.avatar || '');
     } finally {
       setAvatarUploading(false);
+      if (fileInputRef.current) {
+        fileInputRef.current.value = '';
+      }
+    }
+  };
+
+  const handleConfirmRemoveAvatar = async () => {
+    setAvatarRemoving(true);
+    setProfileError('');
+    setProfileSuccess('');
+
+    try {
+      const res = await userAPI.removeAvatar();
+      if (res.data?.success && res.data?.user) {
+        updateUser(res.data.user);
+        setAvatarPreview('');
+        setAvatarFile(null);
+        setAvatarImgError(false);
+        setProfileSuccess('Profile picture removed successfully!');
+        setTimeout(() => setProfileSuccess(''), 4000);
+      }
+    } catch (err) {
+      console.error('[Remove Avatar Error]', err);
+      setProfileError(err.message || 'Failed to remove profile picture. Please try again.');
+    } finally {
+      setAvatarRemoving(false);
+      setRemoveAvatarModalOpen(false);
       if (fileInputRef.current) {
         fileInputRef.current.value = '';
       }
@@ -162,53 +195,102 @@ const ProfilePage = () => {
     navigate('/login');
   };
 
+  const hasAvatar = Boolean((avatarPreview || user?.avatar) && !avatarImgError);
+
   return (
     <div className="max-w-4xl mx-auto space-y-6 sm:space-y-8 animate-in fade-in duration-150">
       {/* Profile Header Card */}
       <div className="bg-white rounded-3xl border border-slate-200/80 p-6 sm:p-8 shadow-card flex flex-col sm:flex-row items-center sm:items-start space-y-5 sm:space-y-0 sm:space-x-6 relative overflow-hidden">
         <div className="absolute top-0 right-0 w-64 h-32 bg-gradient-to-bl from-blue-100/30 via-teal-100/20 to-transparent pointer-events-none rounded-bl-full" />
 
-        {/* Avatar with Camera Overlay */}
-        <div className="relative group shrink-0">
-          {(avatarPreview || user?.avatar) && !avatarImgError ? (
-            <img
-              src={avatarPreview || user?.avatar}
-              alt={user?.name}
-              onError={() => setAvatarImgError(true)}
-              className="w-24 h-24 sm:w-28 sm:h-28 rounded-full object-cover border-4 border-white shadow-md ring-2 ring-blue-500/20"
-            />
-          ) : (
-            <div className="w-24 h-24 sm:w-28 sm:h-28 rounded-full bg-gradient-to-tr from-blue-600 to-indigo-600 text-white font-black text-3xl flex items-center justify-center border-4 border-white shadow-md ring-2 ring-blue-500/20">
-              {user?.name?.charAt(0) || 'U'}
-            </div>
-          )}
-
-          {avatarUploading && (
-            <div className="absolute inset-0 bg-slate-900/40 rounded-full flex items-center justify-center border-4 border-white">
-              <Loader2 className="w-6 h-6 animate-spin text-white" />
-            </div>
-          )}
-
-          <button
-            type="button"
-            disabled={avatarUploading}
-            onClick={() => fileInputRef.current?.click()}
-            className="absolute bottom-0 right-0 p-2.5 bg-blue-600 hover:bg-blue-700 active:scale-95 text-white rounded-full shadow-lg transition disabled:opacity-75"
-            title="Upload profile picture"
-          >
-            {avatarUploading ? (
-              <Loader2 className="w-4 h-4 animate-spin" />
+        {/* Avatar with Camera & Remove Controls */}
+        <div className="flex flex-col items-center shrink-0">
+          <div className="relative group shrink-0">
+            {hasAvatar ? (
+              <img
+                src={avatarPreview || user?.avatar}
+                alt={user?.name}
+                onError={() => setAvatarImgError(true)}
+                className="w-24 h-24 sm:w-28 sm:h-28 rounded-full object-cover border-4 border-white shadow-md ring-2 ring-blue-500/20"
+              />
             ) : (
-              <Camera className="w-4 h-4" />
+              <div className="w-24 h-24 sm:w-28 sm:h-28 rounded-full bg-gradient-to-tr from-blue-600 to-indigo-600 text-white font-black text-3xl flex items-center justify-center border-4 border-white shadow-md ring-2 ring-blue-500/20">
+                {user?.name?.charAt(0) || 'U'}
+              </div>
             )}
-          </button>
-          <input
-            type="file"
-            ref={fileInputRef}
-            onChange={handleAvatarChange}
-            accept="image/*"
-            className="hidden"
-          />
+
+            {(avatarUploading || avatarRemoving) && (
+              <div className="absolute inset-0 bg-slate-900/40 rounded-full flex items-center justify-center border-4 border-white">
+                <Loader2 className="w-6 h-6 animate-spin text-white" />
+              </div>
+            )}
+
+            {/* Remove Profile Picture Button (Bottom Left on badge) */}
+            {hasAvatar && (
+              <button
+                type="button"
+                disabled={avatarUploading || avatarRemoving}
+                onClick={() => setRemoveAvatarModalOpen(true)}
+                className="absolute bottom-0 left-0 p-2.5 bg-rose-600 hover:bg-rose-700 active:scale-95 text-white rounded-full shadow-lg transition disabled:opacity-75"
+                title="Remove profile picture"
+              >
+                {avatarRemoving ? (
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                ) : (
+                  <Trash2 className="w-4 h-4" />
+                )}
+              </button>
+            )}
+
+            {/* Upload/Change Button (Bottom Right on badge) */}
+            <button
+              type="button"
+              disabled={avatarUploading || avatarRemoving}
+              onClick={() => fileInputRef.current?.click()}
+              className="absolute bottom-0 right-0 p-2.5 bg-blue-600 hover:bg-blue-700 active:scale-95 text-white rounded-full shadow-lg transition disabled:opacity-75"
+              title="Upload profile picture"
+            >
+              {avatarUploading ? (
+                <Loader2 className="w-4 h-4 animate-spin" />
+              ) : (
+                <Camera className="w-4 h-4" />
+              )}
+            </button>
+            <input
+              type="file"
+              ref={fileInputRef}
+              onChange={handleAvatarChange}
+              accept="image/*"
+              className="hidden"
+            />
+          </div>
+
+          {/* Quick Action Text Links Below Avatar */}
+          <div className="flex items-center justify-center gap-2 mt-2.5">
+            <button
+              type="button"
+              disabled={avatarUploading || avatarRemoving}
+              onClick={() => fileInputRef.current?.click()}
+              className="text-xs font-bold text-blue-600 hover:text-blue-700 hover:underline transition inline-flex items-center disabled:opacity-50"
+            >
+              <Camera className="w-3.5 h-3.5 mr-1" />
+              {hasAvatar ? 'Change Photo' : 'Upload Photo'}
+            </button>
+            {hasAvatar && (
+              <>
+                <span className="text-slate-300">•</span>
+                <button
+                  type="button"
+                  disabled={avatarUploading || avatarRemoving}
+                  onClick={() => setRemoveAvatarModalOpen(true)}
+                  className="text-xs font-bold text-rose-600 hover:text-rose-700 hover:underline transition inline-flex items-center disabled:opacity-50"
+                >
+                  <Trash2 className="w-3.5 h-3.5 mr-1" />
+                  Remove
+                </button>
+              </>
+            )}
+          </div>
         </div>
 
         {/* User Identity Details */}
@@ -430,6 +512,18 @@ const ProfilePage = () => {
           </div>
         </div>
       </div>
+
+      {/* Remove Profile Picture Confirmation Dialog */}
+      <ConfirmDialog
+        isOpen={removeAvatarModalOpen}
+        onClose={() => setRemoveAvatarModalOpen(false)}
+        onConfirm={handleConfirmRemoveAvatar}
+        title="Remove Profile Picture?"
+        message="Are you sure you want to remove your profile picture? Your profile will revert to displaying your name initial."
+        confirmText="Remove Picture"
+        isDanger={true}
+        loading={avatarRemoving}
+      />
     </div>
   );
 };

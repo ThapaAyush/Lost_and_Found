@@ -39,6 +39,7 @@ export const authAPI = {
 export const userAPI = {
   getProfile: () => api.get('/users/me'),
   updateProfile: (formData) => api.patch('/users/me', formData),
+  removeAvatar: () => api.delete('/users/me/avatar'),
   changePassword: (data) => api.post('/users/change-password', data),
   getStats: () => api.get('/users/stats'),
 };

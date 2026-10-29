@@ -99,6 +99,21 @@ describe('Lost & Found REST API Test Suite', () => {
     expect(res.body.user.email).toBe('john@example.com');
   });
 
+  it('PATCH /api/users/me should update profile and DELETE /api/users/me/avatar should remove avatar', async () => {
+    const updateRes = await request(app)
+      .patch('/api/users/me')
+      .set('Cookie', [userCookie])
+      .send({ avatar: 'https://example.com/test-avatar.jpg' });
+    expect(updateRes.statusCode).toBe(200);
+    expect(updateRes.body.user.avatar).toBe('https://example.com/test-avatar.jpg');
+
+    const deleteRes = await request(app)
+      .delete('/api/users/me/avatar')
+      .set('Cookie', [userCookie]);
+    expect(deleteRes.statusCode).toBe(200);
+    expect(deleteRes.body.user.avatar).toBe('');
+  });
+
   it('GET /api/items should return seeded items', async () => {
     const res = await request(app).get('/api/items').set('Cookie', [userCookie]);
     expect(res.statusCode).toBe(200);
