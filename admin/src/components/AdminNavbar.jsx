@@ -8,11 +8,6 @@ const AdminNavbar = () => {
   return (
     <header className="h-16 bg-white border-b border-slate-200 px-4 sm:px-6 flex items-center justify-between sticky top-0 z-30 shadow-sm">
       <div className="flex items-center space-x-3">
-        <span className="w-2.5 h-2.5 rounded-full bg-teal-500 animate-pulse" />
-        <h2 className="text-sm font-black text-slate-900 tracking-tight hidden sm:inline-block">
-          Governance Console
-        </h2>
-
         {/* Portal Switcher Tabs */}
         <div className="inline-flex items-center p-1 bg-slate-100 rounded-xl border border-slate-200 shadow-inner">
           <span className="px-3 py-1.5 rounded-lg text-xs font-black bg-blue-600 text-white shadow-sm flex items-center space-x-1.5 cursor-default">
