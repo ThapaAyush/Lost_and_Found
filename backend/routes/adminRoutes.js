@@ -7,6 +7,7 @@ import {
   deleteUser,
   getAdminItems,
   moderateItem,
+  deleteAllItems,
   getAdminClaims,
   getAbuseReports,
   resolveAbuseReport,
@@ -27,6 +28,7 @@ router.patch('/users/:id/status', updateUserStatus);
 router.delete('/users/:id', deleteUser);
 router.get('/items', getAdminItems);
 router.patch('/items/:id/moderate', moderateItem);
+router.delete('/items', deleteAllItems);
 router.get('/claims', getAdminClaims);
 router.get('/abuse-reports', getAbuseReports);
 router.patch('/abuse-reports/:id', resolveAbuseReport);

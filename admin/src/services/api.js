@@ -35,6 +35,7 @@ export const adminAPI = {
   getItems: (params) => api.get('/admin/items', { params }),
   moderateItem: (id, data) => api.patch(`/admin/items/${id}/moderate`, data),
   deleteItem: (id) => api.delete(`/items/${id}`),
+  deleteAllItems: (data = {}) => api.delete('/admin/items', { data }),
   getClaims: (params) => api.get('/admin/claims', { params }),
   getAbuseReports: (params) => api.get('/admin/abuse-reports', { params }),
   resolveAbuseReport: (id, data) => api.patch(`/admin/abuse-reports/${id}`, data),

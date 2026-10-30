@@ -506,3 +506,48 @@ export const getAuditLogs = async (req, res, next) => {
     next(error);
   }
 };
+
+// @desc    Delete all items or bulk delete items (Admin only)
+// @route   DELETE /api/admin/items
+export const deleteAllItems = async (req, res, next) => {
+  try {
+    const { itemIds, type } = req.body || {};
+    let filter = {};
+
+    if (Array.isArray(itemIds) && itemIds.length > 0) {
+      filter = { _id: { $in: itemIds } };
+    } else if (type && type !== 'All') {
+      filter = { type };
+    }
+
+    const itemsToDelete = await Item.find(filter).select('_id title');
+    const ids = itemsToDelete.map((i) => i._id);
+
+    if (ids.length === 0) {
+      return res.status(200).json({
+        success: true,
+        message: 'No items to delete',
+        deletedCount: 0,
+      });
+    }
+
+    await Item.deleteMany(filter);
+    await Claim.deleteMany({ item: { $in: ids } });
+
+    await logAudit({
+      actor: req.user._id,
+      action: 'ALL_ITEMS_DELETED',
+      targetType: 'Item',
+      metadata: { deletedCount: ids.length, isBulk: Array.isArray(itemIds) },
+      req,
+    });
+
+    res.status(200).json({
+      success: true,
+      message: `Successfully deleted ${ids.length} item listing(s) and associated claims.`,
+      deletedCount: ids.length,
+    });
+  } catch (error) {
+    next(error);
+  }
+};

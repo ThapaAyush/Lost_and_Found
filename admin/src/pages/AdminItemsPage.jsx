@@ -16,9 +16,9 @@ import {
   Image as ImageIcon,
   LayoutGrid,
   List,
-  Eye,
-  EyeOff,
-  Filter,
+  CheckSquare,
+  Square,
+  AlertTriangle,
 } from 'lucide-react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { adminAPI } from '../services/api';
@@ -59,6 +59,12 @@ const AdminItemsPage = () => {
   const [loading, setLoading] = useState(true);
   const [viewMode, setViewMode] = useState('grid'); // 'grid' | 'table'
 
+  // Selection & Bulk / Delete All State
+  const [selectedIds, setSelectedIds] = useState([]);
+  const [deleteAllModalOpen, setDeleteAllModalOpen] = useState(false);
+  const [deleteMode, setDeleteMode] = useState('all'); // 'all' | 'selected'
+  const [deleteAllLoading, setDeleteAllLoading] = useState(false);
+
   // Moderate Modal State
   const [selectedItem, setSelectedItem] = useState(null);
   const [moderateModalOpen, setModerateModalOpen] = useState(false);
@@ -66,7 +72,7 @@ const AdminItemsPage = () => {
   const [prohibitReason, setProhibitReason] = useState('');
   const [moderateLoading, setModerateLoading] = useState(false);
 
-  // Delete Item State
+  // Single Delete Item State
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
   const [itemToDelete, setItemToDelete] = useState(null);
   const [deleteLoading, setDeleteLoading] = useState(false);
@@ -102,6 +108,55 @@ const AdminItemsPage = () => {
   const handleSearchSubmit = (e) => {
     e.preventDefault();
     fetchItems(1);
+  };
+
+  // Selection handlers
+  const handleSelectAllOnPage = () => {
+    const pageIds = items.map((i) => i._id);
+    const allSelected = pageIds.length > 0 && pageIds.every((id) => selectedIds.includes(id));
+    if (allSelected) {
+      setSelectedIds((prev) => prev.filter((id) => !pageIds.includes(id)));
+    } else {
+      setSelectedIds((prev) => Array.from(new Set([...prev, ...pageIds])));
+    }
+  };
+
+  const handleToggleSelectOne = (id, e) => {
+    if (e) e.stopPropagation();
+    setSelectedIds((prev) =>
+      prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id]
+    );
+  };
+
+  const openDeleteAllPrompt = (mode = 'all') => {
+    setDeleteMode(mode);
+    setDeleteAllModalOpen(true);
+  };
+
+  const handleDeleteAllConfirm = async () => {
+    setDeleteAllLoading(true);
+    try {
+      let payload = {};
+      if (deleteMode === 'selected') {
+        payload = { itemIds: selectedIds };
+      } else {
+        payload = { type: type !== 'All' ? type : undefined };
+      }
+
+      const res = await adminAPI.deleteAllItems(payload);
+      setDeleteAllModalOpen(false);
+      const count =
+        res.data?.deletedCount ?? (deleteMode === 'selected' ? selectedIds.length : totalCount);
+      setSelectedIds([]);
+      setActionSuccess(`Successfully deleted ${count} listing(s) and associated claims.`);
+      setTimeout(() => setActionSuccess(''), 5000);
+      fetchItems(1);
+    } catch (err) {
+      console.error('[Delete All Error]', err);
+      alert(err.response?.data?.message || err.message || 'Failed to delete listings');
+    } finally {
+      setDeleteAllLoading(false);
+    }
   };
 
   const openModerateModal = (item, shouldProhibit) => {
@@ -144,6 +199,8 @@ const AdminItemsPage = () => {
       await adminAPI.deleteItem(itemToDelete._id);
       setDeleteModalOpen(false);
       const title = itemToDelete.title;
+      // Also remove from selectedIds if present
+      setSelectedIds((prev) => prev.filter((id) => id !== itemToDelete._id));
       setItemToDelete(null);
       setActionSuccess(`Post "${title}" removed successfully.`);
       setTimeout(() => setActionSuccess(''), 4500);
@@ -212,7 +269,7 @@ const AdminItemsPage = () => {
         </div>
       )}
 
-      {/* Header with Title & Stats */}
+      {/* Header with Title & Stats & Delete All Controls */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <div className="flex items-center space-x-2">
@@ -226,6 +283,32 @@ const AdminItemsPage = () => {
           <p className="text-xs sm:text-sm text-slate-500 mt-1">
             Browse all lost and found reports with photos. Moderate visibility or delete posts as an administrator.
           </p>
+        </div>
+
+        {/* Delete All & Bulk Delete Buttons */}
+        <div className="flex flex-wrap items-center gap-2">
+          {selectedIds.length > 0 && (
+            <button
+              type="button"
+              onClick={() => openDeleteAllPrompt('selected')}
+              className="inline-flex items-center space-x-1.5 px-3.5 py-2 rounded-xl text-xs font-bold bg-rose-600 hover:bg-rose-700 active:bg-rose-800 text-white shadow-sm transition"
+              title="Delete only selected items"
+            >
+              <Trash2 className="w-4 h-4" />
+              <span>Delete Selected ({selectedIds.length})</span>
+            </button>
+          )}
+
+          <button
+            type="button"
+            onClick={() => openDeleteAllPrompt('all')}
+            disabled={totalCount === 0 || loading}
+            className="inline-flex items-center space-x-1.5 px-3.5 py-2 rounded-xl text-xs font-bold bg-rose-50 hover:bg-rose-100 active:bg-rose-200 text-rose-700 border border-rose-200 shadow-xs transition disabled:opacity-50 disabled:cursor-not-allowed"
+            title="Permanently delete all listings from the database"
+          >
+            <Trash2 className="w-4 h-4 text-rose-600" />
+            <span>Delete All Listings</span>
+          </button>
         </div>
       </div>
 
@@ -243,6 +326,32 @@ const AdminItemsPage = () => {
         </form>
 
         <div className="flex flex-wrap items-center gap-2.5 w-full md:w-auto">
+          {/* Quick Select All Toggle on current page */}
+          {items.length > 0 && (
+            <button
+              type="button"
+              onClick={handleSelectAllOnPage}
+              className={`px-3 py-2 text-xs border rounded-xl font-bold transition flex items-center space-x-1.5 ${
+                items.every((i) => selectedIds.includes(i._id))
+                  ? 'bg-blue-50 text-blue-700 border-blue-300'
+                  : 'bg-slate-50 text-slate-700 border-slate-200 hover:bg-slate-100'
+              }`}
+              title="Select / deselect all items on current page"
+            >
+              <input
+                type="checkbox"
+                readOnly
+                checked={items.length > 0 && items.every((i) => selectedIds.includes(i._id))}
+                className="w-3.5 h-3.5 text-blue-600 rounded border-slate-300 cursor-pointer pointer-events-none"
+              />
+              <span>
+                {items.every((i) => selectedIds.includes(i._id))
+                  ? 'Deselect Page'
+                  : 'Select Page'}
+              </span>
+            </button>
+          )}
+
           {/* Type Filter */}
           <select
             value={type}
@@ -314,10 +423,15 @@ const AdminItemsPage = () => {
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
             {items.map((it) => {
               const thumb = getItemImage(it);
+              const isSelected = selectedIds.includes(it._id);
               return (
                 <div
                   key={it._id}
-                  className="group bg-white rounded-2xl border border-slate-200 hover:border-blue-400 overflow-hidden shadow-sm hover:shadow-card-hover transition-all duration-200 flex flex-col justify-between"
+                  className={`group bg-white rounded-2xl border transition-all duration-200 flex flex-col justify-between overflow-hidden shadow-sm hover:shadow-card-hover ${
+                    isSelected
+                      ? 'border-blue-500 ring-2 ring-blue-500/20 shadow-md'
+                      : 'border-slate-200 hover:border-blue-400'
+                  }`}
                 >
                   <div>
                     {/* Image Banner - Exactly as frontend ItemCard */}
@@ -345,10 +459,23 @@ const AdminItemsPage = () => {
                         <span className="text-[11px] font-medium text-slate-400">No photo uploaded</span>
                       </div>
 
-                      {/* Type Ribbon (Lost in rose, Found in blue) */}
-                      <div className="absolute top-3 left-3">
+                      {/* Top Left: Selection Checkbox & Type Ribbon */}
+                      <div className="absolute top-3 left-3 flex items-center space-x-1.5 z-10">
+                        <label
+                          onClick={(e) => e.stopPropagation()}
+                          className="flex items-center justify-center w-6 h-6 rounded-lg bg-white/95 backdrop-blur-sm border border-slate-300 hover:border-blue-500 shadow-sm cursor-pointer transition"
+                          title="Select item for bulk actions"
+                        >
+                          <input
+                            type="checkbox"
+                            checked={isSelected}
+                            onChange={(e) => handleToggleSelectOne(it._id, e)}
+                            className="w-3.5 h-3.5 text-blue-600 rounded border-slate-300 cursor-pointer"
+                          />
+                        </label>
+
                         <span
-                          className={`px-3 py-1 text-[11px] font-black uppercase tracking-wider rounded-full shadow-sm text-white ${
+                          className={`px-2.5 py-0.5 text-[10px] font-black uppercase tracking-wider rounded-full shadow-sm text-white ${
                             it.type === 'lost' ? 'bg-rose-600' : 'bg-blue-600'
                           }`}
                         >
@@ -357,7 +484,7 @@ const AdminItemsPage = () => {
                       </div>
 
                       {/* Status & Visibility Badges */}
-                      <div className="absolute top-3 right-3 flex items-center space-x-1.5">
+                      <div className="absolute top-3 right-3 flex items-center space-x-1.5 z-10">
                         <StatusBadge status={it.status} size="xs" />
                         {it.isProhibited && (
                           <span className="px-2 py-0.5 text-[10px] font-extrabold rounded-full bg-rose-600 text-white shadow-sm">
@@ -494,6 +621,15 @@ const AdminItemsPage = () => {
             <table className="w-full text-left text-xs">
               <thead>
                 <tr className="border-b border-slate-100 bg-slate-50/70 text-slate-500 uppercase tracking-wider text-[10px]">
+                  <th className="py-3 px-3 w-10 text-center">
+                    <input
+                      type="checkbox"
+                      checked={items.length > 0 && items.every((i) => selectedIds.includes(i._id))}
+                      onChange={handleSelectAllOnPage}
+                      className="w-3.5 h-3.5 text-blue-600 rounded border-slate-300 cursor-pointer"
+                      title="Select all on this page"
+                    />
+                  </th>
                   <th className="py-3 px-4">Photo & Listing</th>
                   <th className="py-3 px-4">Reporter</th>
                   <th className="py-3 px-4">Category</th>
@@ -505,8 +641,24 @@ const AdminItemsPage = () => {
               <tbody className="divide-y divide-slate-100">
                 {items.map((it) => {
                   const thumb = getItemImage(it);
+                  const isSelected = selectedIds.includes(it._id);
                   return (
-                    <tr key={it._id} className="hover:bg-slate-50/60 transition">
+                    <tr
+                      key={it._id}
+                      className={`transition ${
+                        isSelected ? 'bg-blue-50/60' : 'hover:bg-slate-50/60'
+                      }`}
+                    >
+                      {/* Checkbox column */}
+                      <td className="py-3.5 px-3 text-center">
+                        <input
+                          type="checkbox"
+                          checked={isSelected}
+                          onChange={(e) => handleToggleSelectOne(it._id, e)}
+                          className="w-3.5 h-3.5 text-blue-600 rounded border-slate-300 cursor-pointer"
+                        />
+                      </td>
+
                       {/* Photo Thumbnail & Listing Info */}
                       <td className="py-3.5 px-4">
                         <div className="flex items-center space-x-3.5">
@@ -693,7 +845,7 @@ const AdminItemsPage = () => {
         </form>
       </Modal>
 
-      {/* Delete Item Confirmation Dialog */}
+      {/* Single Delete Item Confirmation Dialog */}
       <ConfirmDialog
         isOpen={deleteModalOpen}
         onClose={() => setDeleteModalOpen(false)}
@@ -705,6 +857,32 @@ const AdminItemsPage = () => {
         confirmText="Remove Post"
         isDanger={true}
         loading={deleteLoading}
+      />
+
+      {/* Delete All / Bulk Delete Confirmation Dialog */}
+      <ConfirmDialog
+        isOpen={deleteAllModalOpen}
+        onClose={() => setDeleteAllModalOpen(false)}
+        onConfirm={handleDeleteAllConfirm}
+        title={
+          deleteMode === 'selected'
+            ? `Delete ${selectedIds.length} Selected Listings?`
+            : `Delete All ${type !== 'All' ? type.toUpperCase() : ''} Listings?`
+        }
+        message={
+          deleteMode === 'selected'
+            ? `Are you sure you want to permanently delete the ${selectedIds.length} selected lost & found listing(s)? All descriptions, uploaded photos, and related ownership claims will be permanently removed.`
+            : `Are you sure you want to permanently delete ALL ${totalCount} listings in the database${
+                type !== 'All' ? ` under "${type}"` : ''
+              }? This action cannot be undone and will permanently remove all items, photos, and associated claims.`
+        }
+        confirmText={
+          deleteMode === 'selected'
+            ? `Delete Selected (${selectedIds.length})`
+            : `Delete All Listings (${totalCount})`
+        }
+        isDanger={true}
+        loading={deleteAllLoading}
       />
     </div>
   );
