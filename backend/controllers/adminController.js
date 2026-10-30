@@ -12,35 +12,48 @@ export const getAdminStats = async (req, res, next) => {
   try {
     const [
       totalUsers,
+      activeUsers,
       totalLostReports,
       totalFoundReports,
       openReports,
       returnedItems,
-      pendingClaims,
-      openAbuseReports,
+      recentItems,
+      recentUsers,
       recentAuditLogs,
     ] = await Promise.all([
       User.countDocuments(),
+      User.countDocuments({ accountStatus: 'active' }),
       Item.countDocuments({ type: 'lost' }),
       Item.countDocuments({ type: 'found' }),
       Item.countDocuments({ status: { $in: ['lost', 'found'] } }),
       Item.countDocuments({ status: 'returned' }),
-      Claim.countDocuments({ status: { $in: ['pending', 'under_review'] } }),
-      AbuseReport.countDocuments({ reviewStatus: 'pending' }),
-      AuditLog.find().sort({ createdAt: -1 }).limit(10).populate('actor', 'name email'),
+      Item.find()
+        .sort({ createdAt: -1 })
+        .limit(6)
+        .populate('owner', 'name email avatar'),
+      User.find()
+        .sort({ createdAt: -1 })
+        .limit(5)
+        .select('name email role accountStatus createdAt lastLogin'),
+      AuditLog.find()
+        .sort({ createdAt: -1 })
+        .limit(6)
+        .populate('actor', 'name email'),
     ]);
 
     res.status(200).json({
       success: true,
       stats: {
         totalUsers,
+        activeUsers,
         totalLostReports,
         totalFoundReports,
         openReports,
         returnedItems,
-        pendingClaims,
-        openAbuseReports,
+        totalItems: totalLostReports + totalFoundReports,
       },
+      recentItems,
+      recentUsers,
       recentAuditLogs,
     });
   } catch (error) {
