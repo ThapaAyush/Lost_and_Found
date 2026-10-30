@@ -12,7 +12,6 @@ import {
   Clock,
   MapPin,
   Calendar,
-  Building2,
   ShieldCheck,
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
@@ -196,173 +195,92 @@ const DashboardPage = () => {
         </div>
       )}
 
-      {/* Two Column Layout: Recent Reports & Recent Activity */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        {/* Left 2 Cols: User's Recent Reports */}
-        <div className="lg:col-span-2 space-y-4">
-          <div className="flex items-center justify-between">
-            <div>
-              <h3 className="text-base font-bold text-slate-900">Your Recent Reports</h3>
-              <p className="text-xs text-slate-500">Items you have reported lost or found</p>
-            </div>
-            <Link
-              to="/my-reports"
-              className="text-xs font-bold text-blue-600 hover:text-blue-700 inline-flex items-center"
-            >
-              View All ({stats.totalLost + stats.totalFound})
-              <ArrowRight className="w-3 h-3 ml-1" />
-            </Link>
+      {/* User's Recent Reports */}
+      <div className="space-y-4">
+        <div className="flex items-center justify-between">
+          <div>
+            <h3 className="text-base font-bold text-slate-900">Your Recent Reports</h3>
+            <p className="text-xs text-slate-500">Items you have reported lost or found</p>
           </div>
-
-          {data?.recentItems && data.recentItems.length > 0 ? (
-            <div className="bg-white rounded-3xl border border-slate-200 shadow-sm divide-y divide-slate-100 overflow-hidden">
-              {data.recentItems.map((item) => (
-                <div
-                  key={item._id}
-                  className="p-4 hover:bg-slate-50 transition flex items-center justify-between gap-4"
-                >
-                  <div className="flex items-center space-x-3.5 min-w-0">
-                    <div className="w-12 h-12 rounded-xl bg-slate-100 overflow-hidden flex-shrink-0 border border-slate-200">
-                      {item.images && item.images.length > 0 ? (
-                        <img
-                          src={item.images[0]}
-                          alt={item.title}
-                          className="w-full h-full object-cover"
-                        />
-                      ) : (
-                        <div className="w-full h-full flex items-center justify-center text-[10px] text-slate-400">
-                          No photo
-                        </div>
-                      )}
-                    </div>
-                    <div className="min-w-0">
-                      <div className="flex items-center space-x-2">
-                        <span
-                          className={`text-[10px] font-black uppercase px-2 py-0.5 rounded ${
-                            item.type === 'lost'
-                              ? 'bg-rose-100 text-rose-700'
-                              : 'bg-blue-100 text-blue-700'
-                          }`}
-                        >
-                          {item.type}
-                        </span>
-                        <h4 className="text-xs sm:text-sm font-bold text-slate-800 truncate">
-                          {item.title}
-                        </h4>
-                      </div>
-                      <div className="flex items-center text-[11px] text-slate-500 mt-1 space-x-3">
-                        <span className="flex items-center truncate">
-                          <MapPin className="w-3 h-3 mr-1 text-slate-400" />
-                          {item.locationDescription}
-                        </span>
-                        <span className="flex items-center flex-shrink-0">
-                          <Calendar className="w-3 h-3 mr-1 text-slate-400" />
-                          {formatDate(item.incidentDate)}
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="flex items-center space-x-3 flex-shrink-0">
-                    <StatusBadge status={item.status} size="xs" />
-                    <Link
-                      to={`/items/${item._id}`}
-                      className="p-1.5 text-slate-400 hover:text-blue-600 hover:bg-slate-100 rounded-lg transition"
-                      title="View Details"
-                    >
-                      <ArrowRight className="w-4 h-4" />
-                    </Link>
-                  </div>
-                </div>
-              ))}
-            </div>
-          ) : (
-            <EmptyState
-              title="No reports filed yet"
-              description="Have you lost an item or found someone's belonging? File your first report to connect with the community."
-              actionText="Report an Item"
-              actionLink="/report/lost"
-            />
-          )}
+          <Link
+            to="/my-reports"
+            className="text-xs font-bold text-blue-600 hover:text-blue-700 inline-flex items-center"
+          >
+            View All ({stats.totalLost + stats.totalFound})
+            <ArrowRight className="w-3 h-3 ml-1" />
+          </Link>
         </div>
 
-        {/* Right 1 Col: Recent Notifications */}
-        <div className="space-y-4">
-          <div className="flex items-center justify-between">
-            <div>
-              <h3 className="text-base font-bold text-slate-900">Recent Notifications</h3>
-              <p className="text-xs text-slate-500">Updates and community alerts</p>
-            </div>
-            <Link
-              to="/notifications"
-              className="text-xs font-bold text-blue-600 hover:text-blue-700 inline-flex items-center"
-            >
-              All Alerts
-              <ArrowRight className="w-3 h-3 ml-1" />
-            </Link>
-          </div>
-
-          <div className="bg-white rounded-3xl border border-slate-200 shadow-sm p-3 divide-y divide-slate-100">
-            {data?.recentNotifications && data.recentNotifications.length > 0 ? (
-              data.recentNotifications.map((notif) => {
-                const isUnread = !notif.isRead;
-                return (
-                  <div
-                    key={notif._id}
-                    className={`py-3 px-2.5 first:pt-2 last:pb-2 rounded-xl transition ${
-                      isUnread ? 'bg-blue-50/60 border-l-2 border-l-blue-600' : 'border-l-2 border-l-transparent'
-                    }`}
-                  >
-                    <div className="flex items-start justify-between">
-                      <div className="flex items-center space-x-1.5 min-w-0">
-                        {isUnread && (
-                          <span className="w-1.5 h-1.5 rounded-full bg-blue-600 ring-2 ring-blue-200 flex-shrink-0 animate-pulse" />
-                        )}
-                        <h5
-                          className={`text-xs line-clamp-1 ${
-                            isUnread ? 'font-black text-slate-900' : 'font-bold text-slate-700'
-                          }`}
-                        >
-                          {notif.title}
-                        </h5>
+        {data?.recentItems && data.recentItems.length > 0 ? (
+          <div className="bg-white rounded-3xl border border-slate-200 shadow-sm divide-y divide-slate-100 overflow-hidden">
+            {data.recentItems.map((item) => (
+              <div
+                key={item._id}
+                className="p-4 hover:bg-slate-50 transition flex items-center justify-between gap-4"
+              >
+                <div className="flex items-center space-x-3.5 min-w-0">
+                  <div className="w-12 h-12 rounded-xl bg-slate-100 overflow-hidden flex-shrink-0 border border-slate-200">
+                    {item.images && item.images.length > 0 ? (
+                      <img
+                        src={item.images[0]}
+                        alt={item.title}
+                        className="w-full h-full object-cover"
+                      />
+                    ) : (
+                      <div className="w-full h-full flex items-center justify-center text-[10px] text-slate-400">
+                        No photo
                       </div>
+                    )}
+                  </div>
+                  <div className="min-w-0">
+                    <div className="flex items-center space-x-2">
                       <span
-                        className={`text-[10px] whitespace-nowrap ml-2 ${
-                          isUnread ? 'text-blue-700 font-bold' : 'text-slate-400'
+                        className={`text-[10px] font-black uppercase px-2 py-0.5 rounded ${
+                          item.type === 'lost'
+                            ? 'bg-rose-100 text-rose-700'
+                            : 'bg-blue-100 text-blue-700'
                         }`}
                       >
-                        {formatTimeAgo(notif.createdAt)}
+                        {item.type}
+                      </span>
+                      <h4 className="text-xs sm:text-sm font-bold text-slate-800 truncate">
+                        {item.title}
+                      </h4>
+                    </div>
+                    <div className="flex items-center text-[11px] text-slate-500 mt-1 space-x-3">
+                      <span className="flex items-center truncate">
+                        <MapPin className="w-3 h-3 mr-1 text-slate-400" />
+                        {item.locationDescription}
+                      </span>
+                      <span className="flex items-center flex-shrink-0">
+                        <Calendar className="w-3 h-3 mr-1 text-slate-400" />
+                        {formatDate(item.incidentDate)}
                       </span>
                     </div>
-                    <p
-                      className={`text-xs line-clamp-2 mt-0.5 ${
-                        isUnread ? 'text-slate-700 font-medium' : 'text-slate-500'
-                      }`}
-                    >
-                      {notif.message}
-                    </p>
                   </div>
-                );
-              })
-            ) : (
-              <div className="py-8 text-center text-xs text-slate-400">
-                No new notifications at this time
-              </div>
-            )}
-          </div>
+                </div>
 
-          {/* Safe Handover Guidance Card */}
-          <div className="bg-slate-50 border border-slate-200 rounded-3xl p-5 text-xs text-slate-600 space-y-2">
-            <div className="flex items-center space-x-2 text-indigo-700 font-bold">
-              <Building2 className="w-4 h-4" />
-              <span>Safe Handover Advice</span>
-            </div>
-            <p className="leading-relaxed">
-              Always arrange item handovers at designated supervised spots such as the
-              Security Desk or Reception Desk during business hours.
-            </p>
+                <div className="flex items-center space-x-3 flex-shrink-0">
+                  <StatusBadge status={item.status} size="xs" />
+                  <Link
+                    to={`/items/${item._id}`}
+                    className="p-1.5 text-slate-400 hover:text-blue-600 hover:bg-slate-100 rounded-lg transition"
+                    title="View Details"
+                  >
+                    <ArrowRight className="w-4 h-4" />
+                  </Link>
+                </div>
+              </div>
+            ))}
           </div>
-        </div>
+        ) : (
+          <EmptyState
+            title="No reports filed yet"
+            description="Have you lost an item or found someone's belonging? File your first report to connect with the community."
+            actionText="Report an Item"
+            actionLink="/report/lost"
+          />
+        )}
       </div>
     </div>
   );
