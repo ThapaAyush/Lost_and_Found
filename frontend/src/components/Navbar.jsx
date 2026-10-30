@@ -2,8 +2,6 @@ import React, { useState, useRef, useEffect } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import {
   Search,
-  Menu,
-  X,
   Compass,
   User,
   LogOut,
@@ -18,7 +16,7 @@ import {
 import { useAuth } from '../context/AuthContext';
 import NotificationDropdown from './NotificationDropdown';
 
-const Navbar = ({ toggleSidebar, isSidebarOpen }) => {
+const Navbar = () => {
   const { user, logout, isAdmin } = useAuth();
   const [searchQuery, setSearchQuery] = useState('');
   const [profileDropdownOpen, setProfileDropdownOpen] = useState(false);
@@ -56,18 +54,8 @@ const Navbar = ({ toggleSidebar, isSidebarOpen }) => {
   return (
     <header className="sticky top-0 z-40 h-16 bg-white/95 backdrop-blur-md border-b border-slate-200/80 px-4 lg:px-6 shadow-sm flex items-center">
       <div className="w-full flex items-center justify-between gap-3 lg:gap-5">
-        {/* Left: Sidebar Toggle & Brand Logo */}
+        {/* Left: Brand Logo */}
         <div className="flex items-center space-x-2.5 shrink-0">
-          <button
-            type="button"
-            onClick={toggleSidebar}
-            className="p-2 rounded-xl text-slate-600 hover:bg-slate-100 hover:text-slate-900 transition"
-            aria-label="Toggle Navigation Sidebar"
-            title="Toggle Sidebar"
-          >
-            {isSidebarOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
-          </button>
-
           <Link to="/" className="flex items-center space-x-2.5 group">
             <div className="w-9 h-9 rounded-xl bg-blue-600 text-white flex items-center justify-center shadow-sm shadow-blue-500/20 group-hover:scale-105 transition-transform shrink-0">
               <Compass className="w-5 h-5" />
@@ -84,25 +72,22 @@ const Navbar = ({ toggleSidebar, isSidebarOpen }) => {
         <nav className="hidden lg:flex items-center space-x-1 text-xs font-bold text-slate-600">
           <Link
             to="/"
-            className={`px-3 py-2 rounded-xl transition ${
-              location.pathname === '/' ? 'text-blue-600 bg-blue-50' : 'hover:text-slate-900 hover:bg-slate-100'
-            }`}
+            className={`px-3 py-2 rounded-xl transition ${location.pathname === '/' ? 'text-blue-600 bg-blue-50' : 'hover:text-slate-900 hover:bg-slate-100'
+              }`}
           >
             Home
           </Link>
           <Link
             to="/found-items"
-            className={`px-3 py-2 rounded-xl transition ${
-              location.pathname === '/found-items' ? 'text-blue-600 bg-blue-50' : 'hover:text-slate-900 hover:bg-slate-100'
-            }`}
+            className={`px-3 py-2 rounded-xl transition ${location.pathname === '/found-items' ? 'text-blue-600 bg-blue-50' : 'hover:text-slate-900 hover:bg-slate-100'
+              }`}
           >
             Found Belongings
           </Link>
           <Link
             to="/lost-items"
-            className={`px-3 py-2 rounded-xl transition ${
-              location.pathname === '/lost-items' ? 'text-blue-600 bg-blue-50' : 'hover:text-slate-900 hover:bg-slate-100'
-            }`}
+            className={`px-3 py-2 rounded-xl transition ${location.pathname === '/lost-items' ? 'text-blue-600 bg-blue-50' : 'hover:text-slate-900 hover:bg-slate-100'
+              }`}
           >
             Lost Reports
           </Link>
@@ -110,18 +95,16 @@ const Navbar = ({ toggleSidebar, isSidebarOpen }) => {
             <>
               <Link
                 to="/matches"
-                className={`px-3 py-2 rounded-xl transition flex items-center ${
-                  location.pathname === '/matches' ? 'text-teal-700 bg-teal-50' : 'hover:text-teal-700 hover:bg-slate-100'
-                }`}
+                className={`px-3 py-2 rounded-xl transition flex items-center ${location.pathname === '/matches' ? 'text-teal-700 bg-teal-50' : 'hover:text-teal-700 hover:bg-slate-100'
+                  }`}
               >
                 <Sparkles className="w-3.5 h-3.5 mr-1 text-teal-600" />
                 Matches
               </Link>
               <Link
                 to="/claims"
-                className={`px-3 py-2 rounded-xl transition flex items-center ${
-                  location.pathname === '/claims' ? 'text-blue-600 bg-blue-50' : 'hover:text-slate-900 hover:bg-slate-100'
-                }`}
+                className={`px-3 py-2 rounded-xl transition flex items-center ${location.pathname === '/claims' ? 'text-blue-600 bg-blue-50' : 'hover:text-slate-900 hover:bg-slate-100'
+                  }`}
               >
                 Claims
               </Link>
