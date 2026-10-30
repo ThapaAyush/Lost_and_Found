@@ -12,9 +12,6 @@ import {
   TrendingUp,
   Clock,
   ShieldAlert,
-  HelpCircle,
-  Building2,
-  Users,
   Compass,
 } from 'lucide-react';
 import { itemAPI } from '../services/api';
@@ -359,62 +356,7 @@ const HomePage = () => {
         </div>
       </section>
 
-      {/* 6. Safe Zones & Handover Advice */}
-      <section className="bg-white rounded-3xl border border-slate-200/90 p-8 sm:p-10 shadow-sm space-y-6">
-        <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
-          <div className="space-y-2 max-w-xl">
-            <span className="text-xs font-bold uppercase tracking-wider text-teal-700 bg-teal-50 px-3 py-1 rounded-full border border-teal-100">
-              Safe Handover Zones
-            </span>
-            <h2 className="text-2xl font-black text-slate-900">Recommended Safe Handover Locations</h2>
-            <p className="text-xs text-slate-500 leading-relaxed">
-              When arranging item handovers following verified admin claim approvals, we strongly encourage
-              meeting at supervised public locations during standard operating hours.
-            </p>
-          </div>
-
-          <div className="flex items-center space-x-3">
-            <Building2 className="w-12 h-12 text-blue-600 p-2.5 bg-blue-50 rounded-2xl flex-shrink-0" />
-            <div>
-              <p className="text-xs font-bold text-slate-900">Security & Lost Property Desk</p>
-              <p className="text-[11px] text-slate-400">Open Daily 08:00 – 20:00 • Building A Central</p>
-            </div>
-          </div>
-        </div>
-
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-4 border-t border-slate-100">
-          {[
-            {
-              title: 'Student Union Hub',
-              desc: 'High foot-traffic, well-lit reception desk with official staff presence.',
-              icon: Users,
-            },
-            {
-              title: 'Central Library Foyer',
-              desc: 'Supervised front desk area with continuous security personnel.',
-              icon: Building2,
-            },
-            {
-              title: 'Always Verify Proof',
-              desc: 'Request the admin claim approval code or photo ID match before releasing valuables.',
-              icon: ShieldCheck,
-            },
-          ].map((zone, i) => {
-            const Icon = zone.icon;
-            return (
-              <div key={i} className="p-4 rounded-2xl bg-slate-50 border border-slate-100 space-y-1.5">
-                <div className="flex items-center space-x-2 text-blue-700 font-bold text-xs">
-                  <Icon className="w-4 h-4" />
-                  <span>{zone.title}</span>
-                </div>
-                <p className="text-xs text-slate-500">{zone.desc}</p>
-              </div>
-            );
-          })}
-        </div>
-      </section>
-
-      {/* 7. Bottom Call-To-Action */}
+      {/* 5. Bottom Call-To-Action */}
       <section className="rounded-3xl bg-blue-600 text-white p-8 sm:p-12 text-center space-y-6 shadow-sm relative overflow-hidden">
         <div className="max-w-2xl mx-auto space-y-3">
           <h2 className="text-2xl sm:text-4xl font-black tracking-tight">
