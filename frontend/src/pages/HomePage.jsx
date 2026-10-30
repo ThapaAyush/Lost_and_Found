@@ -81,6 +81,8 @@ const HomePage = () => {
       desc: 'Submit detailed lost or found reports with photos, last seen landmarks, date, and distinguishing marks.',
       icon: PlusCircle,
       accent: 'bg-blue-600',
+      link: '/report/lost',
+      cta: 'File a Report',
     },
     {
       step: '02',
@@ -88,6 +90,8 @@ const HomePage = () => {
       desc: 'Our multi-factor matching engine cross-references title, brand, category, date, and location keywords.',
       icon: Sparkles,
       accent: 'bg-teal-600',
+      link: '/matches',
+      cta: 'View Matches',
     },
     {
       step: '03',
@@ -95,6 +99,8 @@ const HomePage = () => {
       desc: 'The rightful owner clicks “Claim Ownership” and provides confidential proof like receipts or serial numbers.',
       icon: ShieldCheck,
       accent: 'bg-blue-600',
+      link: '/found-items',
+      cta: 'Browse & Claim',
     },
     {
       step: '04',
@@ -102,6 +108,8 @@ const HomePage = () => {
       desc: 'Platform administrators review the submitted proof of ownership to verify legitimate claims.',
       icon: ShieldAlert,
       accent: 'bg-teal-600',
+      link: '/claims',
+      cta: 'Track Claims',
     },
     {
       step: '05',
@@ -109,6 +117,8 @@ const HomePage = () => {
       desc: 'Once approved, both parties communicate in-app to coordinate handover without exposing phone numbers.',
       icon: MessageSquare,
       accent: 'bg-blue-600',
+      link: '/conversations',
+      cta: 'Open Messaging',
     },
     {
       step: '06',
@@ -116,6 +126,8 @@ const HomePage = () => {
       desc: 'Meet safely at designated reception or security desks, complete the return, and mark the item as returned.',
       icon: CheckCircle2,
       accent: 'bg-teal-600',
+      link: '/my-reports',
+      cta: 'Manage Handover',
     },
   ];
 
@@ -254,24 +266,34 @@ const HomePage = () => {
           {workflowSteps.map((step, idx) => {
             const Icon = step.icon;
             return (
-              <div
+              <Link
                 key={idx}
-                className="bg-white rounded-3xl border border-slate-200/80 p-6 shadow-sm hover:shadow-card-hover transition-all duration-300 relative group overflow-hidden"
+                to={step.link}
+                className="bg-white rounded-3xl border border-slate-200/80 p-6 shadow-sm hover:shadow-card-hover hover:border-blue-400 hover:-translate-y-1 transition-all duration-300 relative group overflow-hidden flex flex-col justify-between cursor-pointer"
               >
-                <div className="flex items-center justify-between mb-4">
-                  <div
-                    className={`w-12 h-12 rounded-2xl ${step.accent} text-white flex items-center justify-center shadow-sm group-hover:scale-105 transition-transform`}
-                  >
-                    <Icon className="w-6 h-6" />
+                <div>
+                  <div className="flex items-center justify-between mb-4">
+                    <div
+                      className={`w-12 h-12 rounded-2xl ${step.accent} text-white flex items-center justify-center shadow-sm group-hover:scale-110 transition-transform`}
+                    >
+                      <Icon className="w-6 h-6" />
+                    </div>
+                    <span className="text-2xl font-black text-slate-200 group-hover:text-blue-200 transition">
+                      {step.step}
+                    </span>
                   </div>
-                  <span className="text-2xl font-black text-slate-200 group-hover:text-blue-200 transition">
-                    {step.step}
-                  </span>
+
+                  <h3 className="text-base font-bold text-slate-900 group-hover:text-blue-600 transition mb-2">
+                    {step.title}
+                  </h3>
+                  <p className="text-xs text-slate-500 leading-relaxed">{step.desc}</p>
                 </div>
 
-                <h3 className="text-base font-bold text-slate-900 mb-2">{step.title}</h3>
-                <p className="text-xs text-slate-500 leading-relaxed">{step.desc}</p>
-              </div>
+                <div className="mt-5 pt-3.5 border-t border-slate-100 flex items-center justify-between text-xs font-bold text-blue-600 group-hover:text-blue-700">
+                  <span>{step.cta}</span>
+                  <ArrowRight className="w-4 h-4 transform group-hover:translate-x-1.5 transition-transform" />
+                </div>
+              </Link>
             );
           })}
         </div>
