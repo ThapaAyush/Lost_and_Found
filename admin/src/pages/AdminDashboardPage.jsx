@@ -4,7 +4,6 @@ import {
   Users,
   Search,
   CheckCircle2,
-  ShieldAlert,
   FileText,
   Package,
   ShieldCheck,
@@ -72,13 +71,6 @@ const AdminDashboardPage = () => {
       link: '/items?status=returned',
       color: 'text-teal-600 bg-teal-50 border-teal-200',
     },
-    {
-      title: 'Pending Ownership Claims',
-      count: stats.pendingClaims || 0,
-      icon: ShieldAlert,
-      link: '/claims',
-      color: 'text-amber-600 bg-amber-50 border-amber-200',
-    },
   ];
 
   return (
@@ -93,7 +85,7 @@ const AdminDashboardPage = () => {
             Administrator Oversight Portal
           </h1>
           <p className="text-xs sm:text-sm text-slate-500 mt-1 max-w-xl">
-            Verify ownership claims, enforce platform moderation, manage user directory, and audit compliance.
+            Inspect reports, enforce platform moderation, manage user directory, and audit compliance.
           </p>
         </div>
 
@@ -109,7 +101,7 @@ const AdminDashboardPage = () => {
       </div>
 
       {/* Stats Cards */}
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         {cards.map((card, idx) => {
           const Icon = card.icon;
           return (
@@ -147,7 +139,7 @@ const AdminDashboardPage = () => {
               Direct shortcuts to manage the community lost and found ecosystem.
             </p>
 
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <Link
                 to="/items"
                 className="p-3.5 rounded-2xl border border-slate-200 hover:border-blue-500 hover:bg-blue-50/40 transition group"
@@ -164,15 +156,6 @@ const AdminDashboardPage = () => {
                 <Users className="w-5 h-5 text-blue-600 mb-1.5" />
                 <p className="text-xs font-bold text-slate-900">Manage Users</p>
                 <p className="text-[11px] text-slate-500">Suspend, delete or update</p>
-              </Link>
-
-              <Link
-                to="/claims"
-                className="p-3.5 rounded-2xl border border-slate-200 hover:border-blue-500 hover:bg-blue-50/40 transition group"
-              >
-                <ShieldAlert className="w-5 h-5 text-blue-600 mb-1.5" />
-                <p className="text-xs font-bold text-slate-900">Review Claims</p>
-                <p className="text-[11px] text-slate-500">Validate item ownership</p>
               </Link>
             </div>
           </div>
