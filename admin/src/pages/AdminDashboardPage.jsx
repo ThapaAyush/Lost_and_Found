@@ -6,9 +6,6 @@ import {
   CheckCircle2,
   FileText,
   Package,
-  ShieldCheck,
-  TrendingUp,
-  Globe,
 } from 'lucide-react';
 import { adminAPI } from '../services/api';
 import LoadingSpinner from '../components/LoadingSpinner';
@@ -124,103 +121,6 @@ const AdminDashboardPage = () => {
             </Link>
           );
         })}
-      </div>
-
-      {/* Overview Panels */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Quick Administration Controls */}
-        <div className="bg-white rounded-3xl border border-slate-200 p-6 shadow-sm flex flex-col justify-between">
-          <div>
-            <h2 className="text-base font-bold text-slate-900 flex items-center mb-4">
-              <TrendingUp className="w-4 h-4 mr-2 text-teal-600" />
-              Administrative Actions
-            </h2>
-            <p className="text-xs text-slate-500 mb-4">
-              Direct shortcuts to manage the community lost and found ecosystem.
-            </p>
-
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-              <Link
-                to="/items"
-                className="p-3.5 rounded-2xl border border-slate-200 hover:border-blue-500 hover:bg-blue-50/40 transition group"
-              >
-                <Package className="w-5 h-5 text-blue-600 mb-1.5" />
-                <p className="text-xs font-bold text-slate-900">Moderate Posts</p>
-                <p className="text-[11px] text-slate-500">Remove or reinstate reports</p>
-              </Link>
-
-              <Link
-                to="/users"
-                className="p-3.5 rounded-2xl border border-slate-200 hover:border-blue-500 hover:bg-blue-50/40 transition group"
-              >
-                <Users className="w-5 h-5 text-blue-600 mb-1.5" />
-                <p className="text-xs font-bold text-slate-900">Manage Users</p>
-                <p className="text-[11px] text-slate-500">Suspend, delete or update</p>
-              </Link>
-            </div>
-          </div>
-
-          <div className="mt-6 pt-4 border-t border-slate-100 flex items-center justify-between text-xs text-slate-500">
-            <span>Primary Admin: <strong className="text-slate-800">ayush108ayush108@gmail.com</strong></span>
-            <span className="text-teal-600 font-bold">● Active Session</span>
-          </div>
-        </div>
-
-        {/* Platform Status & Security Card */}
-        <div className="bg-white rounded-3xl border border-slate-200 p-6 shadow-sm flex flex-col justify-between">
-          <div>
-            <h2 className="text-base font-bold text-slate-900 flex items-center mb-4">
-              <ShieldCheck className="w-4 h-4 mr-2 text-blue-600" />
-              Governance & Security Standards
-            </h2>
-            <p className="text-xs text-slate-500 mb-4">
-              Platform policy, admin credential rules, and system oversight overview.
-            </p>
-
-            <div className="space-y-3">
-              <div className="p-3 bg-slate-50 rounded-2xl border border-slate-200/80 flex items-start space-x-3">
-                <div className="w-7 h-7 rounded-lg bg-blue-50 border border-blue-200 text-blue-600 flex items-center justify-center shrink-0 mt-0.5">
-                  <ShieldCheck className="w-4 h-4" />
-                </div>
-                <div>
-                  <p className="text-xs font-bold text-slate-900">Designated Single Administrator Gate</p>
-                  <p className="text-[11px] text-slate-500">
-                    Restricted exclusively to <code className="text-blue-700 font-bold">ayush108ayush108@gmail.com</code> with permanent credentials.
-                  </p>
-                </div>
-              </div>
-
-              <div className="p-3 bg-slate-50 rounded-2xl border border-slate-200/80 flex items-start space-x-3">
-                <div className="w-7 h-7 rounded-lg bg-teal-50 border border-teal-200 text-teal-600 flex items-center justify-center shrink-0 mt-0.5">
-                  <CheckCircle2 className="w-4 h-4" />
-                </div>
-                <div>
-                  <p className="text-xs font-bold text-slate-900">Direct Post & Account Governance</p>
-                  <p className="text-[11px] text-slate-500">
-                    Removal authority for both lost & found posts and rogue user accounts with automated cascade cleanup.
-                  </p>
-                </div>
-              </div>
-
-              <div className="p-3 bg-slate-50 rounded-2xl border border-slate-200/80 flex items-start space-x-3">
-                <div className="w-7 h-7 rounded-lg bg-blue-50 border border-blue-200 text-blue-600 flex items-center justify-center shrink-0 mt-0.5">
-                  <Globe className="w-4 h-4" />
-                </div>
-                <div>
-                  <p className="text-xs font-bold text-slate-900">Bidirectional Portal Switcher</p>
-                  <p className="text-[11px] text-slate-500">
-                    Seamless 1-click transition between this Admin portal (port 5174) and Public Frontend (port 5173).
-                  </p>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div className="mt-6 pt-4 border-t border-slate-100 flex items-center justify-between text-xs text-slate-500">
-            <span>Local Server: <strong className="text-slate-800">http://localhost:5174</strong></span>
-            <span className="text-teal-600 font-bold">● System Healthy</span>
-          </div>
-        </div>
       </div>
     </div>
   );
