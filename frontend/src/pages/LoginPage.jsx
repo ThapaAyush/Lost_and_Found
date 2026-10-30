@@ -84,6 +84,19 @@ const LoginPage = () => {
 
   return (
     <div className="bg-white p-8 rounded-3xl border border-slate-200 shadow-xl">
+      {/* Auth Mode Switcher */}
+      <div className="flex p-1 bg-slate-100 rounded-2xl mb-6 border border-slate-200">
+        <span className="flex-1 py-2.5 text-center text-xs font-bold rounded-xl bg-white text-blue-600 shadow-sm cursor-default">
+          Sign In
+        </span>
+        <Link
+          to="/signup"
+          className="flex-1 py-2.5 text-center text-xs font-bold rounded-xl text-slate-600 hover:text-slate-900 transition"
+        >
+          New User? Sign Up
+        </Link>
+      </div>
+
       <div className="mb-6">
         <h2 className="text-2xl font-black text-slate-900 tracking-tight">Welcome back</h2>
         <p className="text-xs text-slate-500 mt-1">
@@ -209,8 +222,11 @@ const LoginPage = () => {
         </button>
       </form>
 
-      <div className="mt-6 text-center text-xs text-slate-500 bg-slate-50 p-3 rounded-2xl border border-slate-100">
-        Account registrations are managed and provisioned by the platform administrator.
+      <div className="mt-6 text-center text-xs text-slate-500">
+        Don't have an account yet?{' '}
+        <Link to="/signup" className="font-bold text-blue-600 hover:text-blue-700 underline underline-offset-2">
+          Create new account (Sign Up)
+        </Link>
       </div>
     </div>
   );

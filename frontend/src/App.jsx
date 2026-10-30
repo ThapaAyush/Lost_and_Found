@@ -16,6 +16,7 @@ import ItemDetailsPage from './pages/ItemDetailsPage';
 
 // Auth Pages
 import LoginPage from './pages/LoginPage';
+import SignupPage from './pages/SignupPage';
 import ForgotPasswordPage from './pages/ForgotPasswordPage';
 import ResetPasswordPage from './pages/ResetPasswordPage';
 
@@ -44,7 +45,7 @@ function App() {
             {/* Unauthenticated Auth Pages */}
             <Route element={<AuthLayout />}>
               <Route path="/login" element={<LoginPage />} />
-              <Route path="/signup" element={<Navigate to="/login" replace />} />
+              <Route path="/signup" element={<SignupPage />} />
               <Route path="/forgot-password" element={<ForgotPasswordPage />} />
               <Route path="/reset-password/:token" element={<ResetPasswordPage />} />
             </Route>

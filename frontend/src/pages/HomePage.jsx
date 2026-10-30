@@ -446,16 +446,16 @@ const HomePage = () => {
           ) : (
             <>
               <Link
-                to="/login"
+                to="/signup"
                 className="px-6 py-3.5 bg-white text-blue-700 font-bold text-xs rounded-2xl shadow-lg hover:bg-slate-100 transition"
               >
-                Browse Community Items
+                Create Free Account
               </Link>
               <Link
                 to="/login"
                 className="px-6 py-3.5 bg-blue-800/80 hover:bg-blue-800 text-white font-bold text-xs rounded-2xl border border-white/20 transition"
               >
-                Log In to Account
+                Sign In to Account
               </Link>
             </>
           )}
