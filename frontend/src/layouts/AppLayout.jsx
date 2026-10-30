@@ -44,15 +44,10 @@ const AppLayout = () => {
 
       {/* Global Clean Professional Footer */}
       <footer className="bg-white border-t border-slate-200 py-6 px-6 text-center text-xs text-slate-500 hidden lg:block">
-        <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
+        <div className="max-w-7xl mx-auto flex items-center justify-center">
           <p className="font-medium">
             © {new Date().getFullYear()} Lost & Found Platform — Every Lost Item Deserves a Way Home.
           </p>
-          <div className="flex items-center space-x-4 text-xs font-semibold text-slate-600">
-            <span>Community Support & Security</span>
-            <span>•</span>
-            <span>Safe Handover Program</span>
-          </div>
         </div>
       </footer>
     </div>
