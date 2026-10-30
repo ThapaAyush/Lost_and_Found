@@ -69,13 +69,6 @@ const AdminUsersPage = () => {
   const [userStats, setUserStats] = useState({ totalPosts: 0, lostCount: 0, foundCount: 0 });
   const [postsLoading, setPostsLoading] = useState(false);
 
-  // Status Change Dialog State
-  const [selectedUser, setSelectedUser] = useState(null);
-  const [targetStatus, setTargetStatus] = useState('');
-  const [targetRole, setTargetRole] = useState('');
-  const [dialogOpen, setDialogOpen] = useState(false);
-  const [actionLoading, setActionLoading] = useState(false);
-
   // Delete User Dialog State
   const [deleteUserModalOpen, setDeleteUserModalOpen] = useState(false);
   const [userToDelete, setUserToDelete] = useState(null);
@@ -168,41 +161,6 @@ const AdminUsersPage = () => {
       fetchUsers(currentPage);
     } catch (err) {
       alert(err.message || 'Failed to delete listing');
-    }
-  };
-
-  const openStatusToggle = (targetUser) => {
-    const nextStatus = targetUser.accountStatus === 'active' ? 'suspended' : 'active';
-    setSelectedUser(targetUser);
-    setTargetStatus(nextStatus);
-    setTargetRole('');
-    setDialogOpen(true);
-  };
-
-  const openRoleToggle = (targetUser) => {
-    const nextRole = targetUser.role === 'admin' ? 'user' : 'admin';
-    setSelectedUser(targetUser);
-    setTargetRole(nextRole);
-    setTargetStatus('');
-    setDialogOpen(true);
-  };
-
-  const handleConfirmAction = async () => {
-    if (!selectedUser) return;
-    setActionLoading(true);
-    try {
-      await adminAPI.updateUserStatus(selectedUser._id, {
-        accountStatus: targetStatus || undefined,
-        role: targetRole || undefined,
-      });
-      setDialogOpen(false);
-      setActionSuccess(`Updated ${selectedUser.name}'s account standing.`);
-      setTimeout(() => setActionSuccess(''), 4500);
-      fetchUsers(currentPage);
-    } catch (err) {
-      alert(err.message || 'Failed to update user');
-    } finally {
-      setActionLoading(false);
     }
   };
 
@@ -519,37 +477,15 @@ const AdminUsersPage = () => {
                         </button>
 
                         {!isPermanentAdmin ? (
-                          <>
-                            <button
-                              type="button"
-                              onClick={() => openRoleToggle(u)}
-                              className="px-2.5 py-1 text-[11px] font-semibold rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 transition"
-                            >
-                              {u.role === 'admin' ? 'Demote' : 'Make Admin'}
-                            </button>
-
-                            <button
-                              type="button"
-                              onClick={() => openStatusToggle(u)}
-                              className={`px-2.5 py-1 text-[11px] font-semibold rounded-lg transition ${
-                                u.accountStatus === 'active'
-                                  ? 'bg-amber-50 text-amber-700 hover:bg-amber-100'
-                                  : 'bg-emerald-50 text-emerald-700 hover:bg-emerald-100'
-                              }`}
-                            >
-                              {u.accountStatus === 'active' ? 'Suspend' : 'Activate'}
-                            </button>
-
-                            <button
-                              type="button"
-                              onClick={() => openDeleteUserModal(u)}
-                              className="px-2.5 py-1 text-[11px] font-semibold rounded-lg bg-rose-50 text-rose-700 hover:bg-rose-100 inline-flex items-center transition"
-                              title="Permanently remove user"
-                            >
-                              <Trash2 className="w-3 h-3 mr-1 text-rose-600" />
-                              Remove
-                            </button>
-                          </>
+                          <button
+                            type="button"
+                            onClick={() => openDeleteUserModal(u)}
+                            className="px-2.5 py-1 text-[11px] font-semibold rounded-lg bg-rose-50 text-rose-700 hover:bg-rose-100 inline-flex items-center transition"
+                            title="Permanently remove user"
+                          >
+                            <Trash2 className="w-3 h-3 mr-1 text-rose-600" />
+                            Remove
+                          </button>
                         ) : (
                           <span className="text-[11px] text-slate-400 italic">Protected</span>
                         )}
@@ -793,22 +729,6 @@ const AdminUsersPage = () => {
           </div>
         )}
       </Modal>
-
-      {/* Status / Role Confirm Dialog */}
-      <ConfirmDialog
-        isOpen={dialogOpen}
-        onClose={() => setDialogOpen(false)}
-        onConfirm={handleConfirmAction}
-        title={targetRole ? 'Alter User Permissions?' : 'Update Account Standing?'}
-        message={
-          targetRole
-            ? `Change role for ${selectedUser?.name} to "${targetRole}"?`
-            : `Set account status for ${selectedUser?.name} to "${targetStatus}"?`
-        }
-        confirmText="Confirm Modification"
-        isDanger={targetStatus === 'suspended'}
-        loading={actionLoading}
-      />
 
       {/* Delete User Confirm Dialog */}
       <ConfirmDialog
