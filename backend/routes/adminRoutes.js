@@ -5,6 +5,7 @@ import {
   createUser,
   updateUserStatus,
   deleteUser,
+  getUserPosts,
   getAdminItems,
   moderateItem,
   deleteAllItems,
@@ -23,6 +24,7 @@ router.use(protect, adminOnly);
 
 router.get('/stats', getAdminStats);
 router.get('/users', getUsers);
+router.get('/users/:id/posts', getUserPosts);
 router.post('/users', createUser);
 router.patch('/users/:id/status', updateUserStatus);
 router.delete('/users/:id', deleteUser);

@@ -66,6 +66,10 @@ const userSchema = new mongoose.Schema(
       enum: ['active', 'suspended'],
       default: 'active',
     },
+    lastLogin: {
+      type: Date,
+      default: Date.now,
+    },
   },
   {
     timestamps: true,

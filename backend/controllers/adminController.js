@@ -70,18 +70,60 @@ export const getUsers = async (req, res, next) => {
     const pageLimit = Math.max(1, Math.min(50, parseInt(limit, 10)));
     const skip = (pageNum - 1) * pageLimit;
 
-    const [users, total] = await Promise.all([
+    const [users, total, totalUsers, activeUsers, totalPostsCount] = await Promise.all([
       User.find(query).sort({ createdAt: -1 }).skip(skip).limit(pageLimit),
       User.countDocuments(query),
+      User.countDocuments(),
+      User.countDocuments({ accountStatus: 'active' }),
+      Item.countDocuments(),
     ]);
+
+    // Aggregate posts created by each user on this page directly from database
+    const userIds = users.map((u) => u._id);
+    const itemCounts = await Item.aggregate([
+      { $match: { owner: { $in: userIds } } },
+      {
+        $group: {
+          _id: '$owner',
+          totalPosts: { $sum: 1 },
+          lostCount: { $sum: { $cond: [{ $eq: ['$type', 'lost'] }, 1, 0] } },
+          foundCount: { $sum: { $cond: [{ $eq: ['$type', 'found'] }, 1, 0] } },
+        },
+      },
+    ]);
+
+    const countMap = {};
+    itemCounts.forEach((c) => {
+      countMap[c._id.toString()] = {
+        totalPosts: c.totalPosts,
+        lostCount: c.lostCount,
+        foundCount: c.foundCount,
+      };
+    });
+
+    const usersWithActivity = users.map((u) => {
+      const doc = u.toObject ? u.toObject() : u;
+      const stats = countMap[u._id.toString()] || { totalPosts: 0, lostCount: 0, foundCount: 0 };
+      return {
+        ...doc,
+        postsCount: stats.totalPosts,
+        lostCount: stats.lostCount,
+        foundCount: stats.foundCount,
+      };
+    });
 
     res.status(200).json({
       success: true,
-      count: users.length,
+      count: usersWithActivity.length,
       total,
       totalPages: Math.ceil(total / pageLimit),
       currentPage: pageNum,
-      users,
+      stats: {
+        totalUsers,
+        activeUsers,
+        totalPosts: totalPostsCount,
+      },
+      users: usersWithActivity,
     });
   } catch (error) {
     next(error);
@@ -184,6 +226,39 @@ export const deleteUser = async (req, res, next) => {
     res.status(200).json({
       success: true,
       message: `User "${user.name}" and associated records were removed successfully`,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+// @desc    Get user profile and all their posted items from database
+// @route   GET /api/admin/users/:id/posts
+export const getUserPosts = async (req, res, next) => {
+  try {
+    const user = await User.findById(req.params.id).select('-password');
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: 'User not found',
+      });
+    }
+
+    const items = await Item.find({ owner: user._id }).sort({ createdAt: -1 });
+
+    const stats = {
+      totalPosts: items.length,
+      lostCount: items.filter((i) => i.type === 'lost').length,
+      foundCount: items.filter((i) => i.type === 'found').length,
+      activeCount: items.filter((i) => !i.isProhibited).length,
+      prohibitedCount: items.filter((i) => i.isProhibited).length,
+    };
+
+    res.status(200).json({
+      success: true,
+      user,
+      stats,
+      items,
     });
   } catch (error) {
     next(error);

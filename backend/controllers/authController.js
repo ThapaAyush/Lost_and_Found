@@ -136,6 +136,9 @@ export const login = async (req, res, next) => {
       });
     }
 
+    user.lastLogin = new Date();
+    await user.save({ validateBeforeSave: false });
+
     await logAudit({
       actor: user._id,
       action: 'USER_LOGIN',
