@@ -60,19 +60,19 @@ const Sidebar = ({ isOpen, isDesktopOpen = true, closeSidebar }) => {
         />
       )}
 
-      {/* Sidebar Panel: Sticks below Navbar on desktop (lg:top-16), never overlapping top bar */}
+      {/* Sidebar Panel: Fixed in place on desktop (top-16), never scrolls down or disappears */}
       <aside
-        className={`fixed lg:sticky top-0 lg:top-16 left-0 z-50 lg:z-30 h-screen lg:h-[calc(100vh-4rem)] bg-white border-r border-slate-200 flex flex-col justify-between transition-all duration-300 ease-in-out shrink-0 ${
-          isOpen ? 'translate-x-0 w-72 shadow-2xl' : '-translate-x-full'
+        className={`fixed top-16 left-0 h-[calc(100vh-4rem)] bg-white border-r border-slate-200 flex flex-col justify-between transition-all duration-300 ease-in-out shrink-0 select-none ${
+          isOpen ? 'translate-x-0 w-72 shadow-2xl z-50' : '-translate-x-full z-40'
         } ${
           isDesktopOpen
-            ? 'lg:translate-x-0 lg:w-64 lg:shadow-none'
+            ? 'lg:translate-x-0 lg:w-64 lg:shadow-none lg:z-30'
             : 'lg:-translate-x-full lg:w-0 lg:overflow-hidden lg:border-none'
         }`}
       >
         {/* Top Header inside Sidebar for mobile drawer */}
-        <div className="overflow-hidden">
-          <div className="p-4 border-b border-slate-100 flex items-center justify-between lg:hidden">
+        <div className="flex-1 flex flex-col min-h-0 overflow-hidden">
+          <div className="p-4 border-b border-slate-100 flex items-center justify-between lg:hidden shrink-0">
             <span className="font-bold text-slate-800 text-sm">Navigation Menu</span>
             <button
               onClick={closeSidebar}
@@ -84,7 +84,7 @@ const Sidebar = ({ isOpen, isDesktopOpen = true, closeSidebar }) => {
           </div>
 
           {/* Navigation Links with custom scroll */}
-          <nav className="p-3 space-y-1 overflow-y-auto max-h-[calc(100vh-140px)] lg:max-h-[calc(100vh-140px)]">
+          <nav className="flex-1 p-3 space-y-1 overflow-y-auto">
             {navLinks.map((link) => {
               const Icon = link.icon;
               return (

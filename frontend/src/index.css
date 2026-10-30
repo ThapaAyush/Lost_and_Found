@@ -11,7 +11,7 @@
   body {
     @apply bg-slate-50 text-slate-800 font-sans min-h-screen antialiased selection:bg-blue-100 selection:text-blue-900;
     -webkit-tap-highlight-color: transparent;
-    overflow-x: hidden;
+    overflow-x: clip;
   }
 
   /* Prevent auto-zooming on inputs on mobile Safari/Chrome when focusing inputs */
