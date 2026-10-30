@@ -41,6 +41,10 @@ const Navbar = () => {
 
   const handleSearchSubmit = (e) => {
     e.preventDefault();
+    if (!user) {
+      navigate('/login');
+      return;
+    }
     if (searchQuery.trim()) {
       navigate(`/found-items?search=${encodeURIComponent(searchQuery.trim())}`);
     }
@@ -78,14 +82,14 @@ const Navbar = () => {
             Home
           </Link>
           <Link
-            to="/found-items"
+            to={user ? '/found-items' : '/login'}
             className={`px-3 py-2 rounded-xl transition ${location.pathname === '/found-items' ? 'text-blue-600 bg-blue-50' : 'hover:text-slate-900 hover:bg-slate-100'
               }`}
           >
             Found Belongings
           </Link>
           <Link
-            to="/lost-items"
+            to={user ? '/lost-items' : '/login'}
             className={`px-3 py-2 rounded-xl transition ${location.pathname === '/lost-items' ? 'text-blue-600 bg-blue-50' : 'hover:text-slate-900 hover:bg-slate-100'
               }`}
           >
@@ -119,6 +123,11 @@ const Navbar = () => {
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
+              onFocus={() => {
+                if (!user) {
+                  navigate('/login');
+                }
+              }}
               placeholder="Search belongings by keyword or location..."
               className="w-full pl-9 pr-4 py-2 bg-slate-50 hover:bg-slate-100 focus:bg-white text-xs text-slate-800 placeholder-slate-400 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition"
             />
@@ -132,7 +141,13 @@ const Navbar = () => {
           <div className="relative" ref={reportRef}>
             <button
               type="button"
-              onClick={() => setReportDropdownOpen(!reportDropdownOpen)}
+              onClick={() => {
+                if (!user) {
+                  navigate('/login');
+                  return;
+                }
+                setReportDropdownOpen(!reportDropdownOpen);
+              }}
               className="inline-flex items-center px-3.5 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs shadow-sm shadow-blue-500/20 transition"
             >
               <PlusCircle className="w-4 h-4 mr-1.5" />

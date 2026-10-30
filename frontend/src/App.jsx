@@ -53,12 +53,12 @@ function App() {
             <Route element={<AppLayout />}>
               {/* Publicly Browseable Routes */}
               <Route path="/" element={<HomePage />} />
-              <Route path="/found-items" element={<FoundItemsPage />} />
-              <Route path="/lost-items" element={<LostItemsPage />} />
-              <Route path="/items/:id" element={<ItemDetailsPage />} />
 
               {/* Authenticated Protected Routes */}
               <Route element={<ProtectedRoute />}>
+                <Route path="/found-items" element={<FoundItemsPage />} />
+                <Route path="/lost-items" element={<LostItemsPage />} />
+                <Route path="/items/:id" element={<ItemDetailsPage />} />
                 <Route path="/dashboard" element={<DashboardPage />} />
                 <Route path="/report/lost" element={<ReportLostPage />} />
                 <Route path="/report/found" element={<ReportFoundPage />} />

@@ -92,7 +92,13 @@ const Sidebar = ({ isOpen, isDesktopOpen = true, closeSidebar }) => {
                   key={link.to}
                   to={link.to}
                   end={link.to === '/'}
-                  onClick={closeSidebar}
+                  onClick={(e) => {
+                    closeSidebar();
+                    if (!user && link.to !== '/') {
+                      e.preventDefault();
+                      navigate('/login');
+                    }
+                  }}
                   className={({ isActive }) =>
                     `flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-bold transition-all ${
                       isActive

@@ -1,14 +1,27 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { MapPin, Calendar, Tag, ArrowRight, Image as ImageIcon } from 'lucide-react';
 import StatusBadge from './StatusBadge';
 import { formatDate } from '../utils/formatters';
+import { useAuth } from '../context/AuthContext';
 
 const ItemCard = ({ item }) => {
+  const { user } = useAuth();
+  const navigate = useNavigate();
   const thumbnail = item.images && item.images.length > 0 ? item.images[0] : null;
 
+  const handleCardClick = (e) => {
+    if (!user) {
+      e.preventDefault();
+      navigate('/login');
+    }
+  };
+
   return (
-    <div className="group bg-white rounded-2xl border border-slate-200/80 hover:border-blue-400/80 overflow-hidden shadow-sm hover:shadow-card-hover transition-all duration-300 flex flex-col h-full">
+    <div
+      onClick={handleCardClick}
+      className="group bg-white rounded-2xl border border-slate-200/80 hover:border-blue-400/80 overflow-hidden shadow-sm hover:shadow-card-hover transition-all duration-300 flex flex-col h-full cursor-pointer"
+    >
       {/* Image Banner */}
       <div className="relative aspect-[16/10] bg-slate-100 overflow-hidden">
         {thumbnail ? (
@@ -88,7 +101,8 @@ const ItemCard = ({ item }) => {
           </div>
 
           <Link
-            to={`/items/${item._id}`}
+            to={user ? `/items/${item._id}` : '/login'}
+            onClick={handleCardClick}
             className="w-full inline-flex items-center justify-center px-4 py-2.5 bg-slate-100 hover:bg-blue-600 text-slate-700 hover:text-white font-bold text-xs rounded-xl transition-all duration-200 group-hover:bg-blue-600 group-hover:text-white shadow-sm"
           >
             <span>{item.type === 'found' ? 'View Details & Claim' : 'View Lost Report'}</span>

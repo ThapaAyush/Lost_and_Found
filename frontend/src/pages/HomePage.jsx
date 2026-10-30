@@ -68,6 +68,10 @@ const HomePage = () => {
 
   const handleHeroSearch = (e) => {
     e.preventDefault();
+    if (!user) {
+      navigate('/login');
+      return;
+    }
     const params = new URLSearchParams();
     if (searchQuery.trim()) params.set('search', searchQuery.trim());
     if (selectedCategory && selectedCategory !== 'All') params.set('category', selectedCategory);
@@ -156,7 +160,7 @@ const HomePage = () => {
           {/* Quick Dual Actions */}
           <div className="flex flex-wrap items-center justify-center gap-3 pt-2">
             <Link
-              to="/report/lost"
+              to={user ? '/report/lost' : '/login'}
               className="inline-flex items-center px-6 py-3.5 rounded-2xl bg-white hover:bg-rose-50 text-rose-600 hover:text-rose-700 font-bold text-sm border border-rose-200 shadow-sm transition transform hover:-translate-y-0.5"
             >
               <PlusCircle className="w-4 h-4 mr-2 text-rose-500" />
@@ -164,7 +168,7 @@ const HomePage = () => {
             </Link>
 
             <Link
-              to="/report/found"
+              to={user ? '/report/found' : '/login'}
               className="inline-flex items-center px-6 py-3.5 rounded-2xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-sm shadow-sm shadow-blue-500/20 transition transform hover:-translate-y-0.5"
             >
               <PlusCircle className="w-4 h-4 mr-2" />
@@ -172,7 +176,7 @@ const HomePage = () => {
             </Link>
 
             <Link
-              to="/found-items"
+              to={user ? '/found-items' : '/login'}
               className="inline-flex items-center px-6 py-3.5 rounded-2xl bg-teal-50 hover:bg-teal-100 text-teal-800 font-bold text-sm border border-teal-200/80 transition"
             >
               <Search className="w-4 h-4 mr-2 text-teal-600" />
@@ -192,6 +196,9 @@ const HomePage = () => {
                   type="text"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
+                  onFocus={() => {
+                    if (!user) navigate('/login');
+                  }}
                   placeholder="What did you lose or find?"
                   className="w-full text-xs sm:text-sm bg-transparent border-none focus:outline-none placeholder-slate-400 text-slate-800"
                 />
@@ -200,7 +207,13 @@ const HomePage = () => {
               <div className="flex items-center space-x-2 w-full sm:w-auto">
                 <select
                   value={selectedCategory}
-                  onChange={(e) => setSelectedCategory(e.target.value)}
+                  onChange={(e) => {
+                    if (!user) {
+                      navigate('/login');
+                      return;
+                    }
+                    setSelectedCategory(e.target.value);
+                  }}
                   className="px-3 py-2 text-xs bg-slate-50 rounded-xl border border-slate-200 text-slate-700 font-medium focus:outline-none"
                 >
                   {categories.map((c) => (
@@ -234,7 +247,10 @@ const HomePage = () => {
           return (
             <div
               key={i}
-              className="bg-white rounded-2xl border border-slate-200/80 p-5 shadow-sm flex items-center space-x-4 hover:shadow-md transition"
+              onClick={() => {
+                if (!user) navigate('/login');
+              }}
+              className="bg-white rounded-2xl border border-slate-200/80 p-5 shadow-sm flex items-center space-x-4 hover:shadow-md transition cursor-pointer"
             >
               <div className={`w-12 h-12 rounded-xl ${stat.bg} ${stat.color} flex items-center justify-center flex-shrink-0`}>
                 <Icon className="w-6 h-6" />
@@ -268,7 +284,13 @@ const HomePage = () => {
             return (
               <Link
                 key={idx}
-                to={step.link}
+                to={user ? step.link : '/login'}
+                onClick={(e) => {
+                  if (!user) {
+                    e.preventDefault();
+                    navigate('/login');
+                  }
+                }}
                 className="bg-white rounded-3xl border border-slate-200/80 p-6 shadow-sm hover:shadow-card-hover hover:border-blue-400 hover:-translate-y-1 transition-all duration-300 relative group overflow-hidden flex flex-col justify-between cursor-pointer"
               >
                 <div>
@@ -315,7 +337,13 @@ const HomePage = () => {
           <div className="flex items-center space-x-1.5 p-1 bg-slate-100 rounded-2xl border border-slate-200 text-xs">
             <button
               type="button"
-              onClick={() => setActiveTab('found')}
+              onClick={() => {
+                if (!user) {
+                  navigate('/login');
+                  return;
+                }
+                setActiveTab('found');
+              }}
               className={`px-4 py-2 rounded-xl font-bold transition ${
                 activeTab === 'found'
                   ? 'bg-white text-blue-600 shadow-sm'
@@ -326,7 +354,13 @@ const HomePage = () => {
             </button>
             <button
               type="button"
-              onClick={() => setActiveTab('lost')}
+              onClick={() => {
+                if (!user) {
+                  navigate('/login');
+                  return;
+                }
+                setActiveTab('lost');
+              }}
               className={`px-4 py-2 rounded-xl font-bold transition ${
                 activeTab === 'lost'
                   ? 'bg-white text-rose-600 shadow-sm'
@@ -337,7 +371,13 @@ const HomePage = () => {
             </button>
             <button
               type="button"
-              onClick={() => setActiveTab('returned')}
+              onClick={() => {
+                if (!user) {
+                  navigate('/login');
+                  return;
+                }
+                setActiveTab('returned');
+              }}
               className={`px-4 py-2 rounded-xl font-bold transition ${
                 activeTab === 'returned'
                   ? 'bg-white text-teal-700 shadow-sm'
@@ -369,7 +409,13 @@ const HomePage = () => {
 
         <div className="text-center pt-2">
           <Link
-            to={activeTab === 'lost' ? '/lost-items' : '/found-items'}
+            to={user ? (activeTab === 'lost' ? '/lost-items' : '/found-items') : '/login'}
+            onClick={(e) => {
+              if (!user) {
+                e.preventDefault();
+                navigate('/login');
+              }
+            }}
             className="inline-flex items-center px-6 py-3 rounded-2xl bg-white hover:bg-slate-50 border border-slate-200 text-slate-800 text-xs font-bold shadow-sm transition hover:shadow"
           >
             Browse All {activeTab === 'lost' ? 'Lost Reports' : 'Found Items'}
@@ -400,7 +446,7 @@ const HomePage = () => {
           ) : (
             <>
               <Link
-                to="/found-items"
+                to="/login"
                 className="px-6 py-3.5 bg-white text-blue-700 font-bold text-xs rounded-2xl shadow-lg hover:bg-slate-100 transition"
               >
                 Browse Community Items

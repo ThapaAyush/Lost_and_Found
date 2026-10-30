@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { NavLink, Link, useLocation } from 'react-router-dom';
+import { NavLink, Link, useLocation, useNavigate } from 'react-router-dom';
 import {
   Home,
   CheckSquare,
@@ -18,6 +18,7 @@ const MobileBottomNav = () => {
   const { user } = useAuth();
   const { unreadCount } = useNotifications();
   const location = useLocation();
+  const navigate = useNavigate();
   const [reportModalOpen, setReportModalOpen] = useState(false);
 
   // If on login/signup page, don't show the bottom bar
@@ -99,7 +100,13 @@ const MobileBottomNav = () => {
 
           {/* Found Items */}
           <NavLink
-            to="/found-items"
+            to={user ? '/found-items' : '/login'}
+            onClick={(e) => {
+              if (!user) {
+                e.preventDefault();
+                navigate('/login');
+              }
+            }}
             className={({ isActive }) =>
               `flex flex-col items-center justify-center py-1 px-3 rounded-xl transition tap-bounce ${
                 isActive ? 'text-blue-600 font-bold' : 'text-slate-500 hover:text-slate-800'
@@ -113,7 +120,13 @@ const MobileBottomNav = () => {
           {/* Center Elevated Action: + Report */}
           <button
             type="button"
-            onClick={() => setReportModalOpen(true)}
+            onClick={() => {
+              if (!user) {
+                navigate('/login');
+                return;
+              }
+              setReportModalOpen(true);
+            }}
             aria-label="Report lost or found item"
             className="flex flex-col items-center justify-center -mt-5 tap-bounce group"
           >
@@ -125,7 +138,13 @@ const MobileBottomNav = () => {
 
           {/* Lost Items */}
           <NavLink
-            to="/lost-items"
+            to={user ? '/lost-items' : '/login'}
+            onClick={(e) => {
+              if (!user) {
+                e.preventDefault();
+                navigate('/login');
+              }
+            }}
             className={({ isActive }) =>
               `flex flex-col items-center justify-center py-1 px-3 rounded-xl transition tap-bounce ${
                 isActive ? 'text-blue-600 font-bold' : 'text-slate-500 hover:text-slate-800'
