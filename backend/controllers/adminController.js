@@ -52,7 +52,7 @@ export const getAdminStats = async (req, res, next) => {
 // @route   GET /api/admin/users
 export const getUsers = async (req, res, next) => {
   try {
-    const { search, role, status, page = 1, limit = 15 } = req.query;
+    const { search, role, status, page = 1, limit = 100 } = req.query;
     const query = {};
 
     if (role && role !== 'All') query.role = role;
@@ -67,7 +67,7 @@ export const getUsers = async (req, res, next) => {
     }
 
     const pageNum = Math.max(1, parseInt(page, 10));
-    const pageLimit = Math.max(1, Math.min(50, parseInt(limit, 10)));
+    const pageLimit = Math.max(1, Math.min(500, parseInt(limit, 10) || 100));
     const skip = (pageNum - 1) * pageLimit;
 
     const [users, total, totalUsers, activeUsers, totalPostsCount] = await Promise.all([
@@ -362,7 +362,7 @@ export const getAdminItems = async (req, res, next) => {
     }
 
     const pageNum = Math.max(1, parseInt(page, 10));
-    const pageLimit = Math.max(1, Math.min(50, parseInt(limit, 10)));
+    const pageLimit = Math.max(1, Math.min(500, parseInt(limit, 10) || 50));
     const skip = (pageNum - 1) * pageLimit;
 
     const [items, total] = await Promise.all([
@@ -443,7 +443,7 @@ export const getAdminClaims = async (req, res, next) => {
     if (status && status !== 'All') query.status = status;
 
     const pageNum = Math.max(1, parseInt(page, 10));
-    const pageLimit = Math.max(1, Math.min(50, parseInt(limit, 10)));
+    const pageLimit = Math.max(1, Math.min(500, parseInt(limit, 10) || 50));
     const skip = (pageNum - 1) * pageLimit;
 
     const [claims, total] = await Promise.all([
@@ -480,7 +480,7 @@ export const getAbuseReports = async (req, res, next) => {
     if (reviewStatus && reviewStatus !== 'All') query.reviewStatus = reviewStatus;
 
     const pageNum = Math.max(1, parseInt(page, 10));
-    const pageLimit = Math.max(1, Math.min(50, parseInt(limit, 10)));
+    const pageLimit = Math.max(1, Math.min(500, parseInt(limit, 10) || 50));
     const skip = (pageNum - 1) * pageLimit;
 
     const [reports, total] = await Promise.all([

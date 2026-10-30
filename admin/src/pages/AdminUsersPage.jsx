@@ -58,6 +58,7 @@ const AdminUsersPage = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [totalCount, setTotalCount] = useState(0);
+  const [perPage, setPerPage] = useState(100);
   const [globalStats, setGlobalStats] = useState({ totalUsers: 0, activeUsers: 0, totalPosts: 0 });
   const [loading, setLoading] = useState(true);
 
@@ -81,12 +82,12 @@ const AdminUsersPage = () => {
   const [deleteLoading, setDeleteLoading] = useState(false);
   const [actionSuccess, setActionSuccess] = useState('');
 
-  const fetchUsers = async (page = 1) => {
+  const fetchUsers = async (page = 1, currentPerPage = perPage) => {
     setLoading(true);
     try {
       const res = await adminAPI.getUsers({
         page,
-        limit: 12,
+        limit: currentPerPage,
         search: search || undefined,
         role: role !== 'All' ? role : undefined,
         status: status !== 'All' ? status : undefined,
@@ -108,12 +109,12 @@ const AdminUsersPage = () => {
   };
 
   useEffect(() => {
-    fetchUsers(1);
-  }, [role, status]);
+    fetchUsers(1, perPage);
+  }, [role, status, perPage]);
 
   const handleSearchSubmit = (e) => {
     e.preventDefault();
-    fetchUsers(1);
+    fetchUsers(1, perPage);
   };
 
   // Inspect User Posts
@@ -363,6 +364,23 @@ const AdminUsersPage = () => {
             <option value="active">Active</option>
             <option value="suspended">Suspended</option>
           </select>
+
+          {/* Per Page Selector */}
+          <select
+            value={perPage}
+            onChange={(e) => {
+              const val = Number(e.target.value);
+              setPerPage(val);
+              fetchUsers(1, val);
+            }}
+            className="px-3 py-2 text-xs border border-slate-200 rounded-xl bg-slate-50 hover:bg-slate-100/50 focus:bg-white focus:outline-none font-bold text-slate-700 transition"
+            title="Number of members to display per page"
+          >
+            <option value="100">100 per page</option>
+            <option value="50">50 per page</option>
+            <option value="25">25 per page</option>
+            <option value="200">200 per page</option>
+          </select>
         </div>
       </div>
 
@@ -547,7 +565,7 @@ const AdminUsersPage = () => {
             <Pagination
               currentPage={currentPage}
               totalPages={totalPages}
-              onPageChange={(page) => fetchUsers(page)}
+              onPageChange={(page) => fetchUsers(page, perPage)}
             />
           </div>
         </div>
