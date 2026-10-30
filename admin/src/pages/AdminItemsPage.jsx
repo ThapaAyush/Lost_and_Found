@@ -8,7 +8,6 @@ import {
   Loader2,
   Package,
   Users,
-  UserPlus,
   ExternalLink,
   Tag,
   MapPin,
@@ -229,13 +228,6 @@ const AdminItemsPage = () => {
         >
           <Users className="w-4 h-4" />
           <span>Users Section</span>
-        </Link>
-        <Link
-          to="/signup"
-          className="inline-flex items-center space-x-2 px-3.5 py-2 rounded-xl text-xs font-bold text-slate-600 hover:bg-slate-100 transition shrink-0"
-        >
-          <UserPlus className="w-4 h-4" />
-          <span>Sign-Up User</span>
         </Link>
         <Link
           to="/claims"

@@ -7,7 +7,6 @@ import AdminLoginPage from './pages/AdminLoginPage';
 import AdminDashboardPage from './pages/AdminDashboardPage';
 import AdminItemsPage from './pages/AdminItemsPage';
 import AdminUsersPage from './pages/AdminUsersPage';
-import AdminSignupPage from './pages/AdminSignupPage';
 import AdminClaimsPage from './pages/AdminClaimsPage';
 
 function App() {
@@ -23,7 +22,6 @@ function App() {
             <Route path="/" element={<AdminDashboardPage />} />
             <Route path="/items" element={<AdminItemsPage />} />
             <Route path="/users" element={<AdminUsersPage />} />
-            <Route path="/signup" element={<AdminSignupPage />} />
             <Route path="/claims" element={<AdminClaimsPage />} />
           </Route>
 

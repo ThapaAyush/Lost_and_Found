@@ -4,7 +4,6 @@ import {
   LayoutDashboard,
   Package,
   Users,
-  UserPlus,
   ShieldAlert,
   LogOut,
   ExternalLink,
@@ -27,7 +26,6 @@ const AdminSidebar = () => {
     { to: '/', label: 'Admin Overview', icon: LayoutDashboard },
     { to: '/items', label: 'Lost & Found Data', icon: Package },
     { to: '/users', label: 'Users Section', icon: Users },
-    { to: '/signup', label: 'Sign-Up User', icon: UserPlus },
     { to: '/claims', label: 'Claims Oversight', icon: ShieldAlert },
   ];
 

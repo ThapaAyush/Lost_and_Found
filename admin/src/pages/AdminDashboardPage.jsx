@@ -7,7 +7,6 @@ import {
   ShieldAlert,
   FileText,
   Package,
-  UserPlus,
   ShieldCheck,
   TrendingUp,
   Globe,
@@ -100,15 +99,8 @@ const AdminDashboardPage = () => {
 
         <div className="flex flex-wrap items-center gap-2">
           <Link
-            to="/signup"
-            className="px-4 py-2.5 bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold rounded-xl shadow-sm shadow-blue-500/20 transition flex items-center space-x-1.5"
-          >
-            <UserPlus className="w-4 h-4" />
-            <span>Sign-Up User</span>
-          </Link>
-          <Link
             to="/items"
-            className="px-4 py-2.5 bg-slate-50 hover:bg-slate-100 border border-slate-200 text-slate-700 text-xs font-bold rounded-xl transition flex items-center space-x-1.5"
+            className="px-4 py-2.5 bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold rounded-xl shadow-sm shadow-blue-500/20 transition flex items-center space-x-1.5"
           >
             <Package className="w-4 h-4" />
             <span>Lost & Found Data</span>
@@ -155,7 +147,7 @@ const AdminDashboardPage = () => {
               Direct shortcuts to manage the community lost and found ecosystem.
             </p>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
               <Link
                 to="/items"
                 className="p-3.5 rounded-2xl border border-slate-200 hover:border-blue-500 hover:bg-blue-50/40 transition group"
@@ -163,15 +155,6 @@ const AdminDashboardPage = () => {
                 <Package className="w-5 h-5 text-blue-600 mb-1.5" />
                 <p className="text-xs font-bold text-slate-900">Moderate Posts</p>
                 <p className="text-[11px] text-slate-500">Remove or reinstate reports</p>
-              </Link>
-
-              <Link
-                to="/signup"
-                className="p-3.5 rounded-2xl border border-slate-200 hover:border-blue-500 hover:bg-blue-50/40 transition group"
-              >
-                <UserPlus className="w-5 h-5 text-blue-600 mb-1.5" />
-                <p className="text-xs font-bold text-slate-900">Sign Up User</p>
-                <p className="text-[11px] text-slate-500">Provision user accounts</p>
               </Link>
 
               <Link
