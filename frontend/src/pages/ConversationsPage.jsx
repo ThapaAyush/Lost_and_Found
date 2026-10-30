@@ -205,10 +205,7 @@ const ConversationsPage = () => {
                 <div className="grid grid-cols-1 gap-3">
                   {filteredConversations.map((conv) => {
                     const other = getOtherParticipant(conv);
-                    const lastMsg =
-                      conv.messages && conv.messages.length > 0
-                        ? conv.messages[conv.messages.length - 1]
-                        : null;
+                    const itemSubject = (conv.relatedItem?.title || conv.subject || '').replace(/^Regarding:\s*/i, '');
 
                     const unreadMsgCount =
                       conv.messages?.filter((m) => {
@@ -256,17 +253,12 @@ const ConversationsPage = () => {
                             </div>
 
                             {/* Regarding Item */}
-                            {(conv.relatedItem?.title || conv.subject) && (
-                              <div className="inline-flex items-center text-xs font-semibold text-blue-700 bg-blue-50 px-2.5 py-0.5 rounded-lg border border-blue-100 mb-1.5 truncate">
+                            {itemSubject && (
+                              <div className="inline-flex items-center text-xs font-semibold text-blue-700 bg-blue-50 px-2.5 py-1 rounded-lg border border-blue-100 truncate">
                                 <Package className="w-3.5 h-3.5 mr-1 text-blue-500 shrink-0" />
-                                <span className="truncate">Regarding: {conv.relatedItem?.title || conv.subject}</span>
+                                <span className="truncate">Regarding: {itemSubject}</span>
                               </div>
                             )}
-
-                            {/* Last Message Preview */}
-                            <p className="text-xs text-slate-500 truncate max-w-md sm:max-w-xl">
-                              {lastMsg ? lastMsg.text : 'Conversation initiated'}
-                            </p>
                           </div>
                         </div>
 
