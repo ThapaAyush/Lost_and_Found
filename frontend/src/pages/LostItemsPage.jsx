@@ -108,14 +108,9 @@ const LostItemsPage = () => {
       {/* Main All Lost Reports Section */}
       <div className="space-y-6">
         <div className="flex items-center justify-between">
-          <div className="flex items-center space-x-2.5">
-            <h2 className="text-lg font-black text-slate-900">
-              All Lost Reports ({totalCount})
-            </h2>
-            <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-rose-50 text-rose-700 border border-rose-200">
-              Active Reports
-            </span>
-          </div>
+          <h2 className="text-lg font-black text-slate-900">
+            All Lost Reports ({totalCount})
+          </h2>
           <span className="text-xs text-slate-400">
             Updated in real-time
           </span>
