@@ -58,12 +58,31 @@ const ConversationsPage = () => {
     fetchConversations();
   }, []);
 
-  // If navigated here with a specific conversation ID (e.g. from an item or claim)
+  // If navigated here with a specific conversation ID or item ID (e.g. from notification or claim)
   useEffect(() => {
-    if (location.state?.conversationId && conversations.length > 0) {
-      selectConversation(location.state.conversationId);
+    const searchParams = new URLSearchParams(location.search);
+    const targetConvId =
+      location.state?.conversationId ||
+      searchParams.get('conversationId') ||
+      searchParams.get('id');
+    const targetItemId = location.state?.itemId || searchParams.get('itemId');
+
+    if (targetConvId) {
+      selectConversation(targetConvId);
+      return;
     }
-  }, [conversations, location.state]);
+
+    if (targetItemId && conversations.length > 0) {
+      const match = conversations.find(
+        (c) =>
+          (c.relatedItem?._id || c.relatedItem || '').toString() ===
+          targetItemId.toString()
+      );
+      if (match) {
+        selectConversation(match._id);
+      }
+    }
+  }, [conversations, location.state, location.search]);
 
   const selectConversation = async (conversationId) => {
     setActiveConversation(conversationId);

@@ -35,15 +35,40 @@ const NotificationDropdown = () => {
     }
     setIsOpen(false);
 
-    if (notification.relatedItem) {
-      navigate(`/items/${notification.relatedItem._id || notification.relatedItem}`);
-    } else if (notification.relatedClaim) {
-      navigate(`/claims/${notification.relatedClaim._id || notification.relatedClaim}`);
-    } else if (notification.relatedConversation) {
-      navigate(`/conversations`);
-    } else {
-      navigate(`/notifications`);
+    const conversationId =
+      notification.relatedConversation?._id || notification.relatedConversation;
+
+    // 1. Message, contact request, or claim with chat -> Navigate directly to Messages tab
+    if (
+      conversationId ||
+      notification.type === 'new_message' ||
+      notification.type === 'contact_request' ||
+      notification.type === 'new_claim'
+    ) {
+      navigate('/conversations', {
+        state: {
+          conversationId: conversationId || undefined,
+          itemId: notification.relatedItem?._id || notification.relatedItem || undefined,
+        },
+      });
+      return;
     }
+
+    // 2. Claim status reviews (admin approvals/rejections)
+    if (notification.relatedClaim || notification.type === 'claim_status') {
+      const claimId = notification.relatedClaim?._id || notification.relatedClaim;
+      navigate(`/claims/${claimId}`);
+      return;
+    }
+
+    // 3. Item matches or reports
+    if (notification.relatedItem) {
+      const itemId = notification.relatedItem?._id || notification.relatedItem;
+      navigate(`/items/${itemId}`);
+      return;
+    }
+
+    navigate('/notifications');
   };
 
   return (

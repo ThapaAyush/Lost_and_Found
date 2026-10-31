@@ -14,7 +14,8 @@ export const getNotifications = async (req, res, next) => {
         .skip(skip)
         .limit(limit)
         .populate('relatedItem', 'title type images status')
-        .populate('relatedClaim', 'status explanation'),
+        .populate('relatedClaim', 'status explanation')
+        .populate('relatedConversation', '_id subject lastMessageAt'),
       Notification.countDocuments({ recipient: req.user._id }),
     ]);
 

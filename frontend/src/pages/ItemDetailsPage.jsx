@@ -185,7 +185,11 @@ const ItemDetailsPage = () => {
 
       const res = await itemAPI.submitClaim(id, formData);
       if (res.data?.success) {
-        setClaimSuccess('Claim submitted successfully! The manager/administrator will verify your proof.');
+        setClaimSuccess(
+          item?.type === 'lost'
+            ? 'Report submitted and message sent to owner! Opening your chat...'
+            : 'Claim submitted and message sent to owner! Opening your chat...'
+        );
         setHasActiveClaim(true);
         setActiveClaimId(res.data.claim._id);
         setTimeout(() => {
@@ -195,8 +199,12 @@ const ItemDetailsPage = () => {
           setClaimIdentifiers('');
           setClaimFiles([]);
           setClaimPreviews([]);
-          navigate(`/claims/${res.data.claim._id}`);
-        }, 1500);
+          if (res.data.conversationId) {
+            navigate('/conversations', { state: { conversationId: res.data.conversationId } });
+          } else {
+            navigate(`/claims/${res.data.claim._id}`);
+          }
+        }, 1200);
       }
     } catch (err) {
       setClaimError(err.message || 'Failed to submit claim.');

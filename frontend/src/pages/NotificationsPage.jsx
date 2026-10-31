@@ -60,13 +60,39 @@ const NotificationsPage = () => {
       setUnreadCount((prev) => Math.max(0, prev - 1));
     }
 
-    if (notif.relatedItem) {
-      navigate(`/items/${notif.relatedItem._id || notif.relatedItem}`);
-    } else if (notif.relatedClaim) {
-      navigate(`/claims/${notif.relatedClaim._id || notif.relatedClaim}`);
-    } else if (notif.relatedConversation) {
-      navigate(`/conversations`);
+    const conversationId = notif.relatedConversation?._id || notif.relatedConversation;
+
+    // 1. Message, contact request, or claim with chat -> Navigate directly to Messages tab
+    if (
+      conversationId ||
+      notif.type === 'new_message' ||
+      notif.type === 'contact_request' ||
+      notif.type === 'new_claim'
+    ) {
+      navigate('/conversations', {
+        state: {
+          conversationId: conversationId || undefined,
+          itemId: notif.relatedItem?._id || notif.relatedItem || undefined,
+        },
+      });
+      return;
     }
+
+    // 2. Claim status reviews (admin approvals/rejections without conversation)
+    if (notif.relatedClaim || notif.type === 'claim_status') {
+      const claimId = notif.relatedClaim?._id || notif.relatedClaim;
+      navigate(`/claims/${claimId}`);
+      return;
+    }
+
+    // 3. Item matches or reports
+    if (notif.relatedItem) {
+      const itemId = notif.relatedItem?._id || notif.relatedItem;
+      navigate(`/items/${itemId}`);
+      return;
+    }
+
+    navigate('/notifications');
   };
 
   const handleMarkAll = async () => {

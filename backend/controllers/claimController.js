@@ -80,19 +80,72 @@ export const submitClaim = async (req, res, next) => {
       req,
     });
 
-    // Notify item owner of new claim or found report
+    // Automatically send initial message from claimant to owner and establish conversation
     const isLostItem = item.type === 'lost';
+    const explanationText = explanation ? explanation.trim() : '';
+
+    let claimMessageText = '';
+    if (isLostItem) {
+      if (
+        explanationText.toLowerCase().startsWith('i found') ||
+        explanationText.toLowerCase().startsWith('found') ||
+        explanationText.toLowerCase().startsWith('i just found')
+      ) {
+        claimMessageText = explanationText;
+      } else {
+        claimMessageText = `I found this item: "${explanationText}"`;
+      }
+    } else {
+      if (
+        explanationText.toLowerCase().startsWith('i lost') ||
+        explanationText.toLowerCase().startsWith('lost') ||
+        explanationText.toLowerCase().startsWith('this is my')
+      ) {
+        claimMessageText = explanationText;
+      } else {
+        claimMessageText = `I lost this item: "${explanationText}"`;
+      }
+    }
+
+    let conversation = await Conversation.findOne({
+      relatedItem: item._id,
+      participants: { $all: [req.user._id, item.owner] },
+    });
+
+    const messageObj = {
+      sender: req.user._id,
+      text: claimMessageText,
+      timestamp: new Date(),
+      isRead: false,
+    };
+
+    if (conversation) {
+      conversation.messages.push(messageObj);
+      conversation.lastMessageAt = new Date();
+      await conversation.save();
+    } else {
+      conversation = await Conversation.create({
+        participants: [req.user._id, item.owner],
+        initiator: req.user._id,
+        relatedItem: item._id,
+        subject: `Regarding: ${item.title}`,
+        status: 'pending',
+        messages: [messageObj],
+        lastMessageAt: new Date(),
+      });
+    }
+
+    // Notify item owner with the exact message from claimant and link directly to conversation
     await createNotification({
       recipient: item.owner,
-      type: 'new_claim',
+      type: 'new_message',
       title: isLostItem
         ? `Someone Found Your Item "${item.title}"!`
         : `New Ownership Claim on "${item.title}"`,
-      message: isLostItem
-        ? `${req.user.name} reported that they found your lost item "${item.title}" and sent you details and a personal message. Click to view in Claims and coordinate safe return.`
-        : `${req.user.name} submitted an ownership claim with supporting evidence for review.`,
+      message: `${req.user.name}: "${claimMessageText}"`,
       relatedItem: item._id,
       relatedClaim: claim._id,
+      relatedConversation: conversation._id,
       sendEmailNotification: true,
     });
 
@@ -102,6 +155,7 @@ export const submitClaim = async (req, res, next) => {
         ? 'Your found report has been submitted to the owner'
         : 'Your claim has been submitted successfully for verification',
       claim,
+      conversationId: conversation?._id,
     });
   } catch (error) {
     next(error);

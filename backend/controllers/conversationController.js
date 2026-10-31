@@ -99,11 +99,16 @@ export const createOrGetConversation = async (req, res, next) => {
     });
 
     // Notify recipient of contact request
+    const contactPreview =
+      initialMessage && initialMessage.trim()
+        ? `${req.user.name}: "${initialMessage.trim().substring(0, 100)}"`
+        : `${req.user.name} sent you a message regarding your report.`;
+
     await createNotification({
       recipient: recipientId,
       type: 'contact_request',
       title: `New Contact Request for "${item.title}"`,
-      message: `${req.user.name} sent you a message regarding your report.`,
+      message: contactPreview,
       relatedItem: item._id,
       relatedConversation: conversation._id,
     });
