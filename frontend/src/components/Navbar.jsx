@@ -229,38 +229,55 @@ const Navbar = () => {
                     </div>
 
                     <div className="py-1">
-                      <Link
-                        to="/dashboard"
-                        onClick={() => setProfileDropdownOpen(false)}
-                        className="flex items-center px-4 py-2 text-xs text-slate-700 hover:bg-slate-50 transition"
-                      >
-                        <LayoutDashboard className="w-4 h-4 mr-2 text-blue-600" />
-                        User Dashboard
-                      </Link>
-                      <Link
-                        to="/my-reports"
-                        onClick={() => setProfileDropdownOpen(false)}
-                        className="flex items-center px-4 py-2 text-xs text-slate-700 hover:bg-slate-50 transition"
-                      >
-                        <FileText className="w-4 h-4 mr-2 text-slate-400" />
-                        My Reports & Custody
-                      </Link>
-                      <Link
-                        to="/claims"
-                        onClick={() => setProfileDropdownOpen(false)}
-                        className="flex items-center px-4 py-2 text-xs text-slate-700 hover:bg-slate-50 transition"
-                      >
-                        <ShieldCheck className="w-4 h-4 mr-2 text-slate-400" />
-                        My Ownership Claims
-                      </Link>
-                      <Link
-                        to="/profile"
-                        onClick={() => setProfileDropdownOpen(false)}
-                        className="flex items-center px-4 py-2 text-xs text-slate-700 hover:bg-slate-50 transition"
-                      >
-                        <User className="w-4 h-4 mr-2 text-slate-400" />
-                        Account Settings
-                      </Link>
+                      {[
+                        {
+                          to: '/dashboard',
+                          label: 'User Dashboard',
+                          icon: LayoutDashboard,
+                          isActive: location.pathname === '/dashboard',
+                        },
+                        {
+                          to: '/my-reports',
+                          label: 'My Reports & Custody',
+                          icon: FileText,
+                          isActive: location.pathname.startsWith('/my-reports'),
+                        },
+                        {
+                          to: '/claims',
+                          label: 'My Ownership Claims',
+                          icon: ShieldCheck,
+                          isActive:
+                            location.pathname.startsWith('/claims') ||
+                            location.pathname.startsWith('/my-claims'),
+                        },
+                        {
+                          to: '/profile',
+                          label: 'Account Settings',
+                          icon: User,
+                          isActive: location.pathname.startsWith('/profile'),
+                        },
+                      ].map((item) => {
+                        const ItemIcon = item.icon;
+                        return (
+                          <Link
+                            key={item.to}
+                            to={item.to}
+                            onClick={() => setProfileDropdownOpen(false)}
+                            className={`flex items-center px-4 py-2.5 text-xs transition-colors ${
+                              item.isActive
+                                ? 'bg-blue-50 text-blue-600 font-bold'
+                                : 'text-slate-700 hover:bg-slate-50 font-medium'
+                            }`}
+                          >
+                            <ItemIcon
+                              className={`w-4 h-4 mr-2.5 shrink-0 ${
+                                item.isActive ? 'text-blue-600' : 'text-slate-400'
+                              }`}
+                            />
+                            {item.label}
+                          </Link>
+                        );
+                      })}
                     </div>
 
                     <div className="pt-1 border-t border-slate-100">
