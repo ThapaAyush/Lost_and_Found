@@ -29,14 +29,21 @@ export const getItems = async (req, res, next) => {
     // Filter by type (lost / found)
     if (type && ['lost', 'found'].includes(type)) {
       query.type = type;
+
+      // When browsing lost items on the public feed without an explicit status filter,
+      // only show actively missing items (remove items that are found, in custody, returned, or closed)
+      if (type === 'lost' && (!status || status === 'All')) {
+        query.status = 'lost';
+      }
+
+      // When browsing found items without an explicit status filter,
+      // only show active found belongings needing to be reunited (not returned or closed)
+      if (type === 'found' && (!status || status === 'All')) {
+        query.status = { $in: ['found', 'handed_over'] };
+      }
     }
 
-    // Filter by category
-    if (category && category !== 'All') {
-      query.category = category;
-    }
-
-    // Filter by status
+    // Filter by status (explicit filter requested by client)
     if (status && status !== 'All') {
       query.status = status;
     }
@@ -528,7 +535,9 @@ export const getMyItems = async (req, res, next) => {
       query.status = status;
     }
 
-    const items = await Item.find(query).sort({ createdAt: -1 });
+    const items = await Item.find(query)
+      .populate('history.changedBy', 'name avatar')
+      .sort({ createdAt: -1 });
 
     res.status(200).json({
       success: true,
