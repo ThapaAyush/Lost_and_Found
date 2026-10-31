@@ -37,33 +37,30 @@ const NotificationDropdown = () => {
 
     const conversationId =
       notification.relatedConversation?._id || notification.relatedConversation;
+    const itemId = notification.relatedItem?._id || notification.relatedItem;
+    const claimId = notification.relatedClaim?._id || notification.relatedClaim;
 
-    // 1. Message, contact request, or claim with chat -> Navigate directly to Messages tab
+    // Navigate directly to Messages tab for any claim, message, contact, or handover notification
     if (
       conversationId ||
       notification.type === 'new_message' ||
       notification.type === 'contact_request' ||
-      notification.type === 'new_claim'
+      notification.type === 'new_claim' ||
+      notification.type === 'claim_status' ||
+      claimId
     ) {
       navigate('/conversations', {
         state: {
           conversationId: conversationId || undefined,
-          itemId: notification.relatedItem?._id || notification.relatedItem || undefined,
+          itemId: itemId || undefined,
+          claimId: claimId || undefined,
         },
       });
       return;
     }
 
-    // 2. Claim status reviews (admin approvals/rejections)
-    if (notification.relatedClaim || notification.type === 'claim_status') {
-      const claimId = notification.relatedClaim?._id || notification.relatedClaim;
-      navigate(`/claims/${claimId}`);
-      return;
-    }
-
-    // 3. Item matches or reports
-    if (notification.relatedItem) {
-      const itemId = notification.relatedItem?._id || notification.relatedItem;
+    // Item matches or listings
+    if (itemId) {
       navigate(`/items/${itemId}`);
       return;
     }

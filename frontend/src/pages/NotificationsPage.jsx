@@ -61,33 +61,30 @@ const NotificationsPage = () => {
     }
 
     const conversationId = notif.relatedConversation?._id || notif.relatedConversation;
+    const itemId = notif.relatedItem?._id || notif.relatedItem;
+    const claimId = notif.relatedClaim?._id || notif.relatedClaim;
 
-    // 1. Message, contact request, or claim with chat -> Navigate directly to Messages tab
+    // Navigate directly to Messages tab for any claim, message, contact, or handover notification
     if (
       conversationId ||
       notif.type === 'new_message' ||
       notif.type === 'contact_request' ||
-      notif.type === 'new_claim'
+      notif.type === 'new_claim' ||
+      notif.type === 'claim_status' ||
+      claimId
     ) {
       navigate('/conversations', {
         state: {
           conversationId: conversationId || undefined,
-          itemId: notif.relatedItem?._id || notif.relatedItem || undefined,
+          itemId: itemId || undefined,
+          claimId: claimId || undefined,
         },
       });
       return;
     }
 
-    // 2. Claim status reviews (admin approvals/rejections without conversation)
-    if (notif.relatedClaim || notif.type === 'claim_status') {
-      const claimId = notif.relatedClaim?._id || notif.relatedClaim;
-      navigate(`/claims/${claimId}`);
-      return;
-    }
-
-    // 3. Item matches or reports
-    if (notif.relatedItem) {
-      const itemId = notif.relatedItem?._id || notif.relatedItem;
+    // Item matches or reports
+    if (itemId) {
       navigate(`/items/${itemId}`);
       return;
     }
@@ -293,11 +290,24 @@ const NotificationsPage = () => {
                     className={`text-xs mt-1 leading-relaxed ${
                       isUnread
                         ? 'text-slate-800 font-medium'
-                        : 'text-slate-400 font-normal'
+                        : 'text-slate-500 font-normal'
                     }`}
                   >
                     {notif.message}
                   </p>
+
+                  {(notif.relatedConversation ||
+                    notif.type === 'new_message' ||
+                    notif.type === 'contact_request' ||
+                    notif.type === 'new_claim' ||
+                    notif.relatedClaim) && (
+                    <div className="mt-2 flex items-center">
+                      <span className="inline-flex items-center text-[11px] font-bold text-blue-600 bg-blue-50/80 hover:bg-blue-100 px-2.5 py-0.5 rounded-lg border border-blue-200/60 transition">
+                        <MessageSquare className="w-3 h-3 mr-1.5" />
+                        Click to view message & chat directly
+                      </span>
+                    </div>
+                  )}
                 </div>
 
                 {/* Right Actions */}

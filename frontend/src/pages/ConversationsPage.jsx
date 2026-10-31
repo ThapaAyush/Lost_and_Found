@@ -66,6 +66,7 @@ const ConversationsPage = () => {
       searchParams.get('conversationId') ||
       searchParams.get('id');
     const targetItemId = location.state?.itemId || searchParams.get('itemId');
+    const targetClaimId = location.state?.claimId || searchParams.get('claimId');
 
     if (targetConvId) {
       selectConversation(targetConvId);
@@ -80,6 +81,19 @@ const ConversationsPage = () => {
       );
       if (match) {
         selectConversation(match._id);
+        return;
+      }
+    }
+
+    if (targetClaimId && conversations.length > 0) {
+      const match = conversations.find(
+        (c) =>
+          (c.relatedClaim?._id || c.relatedClaim || '').toString() ===
+          targetClaimId.toString()
+      );
+      if (match) {
+        selectConversation(match._id);
+        return;
       }
     }
   }, [conversations, location.state, location.search]);

@@ -19,6 +19,24 @@ export const getNotifications = async (req, res, next) => {
       Notification.countDocuments({ recipient: req.user._id }),
     ]);
 
+    // Automatically resolve relatedConversation if missing on notification
+    const Conversation = (await import('../models/Conversation.js')).default;
+    const populatedNotifications = await Promise.all(
+      notifications.map(async (doc) => {
+        const n = doc.toObject();
+        if (!n.relatedConversation && n.relatedItem?._id) {
+          const conv = await Conversation.findOne({
+            relatedItem: n.relatedItem._id,
+            participants: req.user._id,
+          }).select('_id subject lastMessageAt');
+          if (conv) {
+            n.relatedConversation = conv;
+          }
+        }
+        return n;
+      })
+    );
+
     const unreadCount = await Notification.countDocuments({
       recipient: req.user._id,
       isRead: false,
@@ -26,12 +44,12 @@ export const getNotifications = async (req, res, next) => {
 
     res.status(200).json({
       success: true,
-      count: notifications.length,
+      count: populatedNotifications.length,
       total,
       unreadCount,
       totalPages: Math.ceil(total / limit),
       currentPage: page,
-      notifications,
+      notifications: populatedNotifications,
     });
   } catch (error) {
     next(error);
