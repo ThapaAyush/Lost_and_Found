@@ -128,20 +128,45 @@ const ClaimDetailsPage = () => {
   };
 
   const handleStartMessage = async () => {
+    // If conversation ID is already loaded, navigate directly to it
+    if (conversationId) {
+      navigate('/conversations', {
+        state: {
+          conversationId,
+          itemId: claim.item?._id,
+        },
+      });
+      return;
+    }
+
     const targetUserId = isClaimant
       ? claim.item?.owner?._id || claim.item?.owner
-      : claim.claimant?._id;
-    if (!targetUserId) return;
+      : claim.claimant?._id || claim.claimant;
+
+    if (!targetUserId) {
+      navigate('/conversations');
+      return;
+    }
+
     try {
-      await conversationAPI.createOrGetConversation({
+      const res = await conversationAPI.createOrGetConversation({
         itemId: claim.item?._id,
         recipientId: targetUserId,
-        subject: `Regarding ${claim.item?.title || 'item'}`,
-        initialMessage: `Hello! Reaching out regarding "${claim.item?.title}". Let's coordinate safe handover.`,
+        subject: `Regarding: ${claim.item?.title || 'item'}`,
       });
-      navigate('/conversations');
+      const convId = res.data?.conversation?._id;
+      navigate('/conversations', {
+        state: {
+          conversationId: convId || undefined,
+          itemId: claim.item?._id,
+        },
+      });
     } catch (err) {
-      navigate('/conversations');
+      navigate('/conversations', {
+        state: {
+          itemId: claim.item?._id,
+        },
+      });
     }
   };
 
@@ -216,13 +241,14 @@ const ClaimDetailsPage = () => {
             </div>
 
             <div className="flex flex-wrap items-center gap-2">
-              <Link
-                to="/conversations"
+              <button
+                type="button"
+                onClick={handleStartMessage}
                 className="inline-flex items-center px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs rounded-xl shadow-sm transition"
               >
                 <MessageSquare className="w-4 h-4 mr-1.5" />
                 Open Private Chat
-              </Link>
+              </button>
 
               {!isItemReturned && canReview && (
                 <button
@@ -393,12 +419,13 @@ const ClaimDetailsPage = () => {
               <MessageSquare className="w-4 h-4 mr-1.5" />
               Chat with {claim.item?.type === 'lost' ? 'Owner' : 'Finder'}
             </button>
-            <Link
-              to="/conversations"
+            <button
+              type="button"
+              onClick={handleStartMessage}
               className="inline-flex items-center px-4 py-2.5 bg-white hover:bg-slate-100 text-slate-700 font-bold text-xs rounded-xl border border-slate-200 transition"
             >
               Open Messages Tab
-            </Link>
+            </button>
           </div>
         </div>
       )}

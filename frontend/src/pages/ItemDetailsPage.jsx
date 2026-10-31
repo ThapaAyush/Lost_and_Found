@@ -326,6 +326,7 @@ const ItemDetailsPage = () => {
             <div className="flex flex-wrap items-center gap-2">
               <Link
                 to="/conversations"
+                state={{ conversationId: approvedConversationId, itemId: item._id }}
                 className="inline-flex items-center px-4 py-2.5 bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold rounded-xl shadow-sm transition"
               >
                 <MessageSquare className="w-4 h-4 mr-1.5" />

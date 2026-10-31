@@ -85,7 +85,6 @@ const ConversationsPage = () => {
     if (targetConvId) {
       autoSelectedTargetRef.current = targetKey;
       selectConversation(targetConvId);
-      navigate('/conversations', { replace: true, state: {} });
       return;
     }
 
@@ -98,7 +97,6 @@ const ConversationsPage = () => {
       if (match) {
         autoSelectedTargetRef.current = targetKey;
         selectConversation(match._id);
-        navigate('/conversations', { replace: true, state: {} });
         return;
       }
     }
@@ -112,11 +110,10 @@ const ConversationsPage = () => {
       if (match) {
         autoSelectedTargetRef.current = targetKey;
         selectConversation(match._id);
-        navigate('/conversations', { replace: true, state: {} });
         return;
       }
     }
-  }, [conversations, location.state, location.search, navigate]);
+  }, [conversations, location.state, location.search]);
 
   const selectConversation = async (conversationId) => {
     if (!conversationId) return;
