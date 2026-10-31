@@ -16,7 +16,7 @@ import {
   Package,
   Sparkles,
 } from 'lucide-react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { conversationAPI } from '../services/api';
 import { useAuth } from '../context/AuthContext';
 import LoadingSpinner from '../components/LoadingSpinner';
@@ -27,6 +27,7 @@ import { formatTimeAgo } from '../utils/formatters';
 const ConversationsPage = () => {
   const { user } = useAuth();
   const location = useLocation();
+  const navigate = useNavigate();
 
   const [conversations, setConversations] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
@@ -40,6 +41,8 @@ const ConversationsPage = () => {
   const [abuseModalOpen, setAbuseModalOpen] = useState(false);
 
   const messagesEndRef = useRef(null);
+  const autoSelectedTargetRef = useRef(null);
+  const activeConvIdRef = useRef(null);
 
   const fetchConversations = async () => {
     try {
@@ -68,8 +71,21 @@ const ConversationsPage = () => {
     const targetItemId = location.state?.itemId || searchParams.get('itemId');
     const targetClaimId = location.state?.claimId || searchParams.get('claimId');
 
+    const targetKey = targetConvId
+      ? `conv_${targetConvId}`
+      : targetItemId
+      ? `item_${targetItemId}`
+      : targetClaimId
+      ? `claim_${targetClaimId}`
+      : null;
+
+    if (!targetKey) return;
+    if (autoSelectedTargetRef.current === targetKey) return;
+
     if (targetConvId) {
+      autoSelectedTargetRef.current = targetKey;
       selectConversation(targetConvId);
+      navigate('/conversations', { replace: true, state: {} });
       return;
     }
 
@@ -80,7 +96,9 @@ const ConversationsPage = () => {
           targetItemId.toString()
       );
       if (match) {
+        autoSelectedTargetRef.current = targetKey;
         selectConversation(match._id);
+        navigate('/conversations', { replace: true, state: {} });
         return;
       }
     }
@@ -92,29 +110,39 @@ const ConversationsPage = () => {
           targetClaimId.toString()
       );
       if (match) {
+        autoSelectedTargetRef.current = targetKey;
         selectConversation(match._id);
+        navigate('/conversations', { replace: true, state: {} });
         return;
       }
     }
-  }, [conversations, location.state, location.search]);
+  }, [conversations, location.state, location.search, navigate]);
 
   const selectConversation = async (conversationId) => {
+    if (!conversationId) return;
+
+    // Avoid duplicate re-fetching if this conversation is already active and loaded
+    if (activeConvIdRef.current === conversationId && messages.length > 0) {
+      return;
+    }
+
+    activeConvIdRef.current = conversationId;
     setActiveConversation(conversationId);
 
-    // Optimistically mark messages in this conversation as seen in local state
-    setConversations((prev) =>
-      prev.map((c) => {
-        if (c._id === conversationId && c.messages) {
-          return {
-            ...c,
-            messages: c.messages.map((m) => ({ ...m, isRead: true })),
-          };
-        }
-        return c;
-      })
-    );
+    // Optimistically load cached data and mark as read
+    const cached = conversations.find((c) => c._id === conversationId);
+    if (cached) {
+      setActiveDetails(cached);
+      if (cached.messages && cached.messages.length > 0) {
+        setMessages(cached.messages);
+      }
+    }
 
-    setLoadingMessages(true);
+    // Only show loading spinner if we don't have any cached messages to display
+    if (!cached || !cached.messages || cached.messages.length === 0) {
+      setLoadingMessages(true);
+    }
+
     try {
       const res = await conversationAPI.getConversationById(conversationId);
       if (res.data?.success && res.data?.conversation) {
@@ -129,9 +157,12 @@ const ConversationsPage = () => {
   };
 
   const handleBackToList = () => {
+    autoSelectedTargetRef.current = null;
+    activeConvIdRef.current = null;
     setActiveConversation(null);
     setActiveDetails(null);
     setMessages([]);
+    navigate('/conversations', { replace: true, state: {} });
     fetchConversations();
   };
 
@@ -396,7 +427,7 @@ const ConversationsPage = () => {
           {/* Messages Stream */}
           <div className="flex-1 p-4 sm:p-6 overflow-y-auto space-y-3.5 bg-slate-50/60">
             <div className="max-w-3xl mx-auto w-full space-y-3.5">
-              {loadingMessages ? (
+              {loadingMessages && messages.length === 0 ? (
                 <LoadingSpinner size="sm" message="Loading messages..." />
               ) : messages.length > 0 ? (
                 messages.map((msg, idx) => {

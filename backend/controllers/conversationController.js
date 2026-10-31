@@ -170,7 +170,8 @@ export const getConversationById = async (req, res, next) => {
     // Mark messages as read for this user
     let modified = false;
     conversation.messages.forEach((msg) => {
-      if (msg.sender && msg.sender._id.toString() !== req.user._id.toString() && !msg.isRead) {
+      const senderId = (msg.sender?._id || msg.sender)?.toString();
+      if (senderId && senderId !== req.user._id.toString() && !msg.isRead) {
         msg.isRead = true;
         modified = true;
       }
