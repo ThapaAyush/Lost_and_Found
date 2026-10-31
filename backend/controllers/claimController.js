@@ -272,7 +272,7 @@ export const getClaimById = async (req, res, next) => {
     res.status(200).json({
       success: true,
       claim,
-      canReview: isItemOwner || isAdmin,
+      canReview: !isClaimant && (isItemOwner || isAdmin),
       isClaimant,
       conversationId: existingConversation?._id || null,
     });
@@ -303,21 +303,19 @@ export const updateClaimStatus = async (req, res, next) => {
     const isItemOwner = claim.item.owner.toString() === req.user._id.toString();
     const isAdmin = req.user.role === 'admin';
 
-    // Claimant can only withdraw
-    if (isClaimant && !isItemOwner && !isAdmin) {
-      if (status !== 'withdrawn') {
-        return res.status(403).json({
-          success: false,
-          message: 'As the claimant, you may only withdraw your claim.',
-        });
-      }
+    // Claimant can only withdraw their own claim
+    if (isClaimant && status !== 'withdrawn') {
+      return res.status(403).json({
+        success: false,
+        message: 'As the sender/claimant, you cannot review or approve your own claim.',
+      });
     }
 
     // Only item owner or admin can review, approve, or reject
-    if (!isClaimant && !isItemOwner && !isAdmin) {
+    if (!isItemOwner && !isAdmin) {
       return res.status(403).json({
         success: false,
-        message: 'Unauthorized. You cannot modify the review status of this claim.',
+        message: 'Unauthorized. Only the item owner or administrator can review this claim.',
       });
     }
 

@@ -360,23 +360,76 @@ const ClaimDetailsPage = () => {
         )}
       </div>
 
-      {/* Reviewer / Decision Panel (For Item Owner or Administrator) */}
-      {canReview && (
-        <div className="bg-white rounded-3xl border border-slate-200 p-6 sm:p-8 shadow-sm space-y-4">
-          <h3 className="text-base font-bold text-slate-900 border-b border-slate-100 pb-3">
-            {claim.item?.type === 'lost'
-              ? 'Owner Review & Handover Coordination'
-              : 'Admin / Manager Verification & Review'}
-          </h3>
-          <p className="text-xs text-slate-500">
-            {claim.item?.type === 'lost'
-              ? "Review the finder's details and message above. If this is your item, approve to connect and coordinate physical return, or message them directly."
-              : "Verify the claimant's proof and secret identifiers above against the item details. If satisfied, approve the claim to unlock direct in-app messaging and coordinate the handover."}
-          </p>
+      {/* Claimant Perspective: Confirmation & Status Banner (Sender View) */}
+      {isClaimant && !isApproved && claim.status !== 'rejected' && claim.status !== 'withdrawn' && (
+        <div className="bg-gradient-to-r from-blue-50/90 via-sky-50/70 to-indigo-50/60 rounded-3xl border border-blue-200 p-6 sm:p-7 shadow-xs space-y-3">
+          <div className="flex items-start space-x-3.5">
+            <div className="w-10 h-10 rounded-2xl bg-blue-600 text-white flex items-center justify-center shrink-0 shadow-sm">
+              <Clock className="w-5 h-5" />
+            </div>
+            <div className="flex-1 min-w-0">
+              <span className="text-[10px] font-extrabold uppercase tracking-wider text-blue-700 bg-blue-100/80 px-2.5 py-0.5 rounded-full border border-blue-200">
+                {claim.item?.type === 'lost' ? 'Report Delivered to Owner' : 'Claim Under Review'}
+              </span>
+              <h3 className="text-base font-black text-slate-900 mt-1">
+                {claim.item?.type === 'lost'
+                  ? 'Your found report and message have been delivered to the owner'
+                  : 'Your proof of ownership is awaiting owner or manager verification'}
+              </h3>
+              <p className="text-xs text-slate-600 mt-1 leading-relaxed">
+                {claim.item?.type === 'lost'
+                  ? 'The owner will review your message, photos, and location details to confirm "Yes, this is mine!" and coordinate safe physical handover. You can also chat directly via the Messages tab.'
+                  : 'The owner or administration will review your submitted evidence and identifiers. Once verified, private chat and handover coordination will unlock.'}
+              </p>
+            </div>
+          </div>
+
+          <div className="flex flex-wrap items-center gap-2.5 pt-2 pl-0 sm:pl-13.5">
+            <button
+              type="button"
+              onClick={handleStartMessage}
+              className="inline-flex items-center px-4 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs rounded-xl shadow-xs transition"
+            >
+              <MessageSquare className="w-4 h-4 mr-1.5" />
+              Chat with {claim.item?.type === 'lost' ? 'Owner' : 'Finder'}
+            </button>
+            <Link
+              to="/conversations"
+              className="inline-flex items-center px-4 py-2.5 bg-white hover:bg-slate-100 text-slate-700 font-bold text-xs rounded-xl border border-slate-200 transition"
+            >
+              Open Messages Tab
+            </Link>
+          </div>
+        </div>
+      )}
+
+      {/* Reviewer / Decision Panel (Shown ONLY to the Item Owner / Receiver, NOT to the sender/claimant) */}
+      {!isClaimant && canReview && !isApproved && claim.status !== 'rejected' && (
+        <div className="bg-gradient-to-b from-white via-slate-50/50 to-emerald-50/20 rounded-3xl border border-slate-200 p-6 sm:p-8 shadow-sm space-y-5">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-100 pb-4">
+            <div>
+              <div className="flex items-center space-x-2">
+                <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse" />
+                <h3 className="text-base sm:text-lg font-black text-slate-900">
+                  {claim.item?.type === 'lost'
+                    ? 'Owner Verification & Handover Coordination'
+                    : 'Claim Review & Verification Decision'}
+                </h3>
+              </div>
+              <p className="text-xs text-slate-500 mt-1">
+                {claim.item?.type === 'lost'
+                  ? "Carefully review the finder's message, location notes, and photos above. If this is indeed your lost belonging, confirm to connect and coordinate physical handover."
+                  : "Verify the claimant's proof and description above against the found item records. If satisfied, confirm to unlock direct handover chat."}
+              </p>
+            </div>
+            <span className="self-start sm:self-auto px-3 py-1 rounded-full text-[11px] font-extrabold bg-emerald-100 text-emerald-800 border border-emerald-200 shrink-0">
+              Action Required
+            </span>
+          </div>
 
           <div>
             <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-1.5">
-              Review Notes (visible to {claim.item?.type === 'lost' ? 'finder' : 'claimant'})
+              Reply Message to {claim.item?.type === 'lost' ? 'Finder' : 'Claimant'} (Optional)
             </label>
             <textarea
               rows={3}
@@ -384,50 +437,56 @@ const ClaimDetailsPage = () => {
               onChange={(e) => setReviewNotes(e.target.value)}
               placeholder={
                 claim.item?.type === 'lost'
-                  ? 'e.g. Thank you! That is indeed my lost item. Let’s meet at the Security Desk...'
-                  : 'e.g. Serial number verified against student registry. Claim approved...'
+                  ? 'e.g. Yes, this is mine! Thank you so much for finding it. Let’s meet at the Security Desk to coordinate return...'
+                  : 'e.g. Serial number and photos verified. Let’s connect to arrange return...'
               }
-              className="w-full px-4 py-2.5 bg-slate-50 focus:bg-white text-xs border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-500/20"
+              className="w-full px-4 py-3 bg-white text-xs border border-slate-200 rounded-2xl focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition shadow-2xs"
             />
           </div>
 
-          <div className="flex flex-wrap items-center gap-3 pt-2">
+          <div className="flex flex-wrap items-center gap-3 pt-1">
+            {/* Primary Confirm Button */}
             <button
               type="button"
               disabled={submitting}
               onClick={() => handleDecision('approved')}
-              className="inline-flex items-center px-5 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs rounded-xl shadow-sm transition disabled:opacity-50"
+              className="inline-flex items-center px-5 py-3 bg-emerald-600 hover:bg-emerald-700 active:scale-95 text-white font-black text-xs rounded-xl shadow-md shadow-emerald-600/20 transition disabled:opacity-50"
             >
-              <CheckCircle2 className="w-4 h-4 mr-1.5" />
-              {claim.item?.type === 'lost' ? 'Confirm This Is My Item & Unlock Handover' : 'Approve Claim & Unlock Chat'}
+              <CheckCircle2 className="w-4 h-4 mr-2 shrink-0" />
+              {claim.item?.type === 'lost'
+                ? 'Yes, This Is Mine! Connect & Coordinate'
+                : 'Approve Claim & Unlock Chat'}
             </button>
 
+            {/* Direct Message Button */}
             <button
               type="button"
               onClick={handleStartMessage}
-              className="inline-flex items-center px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs rounded-xl shadow-sm transition"
+              className="inline-flex items-center px-4 py-3 bg-blue-600 hover:bg-blue-700 active:scale-95 text-white font-bold text-xs rounded-xl shadow-xs transition"
             >
-              <MessageSquare className="w-4 h-4 mr-1.5" />
+              <MessageSquare className="w-4 h-4 mr-1.5 shrink-0" />
               Message {claim.item?.type === 'lost' ? 'Finder' : 'Claimant'}
             </button>
 
+            {/* Mark Under Review */}
             <button
               type="button"
               disabled={submitting}
               onClick={() => handleDecision('under_review')}
-              className="inline-flex items-center px-4 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs rounded-xl shadow-sm transition disabled:opacity-50"
+              className="inline-flex items-center px-4 py-3 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs rounded-xl transition disabled:opacity-50"
             >
-              <Clock className="w-4 h-4 mr-1.5" />
-              Mark Under Review
+              <Clock className="w-4 h-4 mr-1.5 shrink-0" />
+              Need More Info (Under Review)
             </button>
 
+            {/* Decline Button */}
             <button
               type="button"
               disabled={submitting}
               onClick={() => handleDecision('rejected')}
-              className="inline-flex items-center px-4 py-2.5 bg-rose-600 hover:bg-rose-700 text-white font-bold text-xs rounded-xl shadow-sm transition disabled:opacity-50"
+              className="inline-flex items-center px-4 py-3 bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-200 font-bold text-xs rounded-xl transition disabled:opacity-50 ml-auto"
             >
-              <XCircle className="w-4 h-4 mr-1.5" />
+              <XCircle className="w-4 h-4 mr-1.5 shrink-0" />
               {claim.item?.type === 'lost' ? 'Not My Item (Decline)' : 'Reject Claim'}
             </button>
           </div>
