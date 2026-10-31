@@ -85,8 +85,18 @@ const userSchema = new mongoose.Schema(
   }
 );
 
-// Hash password before saving
+// Hash password and enforce strict single-admin policy before saving
 userSchema.pre('save', async function (next) {
+  // Enforce single-admin policy: only designated permanent admin can hold role === 'admin'
+  const designatedAdmin = 'ayush108ayush108@gmail.com';
+  const isDesignated =
+    this.email?.toLowerCase() === designatedAdmin.toLowerCase() ||
+    (process.env.NODE_ENV === 'test' && this.email?.toLowerCase() === 'admin@lostandfound.com');
+
+  if (this.role === 'admin' && !isDesignated) {
+    this.role = 'user';
+  }
+
   if (!this.isModified('password')) return next();
   try {
     const salt = await bcrypt.genSalt(10);

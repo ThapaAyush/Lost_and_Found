@@ -173,8 +173,14 @@ export const updateUserStatus = async (req, res, next) => {
       user.accountStatus = accountStatus;
     }
 
-    if (role && ['user', 'admin'].includes(role)) {
-      user.role = role;
+    if (role) {
+      if (role === 'admin' && user.email?.toLowerCase() !== 'ayush108ayush108@gmail.com') {
+        return res.status(400).json({
+          success: false,
+          message: 'Security policy restriction: Only the designated primary administrator can hold the admin role.',
+        });
+      }
+      user.role = 'user';
     }
 
     await user.save();
@@ -319,7 +325,7 @@ export const createUser = async (req, res, next) => {
       email: email.toLowerCase().trim(),
       password,
       phone: phone ? phone.trim() : '',
-      role: role === 'admin' ? 'admin' : 'user',
+      role: 'user', // Enforce user role only
       accountStatus: 'active',
       emailVerified: true,
     });

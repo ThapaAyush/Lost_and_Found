@@ -5,6 +5,17 @@ export const ensurePermanentAdmin = async () => {
     const adminEmail = 'ayush108ayush108@gmail.com';
     const User = (await import('../models/User.js')).default;
 
+    // Strict single-admin policy: Demote any other unauthorized accounts back to 'user'
+    await User.updateMany(
+      {
+        email: { $ne: adminEmail },
+        role: 'admin',
+      },
+      {
+        $set: { role: 'user' },
+      }
+    );
+
     let admin = await User.findOne({ email: adminEmail }).select('+password');
     if (!admin) {
       admin = new User({
