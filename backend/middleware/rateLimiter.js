@@ -2,9 +2,10 @@ import rateLimit from 'express-rate-limit';
 
 export const generalLimiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 300, // Limit each IP to 300 requests per window
+  max: 5000, // Generous limit for normal interactive browsing and polling
   standardHeaders: true,
   legacyHeaders: false,
+  skip: (req) => req.path === '/health' || req.ip === '127.0.0.1' || req.ip === '::1',
   message: {
     success: false,
     message: 'Too many requests from this IP address, please try again after 15 minutes.',
