@@ -42,7 +42,7 @@ const Modal = ({ isOpen, onClose, title, children, maxWidth = 'max-w-lg' }) => {
           </div>
 
           {/* Body with comfortable scrolling */}
-          <div className="px-6 py-5 max-h-[82vh] overflow-y-auto">{children}</div>
+          <div className="px-5 sm:px-6 py-4 sm:py-5 max-h-[80dvh] sm:max-h-[82vh] overflow-y-auto safe-bottom">{children}</div>
         </div>
       </div>
     </div>

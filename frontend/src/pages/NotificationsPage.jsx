@@ -164,7 +164,7 @@ const NotificationsPage = () => {
       </div>
 
       {/* Filter Tabs */}
-      <div className="flex items-center space-x-2 border-b border-slate-200 pb-2">
+      <div className="flex items-center space-x-2 border-b border-slate-200 pb-2 overflow-x-auto scrollbar-none">
         <button
           type="button"
           onClick={() => setFilter('all')}

@@ -138,30 +138,30 @@ const HomePage = () => {
   return (
     <div className="space-y-16 pb-12">
       {/* 1. Hero Section - Soothing Light Tint */}
-      <section className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-blue-50/90 via-sky-50/50 to-teal-50/70 border border-blue-100/90 text-slate-800 p-8 sm:p-12 lg:p-16 shadow-sm">
+      <section className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-blue-50/90 via-sky-50/50 to-teal-50/70 border border-blue-100/90 text-slate-800 p-6 sm:p-12 lg:p-16 shadow-sm">
         {/* Soft Ambient Light Glows */}
         <div className="absolute top-0 -left-10 w-72 h-72 bg-blue-200/30 rounded-full blur-3xl pointer-events-none" />
         <div className="absolute bottom-0 -right-10 w-72 h-72 bg-teal-200/30 rounded-full blur-3xl pointer-events-none" />
 
         <div className="relative z-10 max-w-4xl mx-auto text-center space-y-6">
 
-          <h1 className="text-3xl sm:text-5xl lg:text-6xl font-black tracking-tight leading-tight text-slate-900">
+          <h1 className="text-2xl sm:text-5xl lg:text-6xl font-black tracking-tight leading-tight text-slate-900">
             Every Lost Item Deserves <br className="hidden sm:inline" />
             <span className="text-blue-600">
               A Safe Way Home
             </span>
           </h1>
 
-          <p className="text-sm sm:text-base lg:text-lg text-slate-600 max-w-2xl mx-auto leading-relaxed">
+          <p className="text-xs sm:text-base lg:text-lg text-slate-600 max-w-2xl mx-auto leading-relaxed">
             Report misplaced belongings, register items you've found, and let our smart matching
             and verified handover system connect you securely.
           </p>
 
           {/* Quick Dual Actions */}
-          <div className="flex flex-wrap items-center justify-center gap-3 pt-2">
+          <div className="flex flex-col sm:flex-row flex-wrap items-center justify-center gap-2.5 sm:gap-3 pt-2 w-full">
             <Link
               to={user ? '/report/lost' : '/login'}
-              className="inline-flex items-center px-6 py-3.5 rounded-2xl bg-white hover:bg-rose-50 text-rose-600 hover:text-rose-700 font-bold text-sm border border-rose-200 shadow-sm transition transform hover:-translate-y-0.5"
+              className="w-full sm:w-auto inline-flex items-center justify-center px-5 sm:px-6 py-3 sm:py-3.5 rounded-2xl bg-white hover:bg-rose-50 text-rose-600 hover:text-rose-700 font-bold text-xs sm:text-sm border border-rose-200 shadow-sm transition transform hover:-translate-y-0.5"
             >
               <PlusCircle className="w-4 h-4 mr-2 text-rose-500" />
               I Lost Something
@@ -169,7 +169,7 @@ const HomePage = () => {
 
             <Link
               to={user ? '/report/found' : '/login'}
-              className="inline-flex items-center px-6 py-3.5 rounded-2xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-sm shadow-sm shadow-blue-500/20 transition transform hover:-translate-y-0.5"
+              className="w-full sm:w-auto inline-flex items-center justify-center px-5 sm:px-6 py-3 sm:py-3.5 rounded-2xl bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs sm:text-sm shadow-sm shadow-blue-500/20 transition transform hover:-translate-y-0.5"
             >
               <PlusCircle className="w-4 h-4 mr-2" />
               I Found Something
@@ -177,7 +177,7 @@ const HomePage = () => {
 
             <Link
               to={user ? '/found-items' : '/login'}
-              className="inline-flex items-center px-6 py-3.5 rounded-2xl bg-teal-50 hover:bg-teal-100 text-teal-800 font-bold text-sm border border-teal-200/80 transition"
+              className="w-full sm:w-auto inline-flex items-center justify-center px-5 sm:px-6 py-3 sm:py-3.5 rounded-2xl bg-teal-50 hover:bg-teal-100 text-teal-800 font-bold text-xs sm:text-sm border border-teal-200/80 transition"
             >
               <Search className="w-4 h-4 mr-2 text-teal-600" />
               Browse Found Items
@@ -185,12 +185,12 @@ const HomePage = () => {
           </div>
 
           {/* Search Bar Container */}
-          <div className="pt-6">
+          <div className="pt-4 sm:pt-6">
             <form
               onSubmit={handleHeroSearch}
-              className="bg-white p-2.5 rounded-2xl shadow-md border border-slate-200 flex flex-col sm:flex-row items-center gap-2 max-w-2xl mx-auto text-slate-800"
+              className="bg-white p-2 sm:p-2.5 rounded-2xl shadow-md border border-slate-200 flex flex-col sm:flex-row items-center gap-2 max-w-2xl mx-auto text-slate-800"
             >
-              <div className="flex-1 flex items-center px-3 w-full">
+              <div className="flex-1 flex items-center px-3 w-full py-1 sm:py-0">
                 <Search className="w-4 h-4 text-slate-400 mr-2 flex-shrink-0" />
                 <input
                   type="text"
@@ -214,7 +214,7 @@ const HomePage = () => {
                     }
                     setSelectedCategory(e.target.value);
                   }}
-                  className="px-3 py-2 text-xs bg-slate-50 rounded-xl border border-slate-200 text-slate-700 font-medium focus:outline-none"
+                  className="flex-1 sm:flex-initial px-3 py-2 text-xs bg-slate-50 rounded-xl border border-slate-200 text-slate-700 font-medium focus:outline-none"
                 >
                   {categories.map((c) => (
                     <option key={c} value={c}>
@@ -236,7 +236,7 @@ const HomePage = () => {
       </section>
 
       {/* 2. Reconnection Stats */}
-      <section className="grid grid-cols-2 md:grid-cols-4 gap-4">
+      <section className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
         {[
           { label: 'Reconnection Rate', value: '94%', icon: TrendingUp, color: 'text-blue-600', bg: 'bg-blue-50' },
           { label: 'Belongings Reunited', value: '450+', icon: CheckCircle2, color: 'text-teal-600', bg: 'bg-teal-50' },
@@ -250,14 +250,14 @@ const HomePage = () => {
               onClick={() => {
                 if (!user) navigate('/login');
               }}
-              className="bg-white rounded-2xl border border-slate-200/80 p-5 shadow-sm flex items-center space-x-4 hover:shadow-md transition cursor-pointer"
+              className="bg-white rounded-2xl border border-slate-200/80 p-3.5 sm:p-5 shadow-sm flex items-center space-x-2.5 sm:space-x-4 hover:shadow-md transition cursor-pointer"
             >
-              <div className={`w-12 h-12 rounded-xl ${stat.bg} ${stat.color} flex items-center justify-center flex-shrink-0`}>
-                <Icon className="w-6 h-6" />
+              <div className={`w-10 h-10 sm:w-12 sm:h-12 rounded-xl ${stat.bg} ${stat.color} flex items-center justify-center flex-shrink-0`}>
+                <Icon className="w-5 h-5 sm:w-6 sm:h-6" />
               </div>
-              <div>
-                <p className="text-xl sm:text-2xl font-black text-slate-900 tracking-tight">{stat.value}</p>
-                <p className="text-xs text-slate-500 font-medium">{stat.label}</p>
+              <div className="min-w-0">
+                <p className="text-lg sm:text-2xl font-black text-slate-900 tracking-tight">{stat.value}</p>
+                <p className="text-[11px] sm:text-xs text-slate-500 font-medium truncate">{stat.label}</p>
               </div>
             </div>
           );
@@ -334,7 +334,7 @@ const HomePage = () => {
           </div>
 
           {/* Interactive Showcase Tabs */}
-          <div className="flex items-center space-x-1.5 p-1 bg-slate-100 rounded-2xl border border-slate-200 text-xs">
+          <div className="flex items-center space-x-1 sm:space-x-1.5 p-1 bg-slate-100 rounded-2xl border border-slate-200 text-xs overflow-x-auto scrollbar-none w-full sm:w-auto justify-between sm:justify-start">
             <button
               type="button"
               onClick={() => {
@@ -344,7 +344,7 @@ const HomePage = () => {
                 }
                 setActiveTab('found');
               }}
-              className={`px-4 py-2 rounded-xl font-bold transition ${
+              className={`flex-1 sm:flex-initial px-3 sm:px-4 py-2 rounded-xl font-bold transition text-center whitespace-nowrap text-[11px] sm:text-xs ${
                 activeTab === 'found'
                   ? 'bg-white text-blue-600 shadow-sm'
                   : 'text-slate-600 hover:text-slate-900'
@@ -361,7 +361,7 @@ const HomePage = () => {
                 }
                 setActiveTab('lost');
               }}
-              className={`px-4 py-2 rounded-xl font-bold transition ${
+              className={`flex-1 sm:flex-initial px-3 sm:px-4 py-2 rounded-xl font-bold transition text-center whitespace-nowrap text-[11px] sm:text-xs ${
                 activeTab === 'lost'
                   ? 'bg-white text-rose-600 shadow-sm'
                   : 'text-slate-600 hover:text-slate-900'
@@ -378,7 +378,7 @@ const HomePage = () => {
                 }
                 setActiveTab('returned');
               }}
-              className={`px-4 py-2 rounded-xl font-bold transition ${
+              className={`flex-1 sm:flex-initial px-3 sm:px-4 py-2 rounded-xl font-bold transition text-center whitespace-nowrap text-[11px] sm:text-xs ${
                 activeTab === 'returned'
                   ? 'bg-white text-teal-700 shadow-sm'
                   : 'text-slate-600 hover:text-slate-900'

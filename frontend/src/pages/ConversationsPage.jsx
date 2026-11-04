@@ -353,7 +353,7 @@ const ConversationsPage = () => {
         </div>
       ) : (
         /* -------------------- VIEW 2: ACTIVE CHAT CONVERSATION -------------------- */
-        <div className="bg-white rounded-3xl border border-slate-200 shadow-sm overflow-hidden flex flex-col h-[82vh] min-h-[580px] max-h-[840px]">
+        <div className="bg-white rounded-3xl border border-slate-200 shadow-sm overflow-hidden flex flex-col h-[calc(100dvh-12rem)] sm:h-[82vh] min-h-[380px] max-h-[840px]">
           {/* Active Chat Top Header */}
           <div className="p-3.5 sm:p-4 border-b border-slate-200 flex items-center justify-between bg-white shadow-xs shrink-0">
             <div className="flex items-center space-x-3 min-w-0">

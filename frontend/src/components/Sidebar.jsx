@@ -62,7 +62,7 @@ const Sidebar = ({ isOpen, isDesktopOpen = true, closeSidebar }) => {
 
       {/* Sidebar Panel: Fixed in place on desktop (top-16), never scrolls down or disappears */}
       <aside
-        className={`fixed top-16 left-0 h-[calc(100vh-4rem)] bg-white border-r border-slate-200 flex flex-col justify-between transition-all duration-300 ease-in-out shrink-0 select-none ${
+        className={`fixed top-16 left-0 h-[calc(100dvh-4rem)] bg-white border-r border-slate-200 flex flex-col justify-between transition-all duration-300 ease-in-out shrink-0 select-none ${
           isOpen ? 'translate-x-0 w-72 shadow-2xl z-50' : '-translate-x-full z-40'
         } ${
           isDesktopOpen
@@ -154,7 +154,7 @@ const Sidebar = ({ isOpen, isDesktopOpen = true, closeSidebar }) => {
         </div>
 
         {/* Bottom User Card & Quick Logout */}
-        <div className="p-3 border-t border-slate-100 space-y-2 shrink-0">
+        <div className="p-3 border-t border-slate-100 space-y-2 shrink-0 safe-bottom">
           {user && (
             <button
               type="button"
