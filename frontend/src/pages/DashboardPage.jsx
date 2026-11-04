@@ -120,17 +120,17 @@ const DashboardPage = () => {
           </div>
 
           {/* Quick Action Buttons */}
-          <div className="flex flex-wrap items-center gap-3">
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5 sm:gap-3 w-full sm:w-auto">
             <Link
               to="/report/lost"
-              className="inline-flex items-center px-4 py-2.5 bg-white hover:bg-slate-50 text-slate-800 border border-slate-200 text-xs font-bold rounded-xl shadow-sm transition transform hover:-translate-y-0.5"
+              className="w-full sm:w-auto inline-flex items-center justify-center px-4 py-2.5 bg-white hover:bg-slate-50 text-slate-800 border border-slate-200 text-xs font-bold rounded-xl shadow-sm transition transform hover:-translate-y-0.5"
             >
               <PlusCircle className="w-4 h-4 mr-1.5 text-slate-500" />
               Report Lost Item
             </Link>
             <Link
               to="/report/found"
-              className="inline-flex items-center px-4 py-2.5 bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold rounded-xl shadow-sm shadow-blue-500/20 transition transform hover:-translate-y-0.5"
+              className="w-full sm:w-auto inline-flex items-center justify-center px-4 py-2.5 bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold rounded-xl shadow-sm shadow-blue-500/20 transition transform hover:-translate-y-0.5"
             >
               <PlusCircle className="w-4 h-4 mr-1.5" />
               Report Found Item
@@ -187,7 +187,7 @@ const DashboardPage = () => {
           </div>
           <Link
             to="/matches"
-            className="inline-flex items-center px-4 py-2.5 bg-teal-600 hover:bg-teal-700 text-white font-bold text-xs rounded-xl shadow-sm transition whitespace-nowrap"
+            className="w-full sm:w-auto inline-flex items-center justify-center px-4 py-2.5 bg-teal-600 hover:bg-teal-700 text-white font-bold text-xs rounded-xl shadow-sm transition whitespace-nowrap"
           >
             Review Potential Matches
             <ArrowRight className="w-3.5 h-3.5 ml-1.5" />

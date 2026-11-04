@@ -240,11 +240,11 @@ const ClaimDetailsPage = () => {
               </div>
             </div>
 
-            <div className="flex flex-wrap items-center gap-2">
+            <div className="flex flex-col sm:flex-row flex-wrap items-stretch sm:items-center gap-2 w-full sm:w-auto">
               <button
                 type="button"
                 onClick={handleStartMessage}
-                className="inline-flex items-center px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs rounded-xl shadow-sm transition"
+                className="w-full sm:w-auto inline-flex items-center justify-center px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs rounded-xl shadow-sm transition"
               >
                 <MessageSquare className="w-4 h-4 mr-1.5" />
                 Open Private Chat
@@ -254,7 +254,7 @@ const ClaimDetailsPage = () => {
                 <button
                   type="button"
                   onClick={() => setReturnModalOpen(true)}
-                  className="inline-flex items-center px-4 py-2.5 bg-teal-600 hover:bg-teal-700 text-white font-bold text-xs rounded-xl shadow-sm transition"
+                  className="w-full sm:w-auto inline-flex items-center justify-center px-4 py-2.5 bg-teal-600 hover:bg-teal-700 text-white font-bold text-xs rounded-xl shadow-sm transition"
                 >
                   <CheckCircle2 className="w-4 h-4 mr-1.5" />
                   Mark as Returned
@@ -299,18 +299,18 @@ const ClaimDetailsPage = () => {
           </div>
         </div>
 
-        <div className="flex flex-wrap items-center gap-2">
+        <div className="flex flex-col sm:flex-row flex-wrap items-stretch sm:items-center gap-2 w-full sm:w-auto">
           <button
             type="button"
             onClick={handleStartMessage}
-            className="inline-flex items-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold rounded-xl shadow-sm transition"
+            className="w-full sm:w-auto inline-flex items-center justify-center px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold rounded-xl shadow-sm transition"
           >
             <MessageSquare className="w-4 h-4 mr-1.5" />
             Message {isClaimant ? (claim.item?.type === 'lost' ? 'Owner' : 'Finder') : (claim.item?.type === 'lost' ? 'Finder' : 'Claimant')}
           </button>
           <Link
             to={`/items/${claim.item?._id}`}
-            className="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold rounded-xl transition"
+            className="w-full sm:w-auto inline-flex items-center justify-center px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold rounded-xl transition"
           >
             View Listing
           </Link>
@@ -471,13 +471,13 @@ const ClaimDetailsPage = () => {
             />
           </div>
 
-          <div className="flex flex-wrap items-center gap-3 pt-1">
+          <div className="flex flex-col sm:flex-row flex-wrap items-stretch sm:items-center gap-2.5 sm:gap-3 pt-1">
             {/* Primary Confirm Button */}
             <button
               type="button"
               disabled={submitting}
               onClick={() => handleDecision('approved')}
-              className="inline-flex items-center px-5 py-3 bg-emerald-600 hover:bg-emerald-700 active:scale-95 text-white font-black text-xs rounded-xl shadow-md shadow-emerald-600/20 transition disabled:opacity-50"
+              className="w-full sm:w-auto inline-flex items-center justify-center px-5 py-3 bg-emerald-600 hover:bg-emerald-700 active:scale-95 text-white font-black text-xs rounded-xl shadow-md shadow-emerald-600/20 transition disabled:opacity-50"
             >
               <CheckCircle2 className="w-4 h-4 mr-2 shrink-0" />
               {claim.item?.type === 'lost'
@@ -489,7 +489,7 @@ const ClaimDetailsPage = () => {
             <button
               type="button"
               onClick={handleStartMessage}
-              className="inline-flex items-center px-4 py-3 bg-blue-600 hover:bg-blue-700 active:scale-95 text-white font-bold text-xs rounded-xl shadow-xs transition"
+              className="w-full sm:w-auto inline-flex items-center justify-center px-4 py-3 bg-blue-600 hover:bg-blue-700 active:scale-95 text-white font-bold text-xs rounded-xl shadow-xs transition"
             >
               <MessageSquare className="w-4 h-4 mr-1.5 shrink-0" />
               Message {claim.item?.type === 'lost' ? 'Finder' : 'Claimant'}
@@ -500,7 +500,7 @@ const ClaimDetailsPage = () => {
               type="button"
               disabled={submitting}
               onClick={() => handleDecision('under_review')}
-              className="inline-flex items-center px-4 py-3 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs rounded-xl transition disabled:opacity-50"
+              className="w-full sm:w-auto inline-flex items-center justify-center px-4 py-3 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs rounded-xl transition disabled:opacity-50"
             >
               <Clock className="w-4 h-4 mr-1.5 shrink-0" />
               Need More Info (Under Review)
@@ -511,7 +511,7 @@ const ClaimDetailsPage = () => {
               type="button"
               disabled={submitting}
               onClick={() => handleDecision('rejected')}
-              className="inline-flex items-center px-4 py-3 bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-200 font-bold text-xs rounded-xl transition disabled:opacity-50 ml-auto"
+              className="w-full sm:w-auto inline-flex items-center justify-center px-4 py-3 bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-200 font-bold text-xs rounded-xl transition disabled:opacity-50 sm:ml-auto"
             >
               <XCircle className="w-4 h-4 mr-1.5 shrink-0" />
               {claim.item?.type === 'lost' ? 'Not My Item (Decline)' : 'Reject Claim'}
@@ -574,18 +574,18 @@ const ClaimDetailsPage = () => {
             />
           </div>
 
-          <div className="flex items-center justify-end space-x-2 pt-2">
+          <div className="flex flex-col-reverse sm:flex-row items-center justify-end gap-2 pt-2">
             <button
               type="button"
               onClick={() => setReturnModalOpen(false)}
-              className="px-4 py-2 text-xs font-bold text-slate-500 hover:text-slate-700"
+              className="w-full sm:w-auto px-4 py-2 text-xs font-bold text-slate-500 hover:text-slate-700 text-center justify-center"
             >
               Cancel
             </button>
             <button
               type="submit"
               disabled={returnSubmitting}
-              className="px-5 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold rounded-xl shadow-sm transition disabled:opacity-50"
+              className="w-full sm:w-auto px-5 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold rounded-xl shadow-sm transition disabled:opacity-50 text-center justify-center"
             >
               {returnSubmitting ? 'Saving...' : 'Confirm Return'}
             </button>

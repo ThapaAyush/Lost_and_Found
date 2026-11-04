@@ -193,17 +193,17 @@ const MyReportsPage = () => {
           </p>
         </div>
 
-        <div className="flex items-center space-x-2">
+        <div className="flex items-center space-x-2 w-full sm:w-auto">
           <Link
             to="/report/lost"
-            className="inline-flex items-center px-3.5 py-2 bg-white hover:bg-slate-50 text-slate-800 border border-slate-200 text-xs font-bold rounded-xl shadow-sm transition"
+            className="flex-1 sm:flex-initial inline-flex items-center justify-center px-3.5 py-2 bg-white hover:bg-slate-50 text-slate-800 border border-slate-200 text-xs font-bold rounded-xl shadow-sm transition"
           >
             <PlusCircle className="w-3.5 h-3.5 mr-1.5 text-slate-500" />
             Report Lost
           </Link>
           <Link
             to="/report/found"
-            className="inline-flex items-center px-3.5 py-2 bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold rounded-xl shadow-sm transition"
+            className="flex-1 sm:flex-initial inline-flex items-center justify-center px-3.5 py-2 bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold rounded-xl shadow-sm transition"
           >
             <PlusCircle className="w-3.5 h-3.5 mr-1.5" />
             Report Found
@@ -342,63 +342,67 @@ const MyReportsPage = () => {
                 </div>
 
                 {/* Action Buttons */}
-                <div className="flex flex-wrap items-center gap-2 w-full md:w-auto justify-end pt-3 md:pt-0 border-t md:border-t-0 border-slate-100">
-                  {/* View History Button */}
-                  <button
-                    type="button"
-                    onClick={() => toggleHistory(item._id)}
-                    className={`px-3 py-1.5 rounded-xl text-xs font-bold transition flex items-center space-x-1.5 border ${
-                      expandedHistoryId === item._id
-                        ? 'bg-blue-600 text-white border-blue-600 shadow-2xs'
-                        : 'bg-slate-50 text-slate-700 border-slate-200 hover:bg-slate-100'
-                    }`}
-                    title="View lifecycle history"
-                  >
-                    <History className="w-3.5 h-3.5" />
-                    <span>History ({item.history?.length || 1})</span>
-                    <ChevronDown
-                      className={`w-3.5 h-3.5 transition-transform duration-200 ${
-                        expandedHistoryId === item._id ? 'rotate-180' : ''
+                <div className="flex items-center justify-between sm:justify-end gap-2 w-full md:w-auto pt-3 md:pt-0 border-t md:border-t-0 border-slate-100 flex-wrap">
+                  <div className="flex items-center gap-2 flex-wrap">
+                    {/* View History Button */}
+                    <button
+                      type="button"
+                      onClick={() => toggleHistory(item._id)}
+                      className={`px-3 py-1.5 rounded-xl text-xs font-bold transition flex items-center space-x-1.5 border ${
+                        expandedHistoryId === item._id
+                          ? 'bg-blue-600 text-white border-blue-600 shadow-2xs'
+                          : 'bg-slate-50 text-slate-700 border-slate-200 hover:bg-slate-100'
                       }`}
-                    />
-                  </button>
+                      title="View lifecycle history"
+                    >
+                      <History className="w-3.5 h-3.5" />
+                      <span>History ({item.history?.length || 1})</span>
+                      <ChevronDown
+                        className={`w-3.5 h-3.5 transition-transform duration-200 ${
+                          expandedHistoryId === item._id ? 'rotate-180' : ''
+                        }`}
+                      />
+                    </button>
 
-                  <button
-                    type="button"
-                    onClick={() => openStatusModal(item)}
-                    className="px-3 py-1.5 bg-blue-50 text-blue-700 hover:bg-blue-100 rounded-xl text-xs font-bold transition flex items-center"
-                  >
-                    <CheckCircle2 className="w-3.5 h-3.5 mr-1" />
-                    Status / Return
-                  </button>
+                    <button
+                      type="button"
+                      onClick={() => openStatusModal(item)}
+                      className="px-3 py-1.5 bg-blue-50 text-blue-700 hover:bg-blue-100 rounded-xl text-xs font-bold transition flex items-center"
+                    >
+                      <CheckCircle2 className="w-3.5 h-3.5 mr-1" />
+                      Status / Return
+                    </button>
+                  </div>
 
-                  <Link
-                    to={`/items/${item._id}/edit`}
-                    className="p-1.5 text-slate-500 hover:text-slate-800 hover:bg-slate-100 rounded-xl transition"
-                    title="Edit Listing"
-                  >
-                    <Edit className="w-4 h-4" />
-                  </Link>
+                  <div className="flex items-center gap-1 shrink-0">
+                    <Link
+                      to={`/items/${item._id}/edit`}
+                      className="p-1.5 text-slate-500 hover:text-slate-800 hover:bg-slate-100 rounded-xl transition"
+                      title="Edit Listing"
+                    >
+                      <Edit className="w-4 h-4" />
+                    </Link>
 
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setDeleteItem(item);
-                      setDeleteModalOpen(true);
-                    }}
-                    className="p-1.5 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-xl transition"
-                    title="Delete Listing"
-                  >
-                    <Trash2 className="w-4 h-4" />
-                  </button>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setDeleteItem(item);
+                        setDeleteModalOpen(true);
+                      }}
+                      className="p-1.5 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-xl transition"
+                      title="Delete Listing"
+                    >
+                      <Trash2 className="w-4 h-4" />
+                    </button>
 
-                  <Link
-                    to={`/items/${item._id}`}
-                    className="p-1.5 text-blue-600 hover:bg-blue-50 rounded-xl transition"
-                    title="View Full Details"
-                  >
-                    <ArrowRight className="w-4 h-4" />
-                  </Link>
+                    <Link
+                      to={`/items/${item._id}`}
+                      className="p-1.5 text-blue-600 hover:bg-blue-50 rounded-xl transition"
+                      title="View Full Details"
+                    >
+                      <ArrowRight className="w-4 h-4" />
+                    </Link>
+                  </div>
                 </div>
               </div>
 
@@ -526,18 +530,18 @@ const MyReportsPage = () => {
               />
             </div>
 
-            <div className="flex items-center justify-end space-x-2 pt-2">
+            <div className="flex flex-col-reverse sm:flex-row items-center justify-end gap-2 pt-2">
               <button
                 type="button"
                 onClick={() => setStatusModalOpen(false)}
-                className="px-4 py-2 text-xs font-bold text-slate-500 hover:text-slate-700"
+                className="w-full sm:w-auto px-4 py-2 text-xs font-bold text-slate-500 hover:text-slate-700 text-center justify-center"
               >
                 Cancel
               </button>
               <button
                 type="submit"
                 disabled={statusLoading}
-                className="px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold rounded-xl shadow-sm transition disabled:opacity-50"
+                className="w-full sm:w-auto px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold rounded-xl shadow-sm transition disabled:opacity-50 text-center justify-center"
               >
                 {statusLoading ? 'Updating...' : 'Save Lifecycle Status'}
               </button>

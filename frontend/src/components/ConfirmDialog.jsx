@@ -28,12 +28,12 @@ const ConfirmDialog = ({
         </div>
       </div>
 
-      <div className="mt-6 flex justify-end space-x-3">
+      <div className="mt-6 flex flex-col-reverse sm:flex-row justify-end gap-2.5 sm:gap-3">
         <button
           type="button"
           onClick={onClose}
           disabled={loading}
-          className="px-4 py-2 border border-slate-300 rounded-xl text-sm font-medium text-slate-700 bg-white hover:bg-slate-50 transition"
+          className="w-full sm:w-auto px-4 py-2.5 border border-slate-300 rounded-xl text-xs sm:text-sm font-bold text-slate-700 bg-white hover:bg-slate-50 transition text-center justify-center flex items-center"
         >
           {cancelText}
         </button>
@@ -41,7 +41,7 @@ const ConfirmDialog = ({
           type="button"
           onClick={onConfirm}
           disabled={loading}
-          className={`px-4 py-2 rounded-xl text-sm font-medium text-white transition flex items-center ${
+          className={`w-full sm:w-auto px-4 py-2.5 rounded-xl text-xs sm:text-sm font-bold text-white transition flex items-center justify-center ${
             isDanger
               ? 'bg-rose-600 hover:bg-rose-700 focus:ring-rose-500'
               : 'bg-blue-600 hover:bg-blue-700 focus:ring-blue-500'

@@ -323,11 +323,11 @@ const ItemDetailsPage = () => {
               </div>
             </div>
 
-            <div className="flex flex-wrap items-center gap-2">
+            <div className="flex flex-col sm:flex-row flex-wrap items-stretch sm:items-center gap-2 w-full sm:w-auto">
               <Link
                 to="/conversations"
                 state={{ conversationId: approvedConversationId, itemId: item._id }}
-                className="inline-flex items-center px-4 py-2.5 bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold rounded-xl shadow-sm transition"
+                className="w-full sm:w-auto inline-flex items-center justify-center px-4 py-2.5 bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold rounded-xl shadow-sm transition"
               >
                 <MessageSquare className="w-4 h-4 mr-1.5" />
                 Open In-App Chat with Finder
@@ -336,7 +336,7 @@ const ItemDetailsPage = () => {
                 <button
                   type="button"
                   onClick={openReturnModal}
-                  className="inline-flex items-center px-4 py-2.5 bg-teal-600 hover:bg-teal-700 text-white text-xs font-bold rounded-xl shadow-sm transition"
+                  className="w-full sm:w-auto inline-flex items-center justify-center px-4 py-2.5 bg-teal-600 hover:bg-teal-700 text-white text-xs font-bold rounded-xl shadow-sm transition"
                 >
                   <CheckCircle2 className="w-4 h-4 mr-1.5" />
                   Mark as Returned
@@ -372,7 +372,7 @@ const ItemDetailsPage = () => {
 
           <Link
             to={`/claims/${activeClaimId}`}
-            className="inline-flex items-center px-4 py-2.5 bg-amber-600 hover:bg-amber-700 text-white text-xs font-bold rounded-xl shadow-sm transition whitespace-nowrap self-start sm:self-auto"
+            className="w-full sm:w-auto inline-flex items-center justify-center px-4 py-2.5 bg-amber-600 hover:bg-amber-700 text-white text-xs font-bold rounded-xl shadow-sm transition whitespace-nowrap"
           >
             <ShieldCheck className="w-4 h-4 mr-1.5" />
             View Submitted Details
@@ -408,7 +408,7 @@ const ItemDetailsPage = () => {
                 setClaimModalOpen(true);
               }
             }}
-            className="inline-flex items-center px-5 py-2.5 bg-teal-600 hover:bg-teal-700 active:scale-95 text-white text-xs font-bold rounded-xl shadow-sm transition whitespace-nowrap self-start sm:self-auto"
+            className="w-full sm:w-auto inline-flex items-center justify-center px-5 py-2.5 bg-teal-600 hover:bg-teal-700 active:scale-95 text-white text-xs font-bold rounded-xl shadow-sm transition whitespace-nowrap"
           >
             <Sparkles className="w-4 h-4 mr-1.5" />
             I Found This Item
@@ -444,7 +444,7 @@ const ItemDetailsPage = () => {
                 setClaimModalOpen(true);
               }
             }}
-            className="inline-flex items-center px-5 py-2.5 bg-blue-600 hover:bg-blue-700 active:scale-95 text-white text-xs font-bold rounded-xl shadow-sm transition whitespace-nowrap self-start sm:self-auto"
+            className="w-full sm:w-auto inline-flex items-center justify-center px-5 py-2.5 bg-blue-600 hover:bg-blue-700 active:scale-95 text-white text-xs font-bold rounded-xl shadow-sm transition whitespace-nowrap"
           >
             <ShieldCheck className="w-4 h-4 mr-1.5" />
             Claim Ownership Now
@@ -776,18 +776,18 @@ const ItemDetailsPage = () => {
             />
           </div>
 
-          <div className="flex items-center justify-end space-x-2 pt-2">
+          <div className="flex flex-col-reverse sm:flex-row items-center justify-end gap-2 pt-2">
             <button
               type="button"
               onClick={() => setStatusModalOpen(false)}
-              className="px-4 py-2 text-xs font-bold text-slate-500 hover:text-slate-700"
+              className="w-full sm:w-auto px-4 py-2 text-xs font-bold text-slate-500 hover:text-slate-700 text-center justify-center"
             >
               Cancel
             </button>
             <button
               type="submit"
               disabled={statusSubmitting}
-              className="px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold rounded-xl shadow-sm transition disabled:opacity-50"
+              className="w-full sm:w-auto px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold rounded-xl shadow-sm transition disabled:opacity-50 text-center justify-center"
             >
               {statusSubmitting ? 'Saving...' : 'Confirm Status Update'}
             </button>
@@ -888,18 +888,18 @@ const ItemDetailsPage = () => {
             />
           </div>
 
-          <div className="flex items-center justify-end space-x-2 pt-2">
+          <div className="flex flex-col-reverse sm:flex-row items-center justify-end gap-2 pt-2">
             <button
               type="button"
               onClick={() => setClaimModalOpen(false)}
-              className="px-4 py-2 text-xs font-bold text-slate-500 hover:text-slate-700"
+              className="w-full sm:w-auto px-4 py-2 text-xs font-bold text-slate-500 hover:text-slate-700 text-center justify-center"
             >
               Cancel
             </button>
             <button
               type="submit"
               disabled={claimSubmitting}
-              className="px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold rounded-xl shadow-sm transition disabled:opacity-50"
+              className="w-full sm:w-auto px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold rounded-xl shadow-sm transition disabled:opacity-50 text-center justify-center"
             >
               {claimSubmitting
                 ? 'Submitting...'
@@ -934,18 +934,18 @@ const ItemDetailsPage = () => {
             />
           </div>
 
-          <div className="flex items-center justify-end space-x-2 pt-2">
+          <div className="flex flex-col-reverse sm:flex-row items-center justify-end gap-2 pt-2">
             <button
               type="button"
               onClick={() => setContactModalOpen(false)}
-              className="px-4 py-2 text-xs font-bold text-slate-500 hover:text-slate-700"
+              className="w-full sm:w-auto px-4 py-2 text-xs font-bold text-slate-500 hover:text-slate-700 text-center justify-center"
             >
               Cancel
             </button>
             <button
               type="submit"
               disabled={contactSubmitting}
-              className="px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold rounded-xl shadow-sm transition disabled:opacity-50"
+              className="w-full sm:w-auto px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold rounded-xl shadow-sm transition disabled:opacity-50 text-center justify-center"
             >
               {contactSubmitting ? 'Sending...' : 'Send Message'}
             </button>

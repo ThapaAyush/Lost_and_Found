@@ -234,18 +234,18 @@ const PotentialMatchesPage = () => {
               maxFiles={3}
             />
 
-            <div className="flex justify-end space-x-3 pt-3">
+            <div className="flex flex-col-reverse sm:flex-row items-center justify-end gap-2 pt-3">
               <button
                 type="button"
                 onClick={() => setClaimModalOpen(false)}
-                className="px-4 py-2 text-xs font-bold text-slate-600 hover:bg-slate-100 rounded-xl"
+                className="w-full sm:w-auto px-4 py-2 text-xs font-bold text-slate-600 hover:bg-slate-100 rounded-xl text-center justify-center"
               >
                 Cancel
               </button>
               <button
                 type="submit"
                 disabled={claimSubmitting || Boolean(claimSuccess)}
-                className="inline-flex items-center px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-xs font-bold transition disabled:opacity-50 shadow-sm"
+                className="w-full sm:w-auto inline-flex items-center justify-center px-5 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-xs font-bold transition disabled:opacity-50 shadow-sm text-center"
               >
                 Submit Claim
               </button>

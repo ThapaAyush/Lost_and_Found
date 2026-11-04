@@ -238,10 +238,10 @@ const MatchCard = ({ matchCandidate, match, layout = 'vertical', onClaim, onCont
         </div>
 
         {/* Action Controls */}
-        <div className="mt-4 pt-3 border-t border-slate-100 flex flex-wrap items-center justify-end gap-2">
+        <div className="mt-4 pt-3 border-t border-slate-100 flex flex-col sm:flex-row items-stretch sm:items-center justify-end gap-2 w-full">
           <Link
             to={`/items/${item._id}`}
-            className="inline-flex items-center px-4 py-2 text-xs font-bold text-slate-700 hover:text-blue-600 bg-slate-100 hover:bg-slate-200 rounded-xl transition"
+            className="w-full sm:w-auto inline-flex items-center justify-center px-4 py-2 text-xs font-bold text-slate-700 hover:text-blue-600 bg-slate-100 hover:bg-slate-200 rounded-xl transition text-center"
           >
             <span>View Full Details</span>
             <ArrowRight className="w-3.5 h-3.5 ml-1" />
@@ -250,7 +250,7 @@ const MatchCard = ({ matchCandidate, match, layout = 'vertical', onClaim, onCont
           {item.type === 'found' ? (
             <Link
               to={`/items/${item._id}`}
-              className="inline-flex items-center px-4 py-2 text-xs font-bold text-white bg-teal-600 hover:bg-teal-700 rounded-xl transition shadow-sm"
+              className="w-full sm:w-auto inline-flex items-center justify-center px-4 py-2 text-xs font-bold text-white bg-teal-600 hover:bg-teal-700 rounded-xl transition shadow-sm text-center"
             >
               <ShieldCheck className="w-3.5 h-3.5 mr-1" />
               Claim Ownership
@@ -258,7 +258,7 @@ const MatchCard = ({ matchCandidate, match, layout = 'vertical', onClaim, onCont
           ) : (
             <Link
               to={`/items/${item._id}`}
-              className="inline-flex items-center px-4 py-2 text-xs font-bold text-white bg-blue-600 hover:bg-blue-700 rounded-xl transition shadow-sm"
+              className="w-full sm:w-auto inline-flex items-center justify-center px-4 py-2 text-xs font-bold text-white bg-blue-600 hover:bg-blue-700 rounded-xl transition shadow-sm text-center"
             >
               <Sparkles className="w-3.5 h-3.5 mr-1" />
               I Found This Item

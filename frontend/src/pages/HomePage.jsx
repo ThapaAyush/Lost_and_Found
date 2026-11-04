@@ -418,7 +418,7 @@ const HomePage = () => {
                 navigate('/login');
               }
             }}
-            className="inline-flex items-center px-6 py-3 rounded-2xl bg-white hover:bg-slate-50 border border-slate-200 text-slate-800 text-xs font-bold shadow-sm transition hover:shadow"
+            className="w-full sm:w-auto inline-flex items-center justify-center px-6 py-3 rounded-2xl bg-white hover:bg-slate-50 border border-slate-200 text-slate-800 text-xs font-bold shadow-sm transition hover:shadow"
           >
             Browse All {activeTab === 'lost' ? 'Lost Reports' : 'Found Items'}
             <ArrowRight className="w-4 h-4 ml-2 text-blue-600" />
@@ -437,11 +437,11 @@ const HomePage = () => {
           </p>
         </div>
 
-        <div className="flex flex-wrap items-center justify-center gap-3">
+        <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-center gap-3 w-full sm:w-auto">
           {user ? (
             <Link
               to="/dashboard"
-              className="px-6 py-3.5 bg-white text-blue-700 font-bold text-xs rounded-2xl shadow-sm hover:bg-slate-100 transition"
+              className="w-full sm:w-auto text-center px-6 py-3.5 bg-white text-blue-700 font-bold text-xs rounded-2xl shadow-sm hover:bg-slate-100 transition"
             >
               Go to Your Dashboard
             </Link>
@@ -449,13 +449,13 @@ const HomePage = () => {
             <>
               <Link
                 to="/signup"
-                className="px-6 py-3.5 bg-white text-blue-700 font-bold text-xs rounded-2xl shadow-lg hover:bg-slate-100 transition"
+                className="w-full sm:w-auto text-center px-6 py-3.5 bg-white text-blue-700 font-bold text-xs rounded-2xl shadow-lg hover:bg-slate-100 transition"
               >
                 Create Free Account
               </Link>
               <Link
                 to="/login"
-                className="px-6 py-3.5 bg-blue-800/80 hover:bg-blue-800 text-white font-bold text-xs rounded-2xl border border-white/20 transition"
+                className="w-full sm:w-auto text-center px-6 py-3.5 bg-blue-800/80 hover:bg-blue-800 text-white font-bold text-xs rounded-2xl border border-white/20 transition"
               >
                 Sign In to Account
               </Link>

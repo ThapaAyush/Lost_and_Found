@@ -94,20 +94,20 @@ const ClaimsPage = () => {
       </div>
 
       {/* Tabs Switcher: Claims on My Items vs My Submitted Claims */}
-      <div className="flex flex-wrap items-center gap-2 border-b border-slate-200 pb-3">
+      <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 border-b border-slate-200 pb-3">
         <button
           type="button"
           onClick={() => setActiveTab('received')}
-          className={`px-4 py-2.5 rounded-xl text-xs font-bold transition flex items-center space-x-2 ${
+          className={`flex-1 sm:flex-initial px-4 py-2.5 rounded-xl text-xs font-bold transition flex items-center justify-center space-x-2 ${
             activeTab === 'received'
               ? 'bg-blue-600 text-white shadow-sm shadow-blue-500/20'
               : 'bg-white text-slate-600 hover:bg-slate-100 border border-slate-200'
           }`}
         >
-          <Inbox className="w-4 h-4" />
+          <Inbox className="w-4 h-4 shrink-0" />
           <span>Claims on My Reported Items</span>
           <span
-            className={`px-2 py-0.5 rounded-full text-[10px] font-extrabold ${
+            className={`px-2 py-0.5 rounded-full text-[10px] font-extrabold shrink-0 ${
               activeTab === 'received' ? 'bg-white text-blue-700' : 'bg-slate-100 text-slate-600'
             }`}
           >
@@ -118,16 +118,16 @@ const ClaimsPage = () => {
         <button
           type="button"
           onClick={() => setActiveTab('submitted')}
-          className={`px-4 py-2.5 rounded-xl text-xs font-bold transition flex items-center space-x-2 ${
+          className={`flex-1 sm:flex-initial px-4 py-2.5 rounded-xl text-xs font-bold transition flex items-center justify-center space-x-2 ${
             activeTab === 'submitted'
               ? 'bg-teal-600 text-white shadow-sm shadow-teal-500/20'
               : 'bg-white text-slate-600 hover:bg-slate-100 border border-slate-200'
           }`}
         >
-          <Send className="w-4 h-4" />
+          <Send className="w-4 h-4 shrink-0" />
           <span>My Submitted Claims & Reports</span>
           <span
-            className={`px-2 py-0.5 rounded-full text-[10px] font-extrabold ${
+            className={`px-2 py-0.5 rounded-full text-[10px] font-extrabold shrink-0 ${
               activeTab === 'submitted' ? 'bg-white text-teal-800' : 'bg-slate-100 text-slate-600'
             }`}
           >
@@ -213,7 +213,7 @@ const ClaimsPage = () => {
               </div>
 
               {/* Action Controls: Prominent Message Logo & Text */}
-              <div className="flex flex-wrap items-center gap-2.5 w-full lg:w-auto justify-end pt-3 lg:pt-0 border-t lg:border-t-0 border-slate-100">
+              <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5 w-full lg:w-auto justify-end pt-3 lg:pt-0 border-t lg:border-t-0 border-slate-100">
                 {/* 1. Direct Message Button with Message Logo & Text */}
                 {activeTab === 'received' ? (
                   <button
@@ -226,7 +226,7 @@ const ClaimsPage = () => {
                       )
                     }
                     disabled={startingChatId === claim._id}
-                    className="inline-flex items-center px-4 py-2.5 bg-blue-600 hover:bg-blue-700 active:scale-95 text-white text-xs font-bold rounded-xl shadow-sm transition whitespace-nowrap"
+                    className="w-full sm:w-auto inline-flex items-center justify-center px-4 py-2.5 bg-blue-600 hover:bg-blue-700 active:scale-95 text-white text-xs font-bold rounded-xl shadow-sm transition whitespace-nowrap"
                   >
                     {startingChatId === claim._id ? (
                       <Loader2 className="w-4 h-4 mr-1.5 animate-spin" />
@@ -248,7 +248,7 @@ const ClaimsPage = () => {
                       )
                     }
                     disabled={startingChatId === claim._id}
-                    className="inline-flex items-center px-4 py-2.5 bg-teal-600 hover:bg-teal-700 active:scale-95 text-white text-xs font-bold rounded-xl shadow-sm transition whitespace-nowrap"
+                    className="w-full sm:w-auto inline-flex items-center justify-center px-4 py-2.5 bg-teal-600 hover:bg-teal-700 active:scale-95 text-white text-xs font-bold rounded-xl shadow-sm transition whitespace-nowrap"
                   >
                     {startingChatId === claim._id ? (
                       <Loader2 className="w-4 h-4 mr-1.5 animate-spin" />
@@ -265,7 +265,7 @@ const ClaimsPage = () => {
                 {activeTab === 'received' && (
                   <Link
                     to={`/claims/${claim._id}`}
-                    className="inline-flex items-center px-4 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold rounded-xl transition whitespace-nowrap"
+                    className="w-full sm:w-auto inline-flex items-center justify-center px-4 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold rounded-xl transition whitespace-nowrap"
                   >
                     <ShieldCheck className="w-4 h-4 mr-1.5 text-slate-500" />
                     <span>View {claim.item?.type === 'lost' ? 'Found Report' : 'Claim & Proof'}</span>
