@@ -138,7 +138,7 @@ const HomePage = () => {
   return (
     <div className="space-y-16 pb-12">
       {/* 1. Hero Section - Soothing Light Tint */}
-      <section className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-blue-50/90 via-sky-50/50 to-teal-50/70 border border-blue-100/90 text-slate-800 p-6 sm:p-12 lg:p-16 shadow-sm">
+      <section className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-blue-50/90 via-sky-50/50 to-teal-50/70 border border-blue-100/90 text-slate-800 p-4 sm:p-10 lg:p-16 shadow-sm">
         {/* Soft Ambient Light Glows */}
         <div className="absolute top-0 -left-10 w-72 h-72 bg-blue-200/30 rounded-full blur-3xl pointer-events-none" />
         <div className="absolute bottom-0 -right-10 w-72 h-72 bg-teal-200/30 rounded-full blur-3xl pointer-events-none" />
@@ -185,12 +185,12 @@ const HomePage = () => {
           </div>
 
           {/* Search Bar Container */}
-          <div className="pt-4 sm:pt-6">
+          <div className="pt-4 sm:pt-6 w-full">
             <form
               onSubmit={handleHeroSearch}
-              className="bg-white p-2 sm:p-2.5 rounded-2xl shadow-md border border-slate-200 flex flex-col sm:flex-row items-center gap-2 max-w-2xl mx-auto text-slate-800"
+              className="bg-white p-2 sm:p-2.5 rounded-2xl sm:rounded-3xl shadow-md border border-slate-200 flex flex-col sm:flex-row items-stretch sm:items-center gap-2 max-w-2xl mx-auto text-slate-800 w-full"
             >
-              <div className="flex-1 flex items-center px-3 w-full py-1 sm:py-0">
+              <div className="flex items-center px-3 py-1.5 sm:py-0 w-full flex-1 min-w-0">
                 <Search className="w-4 h-4 text-slate-400 mr-2 flex-shrink-0" />
                 <input
                   type="text"
@@ -200,32 +200,34 @@ const HomePage = () => {
                     if (!user) navigate('/login');
                   }}
                   placeholder="What did you lose or find?"
-                  className="w-full text-xs sm:text-sm bg-transparent border-none focus:outline-none placeholder-slate-400 text-slate-800"
+                  className="w-full text-xs sm:text-sm bg-transparent border-none focus:outline-none placeholder-slate-400 text-slate-800 min-w-0"
                 />
               </div>
 
-              <div className="flex items-center space-x-2 w-full sm:w-auto">
-                <select
-                  value={selectedCategory}
-                  onChange={(e) => {
-                    if (!user) {
-                      navigate('/login');
-                      return;
-                    }
-                    setSelectedCategory(e.target.value);
-                  }}
-                  className="flex-1 sm:flex-initial px-3 py-2 text-xs bg-slate-50 rounded-xl border border-slate-200 text-slate-700 font-medium focus:outline-none"
-                >
-                  {categories.map((c) => (
-                    <option key={c} value={c}>
-                      {c === 'All' ? 'All Categories' : c}
-                    </option>
-                  ))}
-                </select>
+              <div className="flex items-center gap-2 w-full sm:w-auto min-w-0">
+                <div className="flex-1 sm:w-44 min-w-0">
+                  <select
+                    value={selectedCategory}
+                    onChange={(e) => {
+                      if (!user) {
+                        navigate('/login');
+                        return;
+                      }
+                      setSelectedCategory(e.target.value);
+                    }}
+                    className="w-full min-w-0 px-3 py-2 text-xs bg-slate-50 rounded-xl border border-slate-200 text-slate-700 font-medium focus:outline-none truncate"
+                  >
+                    {categories.map((c) => (
+                      <option key={c} value={c}>
+                        {c === 'All' ? 'All Categories' : c}
+                      </option>
+                    ))}
+                  </select>
+                </div>
 
                 <button
                   type="submit"
-                  className="px-5 py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold transition shadow-sm flex items-center justify-center whitespace-nowrap"
+                  className="px-5 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold transition shadow-sm flex items-center justify-center whitespace-nowrap shrink-0 active:scale-95"
                 >
                   Search
                 </button>
