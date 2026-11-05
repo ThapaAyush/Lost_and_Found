@@ -15,9 +15,9 @@ const AdminNavbar = () => {
             <span>Admin Page</span>
           </span>
           <a
-            href="http://localhost:5173"
+            href={import.meta.env.VITE_CLIENT_URL || "http://localhost:5173"}
             className="px-3 py-1.5 rounded-lg text-xs font-bold text-slate-600 hover:text-blue-700 hover:bg-white transition flex items-center space-x-1.5 group"
-            title="Switch to Frontend Page (Port 5173)"
+            title="Switch to Frontend Page"
           >
             <Globe className="w-3.5 h-3.5 text-slate-400 group-hover:text-blue-600" />
             <span>Frontend Page</span>

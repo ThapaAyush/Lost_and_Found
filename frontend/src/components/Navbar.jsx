@@ -14,6 +14,7 @@ import {
   LayoutDashboard,
   Menu,
   X,
+  ArrowUpRight,
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import NotificationDropdown from './NotificationDropdown';
@@ -244,6 +245,24 @@ const Navbar = ({ onToggleSidebar, isSidebarOpen }) => {
                         {user?.role}
                       </span>
                     </div>
+
+                    {isAdmin && (
+                      <div className="p-1 border-b border-slate-100">
+                        <a
+                          href={import.meta.env.VITE_ADMIN_URL || "https://lost-and-found-ad.vercel.app"}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          onClick={() => setProfileDropdownOpen(false)}
+                          className="flex items-center justify-between px-3 py-2 text-xs font-bold text-blue-700 bg-blue-50/70 hover:bg-blue-100/70 rounded-xl transition group"
+                        >
+                          <div className="flex items-center space-x-2">
+                            <ShieldCheck className="w-4 h-4 text-blue-600" />
+                            <span>Admin Portal</span>
+                          </div>
+                          <ArrowUpRight className="w-3.5 h-3.5 text-blue-500 group-hover:translate-x-0.5 transition-transform" />
+                        </a>
+                      </div>
+                    )}
 
                     <div className="py-1">
                       {[

@@ -229,9 +229,11 @@ const Sidebar = ({ isOpen, isDesktopOpen = true, closeSidebar }) => {
             Application
           </div>
           <a
-            href="http://localhost:5174"
+            href={import.meta.env.VITE_ADMIN_URL || "https://lost-and-found-ad.vercel.app"}
+            target="_blank"
+            rel="noopener noreferrer"
             className="flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-bold text-slate-700 hover:text-blue-700 bg-white hover:bg-blue-50/60 border border-slate-200/80 shadow-2xs transition group"
-            title="Switch to Admin Page (Port 5174)"
+            title="Switch to Admin Portal"
           >
             <div className="flex items-center space-x-2.5">
               <ShieldCheck className="w-4 h-4 text-blue-600 shrink-0" />

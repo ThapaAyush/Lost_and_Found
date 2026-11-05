@@ -38,7 +38,14 @@ app.use(
 
 // CORS configuration for HTTP-only cookies
 const clientOrigin = process.env.CLIENT_ORIGIN || 'http://localhost:5173';
-const allowedOrigins = [clientOrigin, 'http://localhost:5173', 'http://localhost:5174'];
+const adminOrigin = process.env.ADMIN_ORIGIN || 'https://lost-and-found-ad.vercel.app';
+const allowedOrigins = [
+  clientOrigin,
+  adminOrigin,
+  'https://lost-and-found-ad.vercel.app',
+  'http://localhost:5173',
+  'http://localhost:5174',
+];
 app.use(
   cors({
     origin: (origin, callback) => {
