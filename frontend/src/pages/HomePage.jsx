@@ -346,11 +346,10 @@ const HomePage = () => {
                 }
                 setActiveTab('found');
               }}
-              className={`flex-1 sm:flex-initial px-3 sm:px-4 py-2 rounded-xl font-bold transition text-center whitespace-nowrap text-[11px] sm:text-xs ${
-                activeTab === 'found'
-                  ? 'bg-white text-blue-600 shadow-sm'
-                  : 'text-slate-600 hover:text-slate-900'
-              }`}
+              className={`flex-1 sm:flex-initial px-3 sm:px-4 py-2 rounded-xl font-bold transition text-center whitespace-nowrap text-[11px] sm:text-xs ${activeTab === 'found'
+                ? 'bg-white text-blue-600 shadow-sm'
+                : 'text-slate-600 hover:text-slate-900'
+                }`}
             >
               Found Items
             </button>
@@ -363,11 +362,10 @@ const HomePage = () => {
                 }
                 setActiveTab('lost');
               }}
-              className={`flex-1 sm:flex-initial px-3 sm:px-4 py-2 rounded-xl font-bold transition text-center whitespace-nowrap text-[11px] sm:text-xs ${
-                activeTab === 'lost'
-                  ? 'bg-white text-rose-600 shadow-sm'
-                  : 'text-slate-600 hover:text-slate-900'
-              }`}
+              className={`flex-1 sm:flex-initial px-3 sm:px-4 py-2 rounded-xl font-bold transition text-center whitespace-nowrap text-[11px] sm:text-xs ${activeTab === 'lost'
+                ? 'bg-white text-rose-600 shadow-sm'
+                : 'text-slate-600 hover:text-slate-900'
+                }`}
             >
               Lost Reports
             </button>
@@ -380,11 +378,10 @@ const HomePage = () => {
                 }
                 setActiveTab('returned');
               }}
-              className={`flex-1 sm:flex-initial px-3 sm:px-4 py-2 rounded-xl font-bold transition text-center whitespace-nowrap text-[11px] sm:text-xs ${
-                activeTab === 'returned'
-                  ? 'bg-white text-teal-700 shadow-sm'
-                  : 'text-slate-600 hover:text-slate-900'
-              }`}
+              className={`flex-1 sm:flex-initial px-3 sm:px-4 py-2 rounded-xl font-bold transition text-center whitespace-nowrap text-[11px] sm:text-xs ${activeTab === 'returned'
+                ? 'bg-white text-teal-700 shadow-sm'
+                : 'text-slate-600 hover:text-slate-900'
+                }`}
             >
               Reunited 🎉
             </button>

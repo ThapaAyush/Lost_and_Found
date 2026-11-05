@@ -102,7 +102,7 @@ const ItemDetailsPage = () => {
             .then((mRes) => {
               if (mRes.data?.matches) setMatches(mRes.data.matches);
             })
-            .catch(() => {});
+            .catch(() => { });
         }
       } catch (err) {
         setError(err.message || 'Item details could not be retrieved.');
@@ -480,9 +480,8 @@ const ItemDetailsPage = () => {
             {/* Badges Overlay */}
             <div className="absolute top-4 left-4">
               <span
-                className={`px-3 py-1 text-xs font-black uppercase tracking-wider rounded-full shadow-sm ${
-                  item.type === 'lost' ? 'bg-rose-600 text-white' : 'bg-blue-600 text-white'
-                }`}
+                className={`px-3 py-1 text-xs font-black uppercase tracking-wider rounded-full shadow-sm ${item.type === 'lost' ? 'bg-rose-600 text-white' : 'bg-blue-600 text-white'
+                  }`}
               >
                 {item.type} Report
               </span>
@@ -500,11 +499,10 @@ const ItemDetailsPage = () => {
                   key={idx}
                   type="button"
                   onClick={() => setSelectedImage(img)}
-                  className={`w-16 h-16 rounded-xl overflow-hidden border-2 flex-shrink-0 transition ${
-                    selectedImage === img
-                      ? 'border-blue-600 ring-2 ring-blue-200'
-                      : 'border-slate-200 opacity-70 hover:opacity-100'
-                  }`}
+                  className={`w-16 h-16 rounded-xl overflow-hidden border-2 flex-shrink-0 transition ${selectedImage === img
+                    ? 'border-blue-600 ring-2 ring-blue-200'
+                    : 'border-slate-200 opacity-70 hover:opacity-100'
+                    }`}
                 >
                   <img src={img} alt={`Thumbnail ${idx}`} className="w-full h-full object-cover" />
                 </button>
@@ -904,8 +902,8 @@ const ItemDetailsPage = () => {
               {claimSubmitting
                 ? 'Submitting...'
                 : item?.type === 'lost'
-                ? 'Submit Found Report & Notify Owner'
-                : 'Submit Claim for Review'}
+                  ? 'Submit Found Report & Notify Owner'
+                  : 'Submit Claim for Review'}
             </button>
           </div>
         </form>

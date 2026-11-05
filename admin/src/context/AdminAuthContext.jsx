@@ -56,6 +56,9 @@ export const AdminAuthProvider = ({ children }) => {
         };
       }
 
+      if (res.data?.token) {
+        localStorage.setItem('admin_token', res.data.token);
+      }
       setAdminUser(user);
       return { success: true, user };
     } catch (err) {
@@ -72,6 +75,7 @@ export const AdminAuthProvider = ({ children }) => {
     } catch (err) {
       console.error('[Admin Logout Error]', err);
     } finally {
+      localStorage.removeItem('admin_token');
       setAdminUser(null);
     }
   };

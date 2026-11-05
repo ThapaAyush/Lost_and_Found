@@ -34,6 +34,9 @@ export const AuthProvider = ({ children }) => {
     setError(null);
     try {
       const res = await authAPI.login({ email, password });
+      if (res.data?.token) {
+        localStorage.setItem('token', res.data.token);
+      }
       setUser(res.data.user);
       return { success: true, user: res.data.user };
     } catch (err) {
@@ -46,6 +49,9 @@ export const AuthProvider = ({ children }) => {
     setError(null);
     try {
       const res = await authAPI.signup(formData);
+      if (res.data?.token) {
+        localStorage.setItem('token', res.data.token);
+      }
       setUser(res.data.user);
       return { success: true, user: res.data.user };
     } catch (err) {
@@ -60,6 +66,7 @@ export const AuthProvider = ({ children }) => {
     } catch (err) {
       console.error('[Logout Error]', err);
     } finally {
+      localStorage.removeItem('token');
       setUser(null);
     }
   };

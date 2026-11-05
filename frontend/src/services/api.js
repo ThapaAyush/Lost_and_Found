@@ -8,6 +8,15 @@ const api = axios.create({
   },
 });
 
+// Request interceptor to attach Bearer token if present
+api.interceptors.request.use((config) => {
+  const token = localStorage.getItem('token');
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
+  return config;
+});
+
 // Response interceptor for consistent error extraction
 api.interceptors.response.use(
   (response) => response,

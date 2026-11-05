@@ -12,17 +12,19 @@ const sendTokenResponse = (user, statusCode, res, message = 'Success') => {
     { expiresIn: process.env.JWT_EXPIRES_IN || '7d' }
   );
 
+  const isProduction = process.env.NODE_ENV === 'production' || process.env.COOKIE_SECURE === 'true';
   const cookieExpireDays = 7;
   const options = {
     expires: new Date(Date.now() + cookieExpireDays * 24 * 60 * 60 * 1000),
     httpOnly: true,
-    secure: process.env.COOKIE_SECURE === 'true' || process.env.NODE_ENV === 'production',
-    sameSite: 'lax',
+    secure: isProduction,
+    sameSite: process.env.COOKIE_SAME_SITE || (isProduction ? 'none' : 'lax'),
   };
 
   res.status(statusCode).cookie('token', token, options).json({
     success: true,
     message,
+    token, // Provided so clients can authenticate via Bearer token cross-origin
     user: {
       _id: user._id,
       name: user.name,

@@ -7,14 +7,14 @@ export default defineConfig({
     port: 5173,
     proxy: {
       '/api': {
-        target: 'http://localhost:5000',
+        target: 'https://lost-and-found-backend-07xa.onrender.com',
         changeOrigin: true,
-        secure: false,
+        secure: true,
       },
       '/uploads': {
-        target: 'http://localhost:5000',
+        target: 'https://lost-and-found-backend-07xa.onrender.com',
         changeOrigin: true,
-        secure: false,
+        secure: true,
       },
     },
   },

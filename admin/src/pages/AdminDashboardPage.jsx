@@ -30,10 +30,11 @@ const getItemImage = (item) => {
       if (img.startsWith('http://') || img.startsWith('https://') || img.startsWith('data:')) {
         return img;
       }
+      const backendUrl = import.meta.env.VITE_API_URL?.replace(/\/api\/?$/, '') || 'https://lost-and-found-backend-07xa.onrender.com';
       if (img.startsWith('/')) {
-        return `http://localhost:5000${img}`;
+        return `${backendUrl}${img}`;
       }
-      return `http://localhost:5000/${img}`;
+      return `${backendUrl}/${img}`;
     }
   }
   return null;
