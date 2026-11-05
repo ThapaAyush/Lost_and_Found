@@ -71,6 +71,22 @@ app.use('/api', generalLimiter);
 // Serve static uploads for local image storage fallback
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
+// Root endpoint welcome & status
+app.get('/', (req, res) => {
+  res.status(200).json({
+    success: true,
+    message: 'Lost & Found Community Platform API is running successfully',
+    health: '/api/health',
+    endpoints: {
+      health: '/api/health',
+      items: '/api/items',
+      auth: '/api/auth',
+      claims: '/api/claims',
+      matches: '/api/matches',
+    },
+  });
+});
+
 // Health check endpoint
 app.get('/api/health', (req, res) => {
   res.status(200).json({
