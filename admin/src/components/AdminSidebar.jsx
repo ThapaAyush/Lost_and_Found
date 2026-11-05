@@ -81,7 +81,7 @@ const AdminSidebar = () => {
             Switch Application
           </div>
           <a
-            href={import.meta.env.VITE_CLIENT_URL || "http://localhost:5173"}
+            href={import.meta.env.VITE_CLIENT_URL || "https://lost-and-found-fd.vercel.app"}
             className="flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-bold text-slate-700 hover:text-blue-600 bg-slate-50 hover:bg-slate-100 border border-slate-200 transition group"
             title="Switch to Frontend"
           >

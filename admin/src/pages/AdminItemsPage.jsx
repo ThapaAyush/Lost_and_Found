@@ -549,7 +549,7 @@ const AdminItemsPage = () => {
                   {/* Admin Moderation Actions Footer */}
                   <div className="p-3 bg-slate-50 border-t border-slate-100 flex items-center justify-between gap-1.5">
                     <a
-                      href={`http://localhost:5173/items/${it._id}`}
+                      href={`${import.meta.env.VITE_CLIENT_URL || "https://lost-and-found-fd.vercel.app"}/items/${it._id}`}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="flex-1 inline-flex items-center justify-center px-2.5 py-1.5 bg-white hover:bg-blue-50 text-slate-700 hover:text-blue-700 border border-slate-200 rounded-xl text-xs font-bold transition shadow-xs"
@@ -728,7 +728,7 @@ const AdminItemsPage = () => {
                       {/* Moderation Actions */}
                       <td className="py-3.5 px-4 text-right space-x-2 whitespace-nowrap">
                         <a
-                          href={`http://localhost:5173/items/${it._id}`}
+                          href={`${import.meta.env.VITE_CLIENT_URL || "https://lost-and-found-fd.vercel.app"}/items/${it._id}`}
                           target="_blank"
                           rel="noopener noreferrer"
                           className="px-2.5 py-1 text-[11px] font-semibold rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 inline-flex items-center transition"

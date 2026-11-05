@@ -682,7 +682,7 @@ const AdminUsersPage = () => {
                       {/* Footer Actions */}
                       <div className="p-2.5 bg-slate-50 border-t border-slate-100 flex items-center justify-between gap-1.5">
                         <a
-                          href={`http://localhost:5173/items/${post._id}`}
+                          href={`${import.meta.env.VITE_CLIENT_URL || "https://lost-and-found-fd.vercel.app"}/items/${post._id}`}
                           target="_blank"
                           rel="noopener noreferrer"
                           className="flex-1 inline-flex items-center justify-center px-2 py-1 text-[11px] font-bold rounded-lg bg-white hover:bg-blue-50 text-slate-700 hover:text-blue-700 border border-slate-200 transition"

@@ -142,7 +142,7 @@ const AdminLoginPage = () => {
 
           <div className="mt-6 pt-5 border-t border-slate-100 text-center">
             <a
-              href="http://localhost:5173"
+              href={import.meta.env.VITE_CLIENT_URL || "https://lost-and-found-fd.vercel.app"}
               className="text-xs font-semibold text-slate-500 hover:text-blue-600 transition"
             >
               ← Return to Public Lost & Found Portal

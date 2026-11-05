@@ -15,7 +15,7 @@ const AdminNavbar = () => {
             <span>Admin Page</span>
           </span>
           <a
-            href={import.meta.env.VITE_CLIENT_URL || "http://localhost:5173"}
+            href={import.meta.env.VITE_CLIENT_URL || "https://lost-and-found-fd.vercel.app"}
             className="px-3 py-1.5 rounded-lg text-xs font-bold text-slate-600 hover:text-blue-700 hover:bg-white transition flex items-center space-x-1.5 group"
             title="Switch to Frontend Page"
           >

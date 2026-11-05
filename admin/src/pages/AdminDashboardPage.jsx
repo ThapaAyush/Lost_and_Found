@@ -146,7 +146,7 @@ const AdminDashboardPage = () => {
         </div>
 
         <a
-          href="http://localhost:5173"
+          href={import.meta.env.VITE_CLIENT_URL || "https://lost-and-found-fd.vercel.app"}
           target="_blank"
           rel="noopener noreferrer"
           className="inline-flex items-center space-x-1.5 px-3 py-1.5 rounded-xl text-xs font-bold text-slate-600 hover:text-blue-600 hover:bg-blue-50 border border-slate-200 transition shrink-0"
@@ -273,7 +273,7 @@ const AdminDashboardPage = () => {
                     Manage Lost & Found
                   </Link>
                   <a
-                    href="http://localhost:5173/report/lost"
+                    href={`${import.meta.env.VITE_CLIENT_URL || "https://lost-and-found-fd.vercel.app"}/report/lost`}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-xl text-xs font-bold transition flex items-center space-x-1.5"
@@ -485,16 +485,16 @@ const AdminDashboardPage = () => {
               <div className="flex items-center justify-between">
                 <span className="text-xs font-bold text-slate-600">Public Frontend</span>
                 <span className="text-[10px] font-bold text-sky-700 bg-sky-100/70 px-2 py-0.5 rounded-full border border-sky-200">
-                  Port 5173
+                  Live
                 </span>
               </div>
               <a
-                href="http://localhost:5173"
+                href={import.meta.env.VITE_CLIENT_URL || "https://lost-and-found-fd.vercel.app"}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-xs font-bold text-blue-600 hover:text-blue-800 hover:underline mt-1 inline-flex items-center"
               >
-                <span>http://localhost:5173</span>
+                <span className="truncate max-w-[200px]">{import.meta.env.VITE_CLIENT_URL || "https://lost-and-found-fd.vercel.app"}</span>
                 <ExternalLink className="w-3 h-3 ml-1" />
               </a>
               <p className="text-[11px] text-slate-400 mt-0.5">Community lost & found portal</p>
